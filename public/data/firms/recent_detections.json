@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-04-15T23:09:50.312Z",
+  "asOf": "2026-04-15T23:22:54.361Z",
   "source": "NASA FIRMS VIIRS_SNPP_NRT area bbox 33,12,60,40 (refreshed 2026-04-15)",
   "note": "Refreshed nightly by scripts/update_market_data.ts. Single area-bbox fetch covering the full Middle East region (Gulf + Levant + Egypt + Turkey). The client-side country fan-out path is dead upstream — NASA deprecated /api/country/csv/ and returns Invalid API call for every ISO3.",
   "detections": [
