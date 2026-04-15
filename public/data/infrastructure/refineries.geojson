@@ -1,0 +1,2413 @@
+{
+  "type": "FeatureCollection",
+  "_metadata": {
+    "source": "EDF Oil and Gas Infrastructure Mapping (OGIM) v2.7 + curated refinery supplement",
+    "downloadDate": "2025-03-28",
+    "recordCount": 83,
+    "license": "CC BY 4.0",
+    "sourceUrl": "https://zenodo.org/records/15103476",
+    "notes": "OGIM refinery status is largely unavailable in the regional slice, so unknown values are preserved instead of inferred. Curated supplement rows are only used when named Gulf sites are absent from OGIM."
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "refinery-eg-alexandria-el-mex-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.67108,
+          31.04917
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-alexandria-el-mex-refinery",
+        "name": "Alexandria (El-Mex) Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "ALEXANDRIA PETROLEUM CO.",
+        "operator": "ALEXANDRIA PETROLEUM CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 31.04917,
+        "lon": 29.67108,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-alexandria-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.86311,
+          31.0983
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-alexandria-refinery",
+        "name": "Alexandria Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "AMERIYA PETROLEUM REFINING CO.",
+        "operator": "AMERIYA PETROLEUM REFINING CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 31.0983,
+        "lon": 29.86311,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-alexandria-refinery-middle-east-oil-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.76528,
+          31.0225
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-alexandria-refinery-middle-east-oil-refinery",
+        "name": "Alexandria Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "MIDDLE EAST OIL REFINERY",
+        "operator": "MIDDLE EAST OIL REFINERY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 31.0225,
+        "lon": 29.76528,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 35000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-assiut-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.84428,
+          31.00284
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-assiut-refinery",
+        "name": "Assiut Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "ASSIUT PETROLEUM REFINING CO.",
+        "operator": "ASSIUT PETROLEUM REFINING CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 31.00284,
+        "lon": 29.84428,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 78000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-el-suez-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.53276,
+          29.95729
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-el-suez-refinery",
+        "name": "El-Suez Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "EL-NASR PETROLEUM CO.",
+        "operator": "EL-NASR PETROLEUM CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.95729,
+        "lon": 32.53276,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 146000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-el-suez-refinery-suez-petroleum-processing-co",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.52024,
+          29.95863
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-el-suez-refinery-suez-petroleum-processing-co",
+        "name": "El-Suez Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "SUEZ PETROLEUM PROCESSING CO.",
+        "operator": "SUEZ PETROLEUM PROCESSING CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.95863,
+        "lon": 32.52024,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 66000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-mostorod-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.99116,
+          27.1962
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-mostorod-refinery",
+        "name": "Mostorod Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "CAIRO PETROLEUM REFINING CO.",
+        "operator": "CAIRO PETROLEUM REFINING CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 27.1962,
+        "lon": 30.99116,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 47000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-tanta-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.95761,
+          30.79348
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-tanta-refinery",
+        "name": "Tanta Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "CAIRO PETROLEUM REFINING CO.",
+        "operator": "CAIRO PETROLEUM REFINING CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 30.79348,
+        "lon": 30.95761,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 145000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-eg-wadi-feran-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.22161,
+          28.73454
+        ]
+      },
+      "properties": {
+        "id": "refinery-eg-wadi-feran-refinery",
+        "name": "Wadi- Feran Refinery",
+        "country": "EG",
+        "countryName": "Egypt",
+        "owner": "EL-NASR PETROLEUM CO.",
+        "operator": "EL-NASR PETROLEUM CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 28.73454,
+        "lon": 33.22161,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_bpd": 8550
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-barauni-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.06182,
+          25.43052
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-barauni-refinery",
+        "name": "Barauni Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 25.43052,
+        "lon": 86.06182,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-bongaigaon-assam-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          90.54683,
+          26.48566
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-bongaigaon-assam-refinery",
+        "name": "Bongaigaon Assam Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "BONGAIGAON REFINERY + PETROCHEMICALS LTD.",
+        "operator": "BONGAIGAON REFINERY + PETROCHEMICALS LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.48566,
+        "lon": 90.54683,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_bpd": 48000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-cauvery-basin-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.28331,
+          13.12536
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-cauvery-basin-refinery",
+        "name": "Cauvery Basin Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 13.12536,
+        "lon": 80.28331,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-cauvery-basin-refinery-chennai-petroleum-corp-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.81099,
+          10.82753
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-cauvery-basin-refinery-chennai-petroleum-corp-ltd",
+        "name": "Cauvery Basin Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "CHENNAI PETROLEUM CORP. LTD.",
+        "operator": "CHENNAI PETROLEUM CORP. LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 10.82753,
+        "lon": 79.81099,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_bpd": 20000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-chennai-petroleum-corporation-limited-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.27804,
+          13.15585
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-chennai-petroleum-corporation-limited-refinery",
+        "name": "Chennai Petroleum Corporation Limited Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 13.15585,
+        "lon": 80.27804,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-digboi-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          95.62014,
+          27.39131
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-digboi-refinery",
+        "name": "Digboi Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 27.39131,
+        "lon": 95.62014,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-essar-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.7584,
+          22.33525
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-essar-refinery",
+        "name": "Essar Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 22.33525,
+        "lon": 69.7584,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-gawahati-assam-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          91.68787,
+          26.18651
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-gawahati-assam-refinery",
+        "name": "Gawahati, Assam Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "INDIAN OIL CO. LTD.",
+        "operator": "INDIAN OIL CO. LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.18651,
+        "lon": 91.68787,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_bpd": 20000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-gujarat-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.12309,
+          22.36653
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-gujarat-refinery",
+        "name": "Gujarat Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 22.36653,
+        "lon": 73.12309,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-guru-gobind-singh-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.96026,
+          29.91973
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-guru-gobind-singh-refinery",
+        "name": "Guru Gobind Singh Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.91973,
+        "lon": 74.96026,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-haldia-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.10914,
+          22.05064
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-haldia-refinery",
+        "name": "Haldia Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 22.05064,
+        "lon": 88.10914,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-jamnagar-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.85872,
+          22.38635
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-jamnagar-refinery",
+        "name": "Jamnagar Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 22.38635,
+        "lon": 69.85872,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-jamnagar-refinery-reliance-petroleum-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.85556,
+          22.33685
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-jamnagar-refinery-reliance-petroleum-ltd",
+        "name": "Jamnagar Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "RELIANCE PETROLEUM LTD.",
+        "operator": "RELIANCE PETROLEUM LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 22.33685,
+        "lon": 69.85556,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_bpd": 540000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-kochi-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.37218,
+          9.96706
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-kochi-refinery",
+        "name": "Kochi Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 9.96706,
+        "lon": 76.37218,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-mangalore-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.84618,
+          12.98339
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-mangalore-refinery",
+        "name": "Mangalore Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 12.98339,
+        "lon": 74.84618,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-mathura-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          77.6866,
+          27.37921
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-mathura-refinery",
+        "name": "Mathura Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 27.37921,
+        "lon": 77.6866,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-mumbai-refinery-mahaul",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.89524,
+          19.02157
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-mumbai-refinery-mahaul",
+        "name": "Mumbai Refinery Mahaul",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 19.02157,
+        "lon": 72.89524,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-numaligarh-assam-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          93.78909,
+          26.58068
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-numaligarh-assam-refinery",
+        "name": "Numaligarh, Assam Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "BHARAT PETROLEUM CO. LTD.",
+        "operator": "BHARAT PETROLEUM CO. LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.58068,
+        "lon": 93.78909,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_bpd": 58000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-panipat-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.96097,
+          29.35822
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-panipat-refinery",
+        "name": "Panipat Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.35822,
+        "lon": 76.96097,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-panipat-refinery-indian-oil-co-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.87831,
+          29.47308
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-panipat-refinery-indian-oil-co-ltd",
+        "name": "Panipat Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "INDIAN OIL CO. LTD.",
+        "operator": "INDIAN OIL CO. LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.47308,
+        "lon": 76.87831,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_bpd": 117000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-tatipaka-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          81.97348,
+          16.41877
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-tatipaka-refinery",
+        "name": "Tatipaka Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 16.41877,
+        "lon": 81.97348,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-in-visakhapatnam-visakh-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.24598,
+          17.69554
+        ]
+      },
+      "properties": {
+        "id": "refinery-in-visakhapatnam-visakh-refinery",
+        "name": "Visakhapatnam (Visakh) Refinery",
+        "country": "IN",
+        "countryName": "India",
+        "owner": "N/A",
+        "operator": "N/A",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 17.69554,
+        "lon": 83.24598,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IN"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-abadan-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.27798,
+          30.34983
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-abadan-refinery",
+        "name": "Abadan Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "ABADAN OIL REFINING COMPANY",
+        "operator": "ABADAN OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 30.34983,
+        "lon": 48.27798,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 400000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-arak-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.47678,
+          34.00805
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-arak-refinery",
+        "name": "Arak Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "IMAM KHOMEINI OIL REFINING COMPANY",
+        "operator": "IMAM KHOMEINI OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 34.00805,
+        "lon": 49.47678,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 170000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-bandar-abbas-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          56.0781,
+          27.17152
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-bandar-abbas-refinery",
+        "name": "Bandar Abbas Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "BANDAR ABBAS REFINING COMPANY",
+        "operator": "BANDAR ABBAS REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 27.17152,
+        "lon": 56.0781,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 350000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-isfahan-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.50631,
+          32.78134
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-isfahan-refinery",
+        "name": "Isfahan Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "ESFAHAN OIL REFINING COMPANY",
+        "operator": "ESFAHAN OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 32.78134,
+        "lon": 51.50631,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 375000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-kermanshah-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          47.10413,
+          34.35255
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-kermanshah-refinery",
+        "name": "Kermanshah Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "KERMANSHAH OIL REFINING COMPANY",
+        "operator": "KERMANSHAH OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 34.35255,
+        "lon": 47.10413,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 25000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-lavan-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          53.34996,
+          26.79954
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-lavan-refinery",
+        "name": "Lavan Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "LAVAN OIL REFINING COMPANY",
+        "operator": "LAVAN OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.79954,
+        "lon": 53.34996,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 60000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-pars-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.10355,
+          35.73816
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-pars-refinery",
+        "name": "Pars Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "PARS OIL COMPANY",
+        "operator": "PARS OIL COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 35.73816,
+        "lon": 51.10355,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 150000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-persian-gulf-star-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          56.05833,
+          27.15966
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-persian-gulf-star-refinery",
+        "name": "Persian Gulf Star Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "PERSIAN GULF STAR OIL COMPANY",
+        "operator": "PERSIAN GULF STAR OIL COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 27.15966,
+        "lon": 56.05833,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 360000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-shiraz-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.65466,
+          29.73499
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-shiraz-refinery",
+        "name": "Shiraz Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "SHIRAZ OIL REFINING COMPANY",
+        "operator": "SHIRAZ OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.73499,
+        "lon": 52.65466,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 60000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-tabriz-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          46.16122,
+          38.05921
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-tabriz-refinery",
+        "name": "Tabriz Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "TABRIZ OIL REFINING COMPANY",
+        "operator": "TABRIZ OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 38.05921,
+        "lon": 46.16122,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 112000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ir-tehran-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.42795,
+          35.53887
+        ]
+      },
+      "properties": {
+        "id": "refinery-ir-tehran-refinery",
+        "name": "Tehran Refinery",
+        "country": "IR",
+        "countryName": "Iran",
+        "owner": "TEHRAN OIL REFINING COMPANY",
+        "operator": "TEHRAN OIL REFINING COMPANY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 35.53887,
+        "lon": 51.42795,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_bpd": 225000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-baiji-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          43.48753,
+          34.99816
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-baiji-refinery",
+        "name": "Baiji Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "OIL REFINERIES ADMINISTRATION",
+        "operator": "OIL REFINERIES ADMINISTRATION",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 34.99816,
+        "lon": 43.48753,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 200000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-basra-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          47.82224,
+          30.53828
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-basra-refinery",
+        "name": "Basra Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "OIL REFINERIES ADMINISTRATION",
+        "operator": "OIL REFINERIES ADMINISTRATION",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 30.53828,
+        "lon": 47.82224,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 126000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-daura-bagdad-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          44.43236,
+          33.27492
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-daura-bagdad-refinery",
+        "name": "Daura, Bagdad Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "MIDLAND REFINERIES CO.",
+        "operator": "MIDLAND REFINERIES CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 33.27492,
+        "lon": 44.43236,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-k3-haditha-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          42.36076,
+          34.07004
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-k3-haditha-refinery",
+        "name": "K3-Haditha Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "OIL REFINERIES ADMINISTRATION",
+        "operator": "OIL REFINERIES ADMINISTRATION",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 34.07004,
+        "lon": 42.36076,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 14000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-khanaqin-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          45.39963,
+          34.31755
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-khanaqin-refinery",
+        "name": "Khanaqin Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "OIL REFINERIES ADMINISTRATION",
+        "operator": "OIL REFINERIES ADMINISTRATION",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 34.31755,
+        "lon": 45.39963,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 10000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-kirkuk-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          44.33475,
+          35.52841
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-kirkuk-refinery",
+        "name": "Kirkuk Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "IRAQI CO. FOR OIL OPERATIONS",
+        "operator": "IRAQI CO. FOR OIL OPERATIONS",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 35.52841,
+        "lon": 44.33475,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 27000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-mufthia-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          44.1178,
+          33.65339
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-mufthia-refinery",
+        "name": "Mufthia Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "OIL REFINERIES ADMINISTRATION",
+        "operator": "OIL REFINERIES ADMINISTRATION",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 33.65339,
+        "lon": 44.1178,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 4500
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-iq-qaiyarah-mosul-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          43.28271,
+          35.7896
+        ]
+      },
+      "properties": {
+        "id": "refinery-iq-qaiyarah-mosul-refinery",
+        "name": "Qaiyarah Mosul Refinery",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "owner": "OIL REFINERIES ADMINISTRATION",
+        "operator": "OIL REFINERIES ADMINISTRATION",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 35.7896,
+        "lon": 43.28271,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_bpd": 4000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-jo-zarqa-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.11163,
+          32.12295
+        ]
+      },
+      "properties": {
+        "id": "refinery-jo-zarqa-refinery",
+        "name": "Zarqa Refinery",
+        "country": "JO",
+        "countryName": "Jordan",
+        "owner": "JORDAN PETROLEUM REFINERY",
+        "operator": "JORDAN PETROLEUM REFINERY",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 32.12295,
+        "lon": 36.11163,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "JO"
+        },
+        "capacity_bpd": 90400
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-al-zour",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.4816,
+          28.7361
+        ]
+      },
+      "properties": {
+        "id": "refinery-al-zour",
+        "name": "KNPC Al Zour Refinery",
+        "country": "KW",
+        "countryName": "Kuwait",
+        "owner": "Kuwait Petroleum Corp",
+        "operator": "Kuwait National Petroleum Co",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 28.7361,
+        "lon": 48.4816,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "KW",
+          "companyId": "kuwait-petroleum"
+        },
+        "notes": "Supplemental refinery site retained because OGIM v2.7 does not include this facility.",
+        "capacity_bpd": 615000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-kw-mina-abdulla-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.15339,
+          29.00391
+        ]
+      },
+      "properties": {
+        "id": "refinery-kw-mina-abdulla-refinery",
+        "name": "Mina Abdulla Refinery",
+        "country": "KW",
+        "countryName": "Kuwait",
+        "owner": "KUWAIT NATIONAL PETROLEUM CO.",
+        "operator": "KUWAIT NATIONAL PETROLEUM CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.00391,
+        "lon": 48.15339,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "KW",
+          "companyId": "kuwait-petroleum"
+        },
+        "capacity_bpd": 240000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-kw-mina-al-ahmadi-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.1297,
+          29.06123
+        ]
+      },
+      "properties": {
+        "id": "refinery-kw-mina-al-ahmadi-refinery",
+        "name": "Mina Al-Ahmadi Refinery",
+        "country": "KW",
+        "countryName": "Kuwait",
+        "owner": "KUWAIT NATIONAL PETROLEUM CO.",
+        "operator": "KUWAIT NATIONAL PETROLEUM CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.06123,
+        "lon": 48.1297,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "KW",
+          "companyId": "kuwait-petroleum"
+        },
+        "capacity_bpd": 412000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-kw-shuaiba-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.14654,
+          29.03122
+        ]
+      },
+      "properties": {
+        "id": "refinery-kw-shuaiba-refinery",
+        "name": "Shuaiba Refinery",
+        "country": "KW",
+        "countryName": "Kuwait",
+        "owner": "KUWAIT NATIONAL PETROLEUM CO.",
+        "operator": "KUWAIT NATIONAL PETROLEUM CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 29.03122,
+        "lon": 48.14654,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "KW",
+          "companyId": "kuwait-petroleum"
+        },
+        "capacity_bpd": 179000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-om-mina-al-fahal-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          58.51328,
+          23.62534
+        ]
+      },
+      "properties": {
+        "id": "refinery-om-mina-al-fahal-refinery",
+        "name": "Mina Al Fahal Refinery",
+        "country": "OM",
+        "countryName": "Oman",
+        "owner": "OMAN REFINERY CO.",
+        "operator": "OMAN REFINERY CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 23.62534,
+        "lon": 58.51328,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "OM"
+        },
+        "capacity_bpd": 106000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-om-sohar-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          56.62126,
+          24.49211
+        ]
+      },
+      "properties": {
+        "id": "refinery-om-sohar-refinery",
+        "name": "Sohar Refinery",
+        "country": "OM",
+        "countryName": "Oman",
+        "owner": "ORPC",
+        "operator": "ORPC",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.49211,
+        "lon": 56.62126,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "OM"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-attock-refinery-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.21071,
+          24.84507
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-attock-refinery-ltd",
+        "name": "Attock Refinery Ltd.",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "ATTOCK REFINERY LTD.",
+        "operator": "ATTOCK REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.84507,
+        "lon": 67.21071,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "PK"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-karachi-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.12617,
+          24.84639
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-karachi-refinery",
+        "name": "Karachi Refinery",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "PAKISTAN REFINERY LTD.",
+        "operator": "PAKISTAN REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.84639,
+        "lon": 67.12617,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_bpd": 40000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-karachi-refinery-bosicor-refinery-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          66.98283,
+          24.81674
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-karachi-refinery-bosicor-refinery-ltd",
+        "name": "Karachi Refinery",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "BOSICOR REFINERY LTD.",
+        "operator": "BOSICOR REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.81674,
+        "lon": 66.98283,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_bpd": 30000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-korangi-karachi-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.11733,
+          24.80252
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-korangi-karachi-refinery",
+        "name": "Korangi, Karachi Refinery",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "NATIONAL REFINERY LTD.",
+        "operator": "NATIONAL REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.80252,
+        "lon": 67.11733,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_bpd": 58000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-mahmood-kot-punjab-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          70.93463,
+          30.16911
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-mahmood-kot-punjab-refinery",
+        "name": "Mahmood Kot, Punjab Refinery",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "PAK-ARAB REFINERY CO.",
+        "operator": "PAK-ARAB REFINERY CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 30.16911,
+        "lon": 70.93463,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_bpd": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-national-refinery-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.1254,
+          24.84622
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-national-refinery-ltd",
+        "name": "National Refinery Ltd.",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "NATIONAL REFINERY LTD.",
+        "operator": "NATIONAL REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.84622,
+        "lon": 67.1254,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "PK"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-pakistan-refinery-ltd",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.11944,
+          24.80039
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-pakistan-refinery-ltd",
+        "name": "Pakistan Refinery Ltd.",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "PAKISTAN REFINERY LTD.",
+        "operator": "PAKISTAN REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.80039,
+        "lon": 67.11944,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "PK"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-pk-rawalpindi-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.07326,
+          33.55324
+        ]
+      },
+      "properties": {
+        "id": "refinery-pk-rawalpindi-refinery",
+        "name": "Rawalpindi Refinery",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "owner": "ATTOCK REFINERY LTD.",
+        "operator": "ATTOCK REFINERY LTD.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 33.55324,
+        "lon": 73.07326,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_bpd": 40000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-qa-umm-said-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.54472,
+          24.9656
+        ]
+      },
+      "properties": {
+        "id": "refinery-qa-umm-said-refinery",
+        "name": "Umm Said Refinery",
+        "country": "QA",
+        "countryName": "Qatar",
+        "owner": "NATIONAL OIL DISTRIBUTION CO.",
+        "operator": "NATIONAL OIL DISTRIBUTION CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.9656,
+        "lon": 51.54472,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "QA"
+        },
+        "capacity_bpd": 200000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-al-jubail-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.56826,
+          27.03793
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-al-jubail-refinery",
+        "name": "Al-Jubail Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "PETROMIN-SHELL",
+        "operator": "PETROMIN-SHELL",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 27.03793,
+        "lon": 49.56826,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "SA"
+        },
+        "capacity_bpd": 305000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-jeddah-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.18671,
+          21.44784
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-jeddah-refinery",
+        "name": "Jeddah Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 21.44784,
+        "lon": 39.18671,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-rabigh-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.01571,
+          22.71829
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-rabigh-refinery",
+        "name": "Rabigh Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 22.71829,
+        "lon": 39.01571,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 400000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-ras-tanura-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.09207,
+          26.70243
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-ras-tanura-refinery",
+        "name": "Ras Tanura Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.70243,
+        "lon": 50.09207,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 550000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-riyadh-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          46.86798,
+          24.51852
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-riyadh-refinery",
+        "name": "Riyadh Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.51852,
+        "lon": 46.86798,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 120000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-yanbu-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.23964,
+          23.97722
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-yanbu-refinery",
+        "name": "Yanbu Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 23.97722,
+        "lon": 38.23964,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 225000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-yanbu-refinery-saudi-aramco-mobil",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.31537,
+          23.94383
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-yanbu-refinery-saudi-aramco-mobil",
+        "name": "Yanbu Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "SAUDI ARAMCO-MOBIL",
+        "operator": "SAUDI ARAMCO-MOBIL",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 23.94383,
+        "lon": 38.31537,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 400000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sy-banias-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          35.96561,
+          35.21539
+        ]
+      },
+      "properties": {
+        "id": "refinery-sy-banias-refinery",
+        "name": "Banias Refinery",
+        "country": "SY",
+        "countryName": "Syria",
+        "owner": "BANIAS REFINING CO.",
+        "operator": "BANIAS REFINING CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 35.21539,
+        "lon": 35.96561,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "SY"
+        },
+        "capacity_bpd": 133000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sy-homs-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          36.63966,
+          34.71683
+        ]
+      },
+      "properties": {
+        "id": "refinery-sy-homs-refinery",
+        "name": "Homs Refinery",
+        "country": "SY",
+        "countryName": "Syria",
+        "owner": "HOMS REFINERY CO.",
+        "operator": "HOMS REFINERY CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 34.71683,
+        "lon": 36.63966,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "SY"
+        },
+        "capacity_bpd": 107000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-tr-aliaga-izmir-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          26.94137,
+          38.80291
+        ]
+      },
+      "properties": {
+        "id": "refinery-tr-aliaga-izmir-refinery",
+        "name": "Aliaga-Izmir Refinery",
+        "country": "TR",
+        "countryName": "Turkey",
+        "owner": "TURKISH PETROLEUM REFINERIES CORP.",
+        "operator": "TURKISH PETROLEUM REFINERIES CORP.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 38.80291,
+        "lon": 26.94137,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "TR"
+        },
+        "capacity_bpd": 200000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-tr-batman-siirt-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          41.14247,
+          37.87161
+        ]
+      },
+      "properties": {
+        "id": "refinery-tr-batman-siirt-refinery",
+        "name": "Batman, Siirt Refinery",
+        "country": "TR",
+        "countryName": "Turkey",
+        "owner": "TURKISH PETROLEUM REFINERIES CORP.",
+        "operator": "TURKISH PETROLEUM REFINERIES CORP.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 37.87161,
+        "lon": 41.14247,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "TR"
+        },
+        "capacity_bpd": 24000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-tr-izmit-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          29.77044,
+          40.75063
+        ]
+      },
+      "properties": {
+        "id": "refinery-tr-izmit-refinery",
+        "name": "Izmit Refinery",
+        "country": "TR",
+        "countryName": "Turkey",
+        "owner": "TURKISH PETROLEUM REFINERIES CORP.",
+        "operator": "TURKISH PETROLEUM REFINERIES CORP.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 40.75063,
+        "lon": 29.77044,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "TR"
+        },
+        "capacity_bpd": 226000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-tr-kirikkale-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          33.4601,
+          39.74427
+        ]
+      },
+      "properties": {
+        "id": "refinery-tr-kirikkale-refinery",
+        "name": "Kirikkale Refinery",
+        "country": "TR",
+        "countryName": "Turkey",
+        "owner": "TURKISH PETROLEUM REFINERIES CORP.",
+        "operator": "TURKISH PETROLEUM REFINERIES CORP.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 39.74427,
+        "lon": 33.4601,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "TR"
+        },
+        "capacity_bpd": 100000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-tr-mersin-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.70063,
+          36.82007
+        ]
+      },
+      "properties": {
+        "id": "refinery-tr-mersin-refinery",
+        "name": "Mersin Refinery",
+        "country": "TR",
+        "countryName": "Turkey",
+        "owner": "ANADOLU TASFIYEHANESI AS",
+        "operator": "ANADOLU TASFIYEHANESI AS",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 36.82007,
+        "lon": 34.70063,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "TR"
+        },
+        "capacity_bpd": 95000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-tr-narli-kahramanmaras-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          37.14912,
+          37.40036
+        ]
+      },
+      "properties": {
+        "id": "refinery-tr-narli-kahramanmaras-refinery",
+        "name": "Narli, Kahramanmaras Refinery",
+        "country": "TR",
+        "countryName": "Turkey",
+        "owner": "ERSAN PETROL SANAYII AS",
+        "operator": "ERSAN PETROL SANAYII AS",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 37.40036,
+        "lon": 37.14912,
+        "firmsRadius_km": 2,
+        "linkedContext": {
+          "countryCode": "TR"
+        },
+        "capacity_bpd": 6000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ruwais",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          54.0894,
+          24.1108
+        ]
+      },
+      "properties": {
+        "id": "refinery-ruwais",
+        "name": "Ruwais Refinery",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "owner": "Abu Dhabi National Oil Co",
+        "operator": "ADNOC Refining",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 24.1108,
+        "lon": 54.0894,
+        "firmsRadius_km": 5,
+        "linkedContext": {
+          "countryCode": "AE",
+          "companyId": "adnoc"
+        },
+        "notes": "Supplemental refinery site retained because OGIM v2.7 does not include this facility.",
+        "capacity_bpd": 837000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-ye-little-aden-refinery",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          44.8822,
+          12.75074
+        ]
+      },
+      "properties": {
+        "id": "refinery-ye-little-aden-refinery",
+        "name": "Little Aden Refinery",
+        "country": "YE",
+        "countryName": "Yemen",
+        "owner": "ADEN REFINERY CO.",
+        "operator": "ADEN REFINERY CO.",
+        "status": "unknown",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 12.75074,
+        "lon": 44.8822,
+        "firmsRadius_km": 3,
+        "linkedContext": {
+          "countryCode": "YE"
+        },
+        "capacity_bpd": 130000
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  border: 1px solid #333333;
+  background: #000000;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #222222;
+  flex: 0 0 auto;
+}
+
+/* Clickable header variant: used when the parent supplies
+   `onExpand`. Resets button chrome (background, border, font,
+   text-align) so the rendered bar looks identical to the inert
+   header at rest, then tints the title amber on hover so the
+   click affordance is discoverable. */
+.headerClickable {
+  width: 100%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.headerClickable:hover .title,
+.headerClickable:hover .expandGlyph {
+  color: #ffa500;
+}
+
+.expandGlyph {
+  color: #555555;
+  font-size: 10px;
+  margin-left: 4px;
+  flex: 0 0 auto;
+}
+
+.title {
+  color: #ff8c00;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  flex: 0 0 auto;
+}
+
+.badge {
+  color: #999999;
+  font-size: 10px;
+  margin-left: auto;
+}
+
+.trailing {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.content {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  padding: 12px;
+  overflow: hidden;
+}

@@ -1,0 +1,212 @@
+.gridShell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  color: #777777;
+  font-size: 10px;
+  flex: 0 0 auto;
+}
+
+.separator {
+  color: #333333;
+}
+
+.modeLive {
+  color: #00c853;
+}
+
+.modeStatic {
+  color: #ffd600;
+}
+
+.tableWrap {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  border: 1px solid #222222;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #111111;
+  padding: 6px 8px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Clickable rows open the GradeDetailOverlay on click. Hover swaps
+   the cell background to a lighter tone and tints the name amber,
+   same cue the asset grid uses. No transitions. */
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:hover td {
+  background: #0f0f0f;
+}
+
+.clickableRow:hover .nameLabel {
+  color: #ff8c00;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #050505;
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.numericHeader,
+.numericCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.noteCell {
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #999999;
+}
+
+.sortButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.sortButtonRight {
+  composes: sortButton;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.sortButton:hover,
+.sortButtonRight:hover {
+  color: #ff8c00;
+}
+
+.sortIndicator {
+  color: #666666;
+  font-size: 9px;
+}
+
+.nameCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nameLabel {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.producerLabel {
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+}
+
+.classificationBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border: 1px solid #333333;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.classificationBadge[data-tone="light-sweet"] {
+  color: #00c853;
+  border-color: #00c853;
+}
+
+.classificationBadge[data-tone="light-sour"] {
+  color: #ffcc80;
+  border-color: #ffcc80;
+}
+
+.classificationBadge[data-tone="medium-sweet"] {
+  color: #a7ffeb;
+  border-color: #a7ffeb;
+}
+
+.classificationBadge[data-tone="medium-sour"] {
+  color: #ff8c00;
+  border-color: #ff8c00;
+}
+
+.classificationBadge[data-tone="heavy-sweet"] {
+  color: #b39ddb;
+  border-color: #b39ddb;
+}
+
+.classificationBadge[data-tone="heavy-sour"] {
+  color: #ff1744;
+  border-color: #ff1744;
+}
+
+.emptyState {
+  color: #666666;
+  font-size: 11px;
+  padding: 12px 0;
+}
+
+.loadingState {
+  color: #888888;
+  font-size: 11px;
+  padding: 12px 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.errorState {
+  color: #ff1744;
+  font-size: 11px;
+  padding: 12px 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sourceLine {
+  color: #555555;
+  font-size: 9px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-top: 4px;
+  flex: 0 0 auto;
+}

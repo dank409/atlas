@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Stale Vite compile artifacts generated next to vite.config.ts
+# (we keep vite.config.ts and vitest.config.ts as the sources of
+# truth; anything emitted beside them by a one-off run is cruft)
+vite.config.js
+vite.config.d.ts
+
+# Secrets — NEVER commit these
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Raw GEM XLSX drops (3.3 GB). The curated GeoJSON the app actually
+# reads lives at public/data/infrastructure/*.geojson and IS
+# committed; the raw archives can be re-downloaded from
+# https://globalenergymonitor.org/ if you need to re-run
+# scripts/build_workspace_data.py.
+raw/
+
+# Editor / OS cruft
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code session data
+.claude/
+
+# Test / coverage output
+coverage/
+.vitest/

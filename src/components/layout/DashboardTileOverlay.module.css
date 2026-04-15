@@ -1,0 +1,21 @@
+/* Wider panel override for the tile-expand overlay. The base
+   `.panel` class in AssetDetailOverlay.module.css caps at 640px
+   which is great for metadata grids but way too small for a
+   full-size Brent historical chart or forward curve. Here we
+   override width + height to give charts real room. */
+.wide {
+  width: min(1100px, 96vw);
+  max-width: 96vw;
+  height: min(760px, 92vh);
+  max-height: 92vh;
+}
+
+/* The body of the wide overlay is a flex column so chart
+   components that use `height: 100%` can claim all the vertical
+   space between the header and the bottom of the panel. */
+.wideBody {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px;
+}

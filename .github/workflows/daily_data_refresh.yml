@@ -1,0 +1,136 @@
+name: Daily data refresh
+
+# Nightly pipeline that keeps Atlas's static JSON files fresh. See
+# scripts/update_market_data.ts for the upstream endpoints, the
+# fallback chain (EIA → FRED), and the exit-code semantics.
+#
+# The core design principle: EVERY LEG IS INDEPENDENT. One leg
+# failing does not stop the others. The commit step only fires if
+# at least one JSON file actually changed on disk, so a partial
+# outage (say, FIRMS momentarily down) just leaves yesterday's
+# FIRMS snapshot in place while still landing today's EIA refresh.
+#
+# Required repo secrets (Settings → Secrets and variables → Actions):
+#
+#   EIA_API_KEY    EIA v2 key. Register free at
+#                  https://www.eia.gov/opendata/register.php
+#                  Optional — the script falls back to FRED's
+#                  keyless CSV if this is unset, but EIA is the
+#                  canonical upstream so set it if you can.
+#
+#   FIRMS_MAP_KEY  NASA FIRMS map key. Register free at
+#                  https://firms.modaps.eosdis.nasa.gov/api/map_key/
+#                  Required for the FIRMS leg — there is no
+#                  keyless fallback. Without it the firms leg
+#                  logs a skip and the other legs still run.
+
+on:
+  schedule:
+    # 05:17 UTC daily. Deliberate odd minute: every cron job in the
+    # world fires on :00, creating a GitHub-runner traffic spike
+    # that delays startup by 5-15 minutes. :17 lands in a quiet
+    # window. See CronCreate guidance about avoiding round-number
+    # minutes for non-pinned schedules.
+    #
+    # Timing logic: US close is ~22:00 ET which is 02:00 UTC next
+    # day. London open is 07:00 UTC. Running at 05:17 UTC means the
+    # refresh happens AFTER US settlements post (EIA + FRED update)
+    # but BEFORE European traders open the site.
+    - cron: "17 5 * * *"
+
+  # Manual trigger so we can force a refresh from the Actions tab
+  # without waiting for the nightly window.
+  workflow_dispatch:
+
+# Prevent a manual trigger from colliding with an in-flight cron
+# run. `cancel-in-progress: false` means the first one wins — the
+# second one queues and runs after.
+concurrency:
+  group: daily-data-refresh
+  cancel-in-progress: false
+
+permissions:
+  # The commit step pushes the JSON diff back to the branch. That
+  # requires write access to repo contents. Everything else stays
+  # at the default read-only.
+  contents: write
+
+jobs:
+  refresh:
+    name: Refresh market + FIRMS JSON snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Depth 1 is enough for commit-and-push; we don't need
+          # history for this workflow.
+          fetch-depth: 1
+          # Default GITHUB_TOKEN is fine for pushing to an
+          # unprotected branch. If main is branch-protected, swap
+          # this for a PAT stored as secrets.GH_PAT with
+          # `contents: write` scope, or use a GitHub App token.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        # `npm ci` is strict: it refuses to run if package.json and
+        # package-lock.json disagree. That's the guardrail against
+        # "I added a dep locally and forgot to commit the lockfile".
+        run: npm ci
+
+      - name: Run data refresh
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          FIRMS_MAP_KEY: ${{ secrets.FIRMS_MAP_KEY }}
+        run: npm run refresh:data
+
+      - name: Check for changes
+        id: diff
+        run: |
+          if git diff --quiet public/data; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No changes to public/data — nothing to commit."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::public/data has changes — will commit."
+            git diff --stat public/data
+          fi
+
+      - name: Commit and push refreshed snapshots
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name "atlas-refresh-bot"
+          git config user.email "atlas-refresh-bot@users.noreply.github.com"
+          git add public/data
+          # [skip ci] on the commit message so the refresh commit
+          # does NOT trigger any downstream workflows (test runs,
+          # deploy pipelines, etc.) — the data change is safe by
+          # construction, and retriggering CI every night is noise.
+          git commit -m "chore(data): nightly refresh $(date -u +%Y-%m-%d)
+
+          Automated refresh by .github/workflows/daily_data_refresh.yml.
+          Upstream: EIA v2 (or FRED fallback) + NASA FIRMS.
+
+          [skip ci]"
+          git push
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Atlas data refresh summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "✓ Committed a refresh diff." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "⋯ No data changes this run (upstream returned identical snapshots)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Next scheduled run: tomorrow 05:17 UTC." >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,87 @@
+.tableShell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid #333333;
+  background: #000000;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #222222;
+}
+
+.title {
+  color: #ff8c00;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.searchInput {
+  width: 200px;
+  border: 1px solid #333333;
+  background: #000000;
+  color: #e0e0e0;
+  font: inherit;
+  padding: 6px 8px;
+}
+
+.metaRow {
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  color: #666666;
+  font-size: 10px;
+}
+
+.tableWrap {
+  min-height: 0;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  border: 1px solid #222222;
+  background: #111111;
+  color: #ff8c00;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 6px 8px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.table td {
+  border: 1px solid #222222;
+  color: #e0e0e0;
+  font-size: 11px;
+  padding: 6px 8px;
+}
+
+.table tbody tr:nth-child(odd) {
+  background: #0a0a0a;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #000000;
+}
+
+.table tbody tr {
+  cursor: pointer;
+}
+
+.selectedRow {
+  background: #1a1200 !important;
+}

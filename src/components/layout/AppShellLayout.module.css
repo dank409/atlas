@@ -1,0 +1,193 @@
+.shell {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 360px;
+  grid-template-rows: 40px minmax(0, 1fr) 28px;
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  min-height: 0;
+  background: #000000;
+}
+
+.shellWithTape {
+  grid-template-rows: 40px 32px minmax(0, 1fr) 28px;
+}
+
+/* Collapsed sidebars are still rendered — they just shrink to a
+   22px rail that houses a single expand button. Keeping the column
+   in the grid means the toggle never escapes the sidebar area. */
+.shellLeftRail {
+  grid-template-columns: 22px minmax(0, 1fr) 360px;
+}
+
+.shellRightRail {
+  grid-template-columns: 280px minmax(0, 1fr) 22px;
+}
+
+.shellLeftRail.shellRightRail {
+  grid-template-columns: 22px minmax(0, 1fr) 22px;
+}
+
+.header {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.marketTape {
+  grid-column: 1 / -1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.leftSidebar,
+.rightSidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+.leftSidebar {
+  border-right: 1px solid #222222;
+}
+
+.rightSidebar {
+  border-left: 1px solid #222222;
+}
+
+/* 24px strip at the very top of each open sidebar — same role as
+   the asset grid panel's header: a place for the collapse toggle
+   plus a short uppercase label so the user can see what the column
+   holds at a glance. */
+.sidebarStrip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  padding: 0 8px;
+  border-bottom: 1px solid #1a1a1a;
+  background: #0a0a0a;
+  flex-shrink: 0;
+}
+
+.sidebarStripLabel {
+  flex: 1;
+  color: #666666;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.rightSidebar .sidebarStripLabel {
+  text-align: right;
+}
+
+.sidebarStripButton {
+  width: 18px;
+  height: 18px;
+  background: transparent;
+  border: 1px solid #333333;
+  color: #888888;
+  cursor: pointer;
+  font: inherit;
+  font-size: 9px;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.sidebarStripButton:hover {
+  border-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.sidebarBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* Rail variant: no header strip, no body — the whole column is
+   a single tall expand button. */
+.sidebarRail {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarRailButton {
+  width: 100%;
+  height: 40px;
+  background: #0a0a0a;
+  border: none;
+  border-bottom: 1px solid #222222;
+  color: #888888;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.sidebarRailButton:hover {
+  background: #111111;
+  color: #ff8c00;
+}
+
+.mainViewport {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+.mainInner {
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.statusBar {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 1199px) {
+  .shell {
+    grid-template-columns: 240px minmax(0, 1fr) 300px;
+  }
+
+  .shellLeftRail {
+    grid-template-columns: 22px minmax(0, 1fr) 300px;
+  }
+
+  .shellRightRail {
+    grid-template-columns: 240px minmax(0, 1fr) 22px;
+  }
+
+  .shellLeftRail.shellRightRail {
+    grid-template-columns: 22px minmax(0, 1fr) 22px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 40px auto auto auto 28px;
+  }
+
+  .shellWithTape {
+    grid-template-rows: 40px 32px auto auto auto 28px;
+  }
+
+  .leftSidebar,
+  .rightSidebar {
+    border: none;
+    border-top: 1px solid #222222;
+  }
+}

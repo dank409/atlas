@@ -1,0 +1,60 @@
+.tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid #222222;
+  background: #050505;
+  min-width: 0;
+}
+
+.tab,
+.tabActive {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #666666;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 8px 10px;
+  text-transform: uppercase;
+  border-radius: 0;
+}
+
+.tab:hover {
+  color: #cccccc;
+}
+
+.tabActive {
+  color: #ff8c00;
+  border-bottom-color: #ff8c00;
+}
+
+.tab + .tab,
+.tab + .tabActive,
+.tabActive + .tab,
+.tabActive + .tabActive {
+  border-left: 1px solid #1a1a1a;
+}
+
+.tabLabel {
+  letter-spacing: inherit;
+}
+
+.tabBadge {
+  color: #999999;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.tabActive .tabBadge {
+  color: #ff8c00;
+}

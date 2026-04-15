@@ -1,0 +1,370 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  min-height: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #333333;
+  padding: 8px 12px;
+  background: #050505;
+  flex-shrink: 0;
+}
+
+.title {
+  color: #ff8c00;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.meta {
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+/* Deterministic 3-column × 3-row grid with named areas so the
+   layout is readable from the CSS alone and doesn't depend on
+   `:nth-child` hacks that break when tile counts change. Row
+   weights give the two chart rows more vertical space (the charts
+   need it to read) than the reference-input row. */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows:
+    minmax(0, 1.3fr)
+    minmax(0, 1.3fr)
+    minmax(0, 1fr);
+  grid-template-areas:
+    "bypass  curve   curve"
+    "hist    hist    alert"
+    "choke   market  firms";
+  gap: 8px;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.slotBypass {
+  grid-area: bypass;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotCurve {
+  grid-area: curve;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotHist {
+  grid-area: hist;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotAlert {
+  grid-area: alert;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotChoke {
+  grid-area: choke;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotMarket {
+  grid-area: market;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotFirms {
+  grid-area: firms;
+  min-height: 0;
+  min-width: 0;
+}
+
+.tableShell {
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid #222222;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #111111;
+  padding: 6px 8px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  background: #050505;
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.numericHeader,
+.numericCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.clickableRow {
+  cursor: pointer;
+}
+
+.clickableRow:hover td {
+  background: #0f0f0f;
+  color: #ff8c00;
+}
+
+.placeholder {
+  color: #777777;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Compact FIRMS readout — used in the dashboard grid cell where
+   the full FirmsControlPanel (sliders, buttons, hint line) won't
+   fit. A vertical list of label/value rows, same shape as the
+   scenario block in BYPASS SCENARIO. The click-to-expand overlay
+   renders the full interactive FirmsControlPanel instead. */
+.firmsCompact {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.firmsCompactRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid #111111;
+}
+
+.firmsCompactRow:last-child {
+  border-bottom: none;
+}
+
+.firmsCompactLabel {
+  color: #666666;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.firmsCompactValue {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.firmsCompactValue[data-tone="green"] {
+  color: #00c853;
+}
+
+.firmsCompactValue[data-tone="amber"] {
+  color: #ff8c00;
+}
+
+.firmsCompactValue[data-tone="muted"] {
+  color: #666666;
+}
+
+.marketBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.marketRow {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) minmax(0, auto);
+  align-items: baseline;
+  gap: 8px;
+  border-bottom: 1px solid #111111;
+  padding-bottom: 4px;
+}
+
+.marketSpreadRow {
+  display: grid;
+  grid-template-columns: 78px minmax(0, auto) minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  border-bottom: 1px solid #111111;
+  padding-bottom: 4px;
+}
+
+.marketLabel {
+  color: #666666;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.marketValue {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.marketChange {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.marketChange[data-direction="up"] {
+  color: #00c853;
+}
+
+.marketChange[data-direction="down"] {
+  color: #ff1744;
+}
+
+.marketChange[data-direction="flat"] {
+  color: #888888;
+}
+
+.marketTag {
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-align: right;
+}
+
+.scenarioBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+}
+
+.scenarioRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #111111;
+}
+
+.scenarioLabel {
+  color: #666666;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.scenarioValue {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.scenarioValue[data-tone="green"] {
+  color: #00c853;
+}
+
+.scenarioValue[data-tone="amber"] {
+  color: #ff8c00;
+}
+
+.scenarioValue[data-tone="red"] {
+  color: #ff1744;
+}
+
+.scenarioValue[data-tone="muted"] {
+  color: #666666;
+}
+
+.scenarioRationale {
+  margin-top: 6px;
+  color: #c8c8c8;
+  font-size: 10px;
+  line-height: 1.45;
+  border: 1px solid #222222;
+  background: #050505;
+  padding: 8px;
+}
+
+.sourceLine {
+  color: #777777;
+  font-size: 10px;
+  line-height: 1.4;
+  margin-top: 4px;
+}
+
+/* Responsive: on narrower viewports collapse to 2 columns. Chart
+   tiles reclaim full width of the 2-col grid; reference tiles
+   stack underneath. On very narrow (mobile) reduce to 1 column
+   vertical stack. */
+@media (max-width: 1399px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows:
+      minmax(0, 1.2fr)
+      minmax(0, 1.2fr)
+      minmax(0, 1.2fr)
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+    grid-template-areas:
+      "bypass  bypass"
+      "curve   curve"
+      "hist    hist"
+      "alert   choke"
+      "market  firms";
+  }
+}
+
+@media (max-width: 1023px) {
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(7, minmax(0, auto));
+    grid-template-areas:
+      "bypass"
+      "curve"
+      "hist"
+      "alert"
+      "choke"
+      "market"
+      "firms";
+  }
+
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

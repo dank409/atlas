@@ -1,0 +1,42 @@
+{
+  "_metadata": {
+    "source": "Curated operator context for MAP workspace",
+    "downloadDate": "2026-04-13",
+    "recordCount": 3
+  },
+  "companies": [
+    {
+      "id": "saudi-aramco",
+      "name": "Saudi Aramco",
+      "summary": "Integrated oil major spanning upstream, refining, petrochemicals, and export infrastructure across the Gulf and Red Sea.",
+      "domicile": "Saudi Arabia",
+      "website": "www.aramco.com",
+      "tickers": ["ARAMCO AB Equity"],
+      "benchmarks": ["Arab Light", "Dubai", "Dated Brent"],
+      "source": "Curated operator profile",
+      "updated": "2026-04-13"
+    },
+    {
+      "id": "adnoc",
+      "name": "Abu Dhabi National Oil Company",
+      "summary": "Integrated producer, refiner, petrochemical operator, and exporter anchored in Abu Dhabi with major Fujairah bypass relevance.",
+      "domicile": "United Arab Emirates",
+      "website": "www.adnoc.ae",
+      "tickers": ["ADNOCDIST EY Equity"],
+      "benchmarks": ["Murban", "Dubai"],
+      "source": "Curated operator profile",
+      "updated": "2026-04-13"
+    },
+    {
+      "id": "kuwait-petroleum",
+      "name": "Kuwait Petroleum Corporation",
+      "summary": "State-backed integrated oil system spanning upstream, refining, and export infrastructure led through KNPC and related entities.",
+      "domicile": "Kuwait",
+      "website": "www.kpc.com.kw",
+      "tickers": ["KNPCCRU Index"],
+      "benchmarks": ["Kuwait Export Blend", "Dubai"],
+      "source": "Curated operator profile",
+      "updated": "2026-04-13"
+    }
+  ]
+}

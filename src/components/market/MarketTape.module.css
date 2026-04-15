@@ -1,0 +1,116 @@
+.tape {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 32px;
+  padding: 0 12px;
+  background: #050505;
+  border-bottom: 1px solid #222222;
+  font-size: 11px;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+.tape::-webkit-scrollbar {
+  display: none;
+}
+
+.sourceLabel {
+  color: #ff8c00;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  flex: 0 0 auto;
+}
+
+.tile {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-right: 16px;
+  border-right: 1px solid #1a1a1a;
+  flex: 0 0 auto;
+}
+
+.tile:last-of-type {
+  border-right: none;
+}
+
+.tileLabel {
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.tileValue {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.tileChange {
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.tileChange[data-direction="up"] {
+  color: #00c853;
+}
+
+.tileChange[data-direction="down"] {
+  color: #ff1744;
+}
+
+.tileChange[data-direction="flat"] {
+  color: #666666;
+}
+
+.metaBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex: 0 0 auto;
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.modeLabel {
+  padding: 2px 6px;
+  border: 1px solid #333333;
+  color: #cccccc;
+  font-weight: 700;
+}
+
+.modeLabel[data-mode="live"] {
+  color: #00c853;
+  border-color: #00c853;
+}
+
+.modeLabel[data-mode="static"] {
+  color: #ffd600;
+  border-color: #5a4800;
+}
+
+.metaSeparator {
+  color: #333333;
+}
+
+.metaText {
+  color: #888888;
+}
+
+.loadingLabel,
+.offlineLabel {
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.offlineLabel {
+  color: #ff1744;
+}

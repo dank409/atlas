@@ -1,0 +1,126 @@
+{
+  "_metadata": {
+    "source": "Curated country context for MAP workspace",
+    "downloadDate": "2026-04-15",
+    "recordCount": 9
+  },
+  "countries": [
+    {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "summary": "Largest OPEC producer (~10 mbpd) with ~3 mbpd of domestic refining, ~2.9 mbpd of effective Petroline bypass capacity, and systemically important Gulf export nodes at Ras Tanura and Ju'aymah.",
+      "keyGrades": ["Arab Super Light", "Arab Extra Light", "Arab Light", "Arab Medium", "Arab Heavy"],
+      "chokepointDependency": "Partial Hormuz hedge via East-West (Petroline) pipeline to Yanbu; still core to Gulf-system export risk.",
+      "chokepointScores": { "hormuz": 0.7, "babElMandeb": 0.05, "suez": 0.05 },
+      "bypassCapacityMbpd": 2.9,
+      "keyRefineriesBpd": 3100000,
+      "keyExportTerminals": ["Ras Tanura", "Ju'aymah", "Yanbu (Red Sea)", "Rabigh"],
+      "source": "EIA Country Analysis Brief — Saudi Arabia, plus Aramco annual report",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "summary": "ADNOC-dominant exporter (~4 mbpd production) built around Murban as the primary light-sour grade. ADCOP (Habshan–Fujairah) delivers ~1.5 mbpd nameplate bypass capacity to the Gulf of Oman, insulating part of the export stream from Hormuz closure.",
+      "keyGrades": ["Murban", "Upper Zakum", "Das Blend", "Umm Lulu"],
+      "chokepointDependency": "Has bypass via Habshan–Fujairah (ADCOP) but remains tightly coupled to Gulf logistics and pricing context.",
+      "chokepointScores": { "hormuz": 0.6, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 1.5,
+      "keyRefineriesBpd": 922000,
+      "keyExportTerminals": ["Jebel Dhanna", "Das Island", "Fujairah (bypass)", "Ruwais"],
+      "source": "EIA Country Analysis Brief — UAE, October 2024; ADNOC fact sheet",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "KW",
+      "name": "Kuwait",
+      "summary": "Major Gulf exporter (~2.7 mbpd production) centered on KNPC refining assets (Al Zour + legacy Mina Al-Ahmadi / Mina Abdulla / Shuaiba). Has no physical bypass and is entirely Hormuz-dependent for seaborne exports.",
+      "keyGrades": ["Kuwait Export", "Kuwait Super Light"],
+      "chokepointDependency": "Primarily Hormuz-dependent for seaborne exports; no bypass route exists.",
+      "chokepointScores": { "hormuz": 1.0, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 0,
+      "keyRefineriesBpd": 1446000,
+      "keyExportTerminals": ["Mina Al-Ahmadi", "Mina Abdulla", "Al Zour"],
+      "source": "EIA Country Analysis Brief — Kuwait; KPC annual report",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "BH",
+      "name": "Bahrain",
+      "summary": "Small producer (~0.2 mbpd) with Bapco's Sitra refinery as the dominant downstream asset. Directly pipeline-connected to Saudi Arabia's A-B pipeline from Khurais for feedstock, with all exports exiting the Gulf.",
+      "keyGrades": ["Dukhan", "Bahrain Blend"],
+      "chokepointDependency": "Connected into the Gulf system and sensitive to regional export route disruptions; no bypass.",
+      "chokepointScores": { "hormuz": 0.95, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 0,
+      "keyRefineriesBpd": 267000,
+      "keyExportTerminals": ["Sitra"],
+      "source": "EIA Country Analysis Brief — Bahrain; Bapco operator disclosures",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "IR",
+      "name": "Iran",
+      "summary": "OPEC founding member producing ~3.4 mbpd under sustained US secondary sanctions. Crude exits via Kharg Island (~90% of flow) and Bandar Abbas — both inside the Strait of Hormuz. No physical bypass exists; the long-mooted Goreh–Jask line has never reached meaningful throughput.",
+      "keyGrades": ["Iranian Heavy", "Iranian Light", "Forozan Blend", "Soroosh", "South Pars Condensate"],
+      "chokepointDependency": "Entirely Hormuz-locked; no bypass route. Kharg Island and Bandar Abbas terminals both sit inside the strait.",
+      "chokepointScores": { "hormuz": 1.0, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 0,
+      "keyRefineriesBpd": 2287000,
+      "keyExportTerminals": ["Kharg Island", "Bandar Abbas", "Assaluyeh (condensate)"],
+      "source": "EIA Country Analysis Brief — Iran; NIOC disclosures (figures approximated given sanctions opacity)",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "IQ",
+      "name": "Iraq",
+      "summary": "Second-largest OPEC producer (~4.3 mbpd) with southern production dominating: Basra Oil Terminal + Khor al-Amaya carry ~3.3 mbpd of Hormuz-facing exports. The Kirkuk–Ceyhan pipeline to Turkey's Mediterranean coast is a partial northern hedge at ~0.3 mbpd when political friction permits flow.",
+      "keyGrades": ["Basrah Light", "Basrah Medium", "Basrah Heavy", "Kirkuk"],
+      "chokepointDependency": "Southern exports via Basra Oil Terminal are Hormuz-locked; the Kirkuk–Ceyhan line is a partial Mediterranean hedge for northern barrels but capacity is constrained by political friction.",
+      "chokepointScores": { "hormuz": 0.85, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 0.3,
+      "keyRefineriesBpd": 486000,
+      "keyExportTerminals": ["Basra Oil Terminal (BOT)", "Khor al-Amaya", "Ceyhan (Turkey, via Kirkuk pipeline)"],
+      "source": "EIA Country Analysis Brief — Iraq, plus SOMO and trade-press estimates",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "QA",
+      "name": "Qatar",
+      "summary": "Global LNG leader (~110 mtpa) with ~0.6 mbpd of crude and condensate production. All Qatari hydrocarbon exports transit the Strait of Hormuz via Ras Laffan (LNG), Halul Island (offshore crude), and Mesaieed (onshore crude + products). No bypass exists.",
+      "keyGrades": ["Qatar Marine", "Qatar Land"],
+      "chokepointDependency": "All Qatari hydrocarbon exports transit Hormuz; no bypass exists. LNG and crude both exit via Ras Laffan and Halul Island terminals inside the strait.",
+      "chokepointScores": { "hormuz": 1.0, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 0,
+      "keyRefineriesBpd": 200000,
+      "keyExportTerminals": ["Ras Laffan", "Halul Island", "Mesaieed"],
+      "source": "EIA Country Analysis Brief — Qatar; QatarEnergy annual report",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "OM",
+      "name": "Oman",
+      "summary": "Non-OPEC producer (~1 mbpd) sitting physically east of the Strait of Hormuz. Mina al Fahal — the delivery point for the DME Oman futures contract and the global Asian-sour benchmark — is on the Gulf of Oman coast, so Omani crude never transits the chokepoint. In a Hormuz closure Oman becomes a natural hedge, not a casualty.",
+      "keyGrades": ["Oman Export"],
+      "chokepointDependency": "Oman is east of the Strait of Hormuz. Mina al Fahal export terminal sits directly on the Gulf of Oman, giving Oman a natural hedge — Omani crude never transits the chokepoint.",
+      "chokepointScores": { "hormuz": 0.15, "babElMandeb": 0, "suez": 0 },
+      "bypassCapacityMbpd": 1.0,
+      "keyRefineriesBpd": 306000,
+      "keyExportTerminals": ["Mina al Fahal", "Sohar", "Duqm"],
+      "source": "EIA Country Analysis Brief — Oman; PDO + OQ disclosures; DME contract specification",
+      "updated": "2026-04-15"
+    },
+    {
+      "code": "YE",
+      "name": "Yemen",
+      "summary": "Civil conflict has collapsed Yemeni production from a ~0.44 mbpd peak in the mid-2000s to effectively near-zero today, with Little Aden refinery running below capacity. Historically exported Marib Light via Ras Isa (Red Sea) and Masila via Ash-Shihr (Gulf of Aden) — neither transits Hormuz but both carry Bab el-Mandeb exposure.",
+      "keyGrades": ["Marib Light", "Masila"],
+      "chokepointDependency": "Yemeni exports historically exit via Ras Isa (Red Sea → Bab el-Mandeb) and Ash-Shihr (Gulf of Aden, outside Hormuz). Zero Hormuz dependency but meaningful Bab el-Mandeb exposure.",
+      "chokepointScores": { "hormuz": 0, "babElMandeb": 1.0, "suez": 0.4 },
+      "bypassCapacityMbpd": 0,
+      "keyRefineriesBpd": 150000,
+      "keyExportTerminals": ["Ras Isa (Red Sea)", "Ash-Shihr (Gulf of Aden)"],
+      "source": "EIA Country Analysis Brief — Yemen; figures approximated given conflict-era reporting opacity",
+      "updated": "2026-04-15"
+    }
+  ]
+}

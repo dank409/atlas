@@ -1,0 +1,116 @@
+.catalogList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.catalogCard,
+.catalogCardFocused {
+  border: 1px solid #222222;
+  background: #050505;
+  padding: 8px;
+}
+
+.catalogCardFocused {
+  border-color: #ff8c00;
+  background: #0a0a0a;
+}
+
+.cardHeader {
+  display: flex;
+  gap: 8px;
+}
+
+.datasetButton,
+.datasetButtonFocused {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  border: 1px solid #333333;
+  background: transparent;
+  color: #e0e0e0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 8px;
+  text-align: left;
+}
+
+.datasetButtonFocused {
+  border-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.datasetButton:disabled,
+.datasetButtonFocused:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.recordCount {
+  color: #666666;
+  font-size: 10px;
+}
+
+.toggleButton,
+.toggleButtonActive {
+  min-width: 52px;
+  border: 1px solid #555555;
+  background: transparent;
+  color: #cccccc;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 8px 6px;
+}
+
+.toggleButtonActive {
+  border-color: #ff8c00;
+  background: #ff8c00;
+  color: #000000;
+}
+
+.toggleButton:disabled,
+.toggleButtonActive:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.metaRow,
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+  color: #777777;
+  font-size: 10px;
+}
+
+.separator {
+  color: #444444;
+}
+
+.note {
+  margin-top: 6px;
+  color: #aaaaaa;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.statusAvailable,
+.statusCurating {
+  border: 1px solid #333333;
+  padding: 2px 6px;
+}
+
+.statusAvailable {
+  color: #00c853;
+}
+
+.statusCurating {
+  color: #ffd600;
+}

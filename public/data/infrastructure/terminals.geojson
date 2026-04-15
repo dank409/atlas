@@ -1,0 +1,1917 @@
+{
+  "type": "FeatureCollection",
+  "_metadata": {
+    "source": "Global Energy Monitor - Global Gas Infrastructure Tracker (LNG terminals)",
+    "downloadDate": "2025-09",
+    "recordCount": 68,
+    "license": "CC BY 4.0",
+    "sourceUrl": "https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/download-data/"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "terminal-t100001050400",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.66010727224264,
+          21.128048639580744
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100001050400",
+        "name": "AMNS Suvali LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "proposed",
+        "lat": 21.128048639580744,
+        "lon": 72.66010727224264,
+        "owner": "ArcelorMittal Nippon Steel India Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130685",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.355923,
+          29.64863
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130685",
+        "name": "Ain Sokhna FSRU",
+        "country": "EG",
+        "countryName": "Egypt",
+        "status": "operating",
+        "lat": 29.64863,
+        "lon": 32.355923,
+        "owner": "EGAS",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_mtpa": 25.28
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130671",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.3973631,
+          28.7183683
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130671",
+        "name": "Al Zour LNG Terminal",
+        "country": "KW",
+        "countryName": "Kuwait",
+        "status": "operating",
+        "lat": 28.7183683,
+        "lon": 48.3973631,
+        "owner": "Kuwait National Petroleum Co",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "KW",
+          "companyId": "kuwait-petroleum"
+        },
+        "capacity_mtpa": 22.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131158",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.4358751,
+          29.8955
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131158",
+        "name": "Al-Faw FSRU Terminal",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "status": "proposed",
+        "lat": 29.8955,
+        "lon": 48.4358751,
+        "owner": "unknown",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_mtpa": 7.67
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130591",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.9635687,
+          29.3752527
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130591",
+        "name": "Aqaba Jordan FSRU",
+        "country": "JO",
+        "countryName": "Jordan",
+        "status": "operating",
+        "lat": 29.3752527,
+        "lon": 34.9635687,
+        "owner": "Jordan Ministry of Energy and Mineral Resources",
+        "operator": "Energos",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "JO"
+        },
+        "capacity_mtpa": 3.8
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130451",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.8163583,
+          12.9331432
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130451",
+        "name": "BPCL Mangalore LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 12.9331432,
+        "lon": 74.8163583,
+        "owner": "New Mangalore Port Trust",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130581",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.7031432,
+          26.2104277
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130581",
+        "name": "Bahrain Hidd FLNG Terminal",
+        "country": "BH",
+        "countryName": "Bahrain",
+        "status": "operating",
+        "lat": 26.2104277,
+        "lon": 50.7031432,
+        "owner": "Bahrain LNG",
+        "operator": "Bahrain LNG",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "BH"
+        },
+        "capacity_mtpa": 6.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130800",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          70.749983,
+          20.72124
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130800",
+        "name": "Chhara LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 20.72124,
+        "lon": 70.749983,
+        "owner": "HPCL Shapoorji Energy Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131053",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.3869,
+          16.9524
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131053",
+        "name": "Crown Kakinada LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "proposed",
+        "lat": 16.9524,
+        "lon": 82.3869,
+        "owner": "Crown LNG India AS",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 7.2
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130429",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.16,
+          17.54
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130429",
+        "name": "Dabhol LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 17.54,
+        "lon": 73.16,
+        "owner": "Konkan LNG Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 12.5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130300",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          62.3396,
+          25.1106
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130300",
+        "name": "Daewoo Gas LNG Terminal",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "shelved",
+        "lat": 25.1106,
+        "lon": 62.3396,
+        "owner": "Daewoo Gas",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 2.5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130427",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.536,
+          21.6746
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130427",
+        "name": "Dahej LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 21.6746,
+        "lon": 72.536,
+        "owner": "Petronet LNG",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 22.5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130249",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          31.7473,
+          31.469
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130249",
+        "name": "Damietta SEGAS LNG Terminal",
+        "country": "EG",
+        "countryName": "Egypt",
+        "status": "operating",
+        "lat": 31.469,
+        "lon": 31.7473,
+        "owner": "Spanish Egyptian Gas Company SAE",
+        "operator": "SEGAS Services",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_mtpa": 10.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130601",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.875876,
+          25.1612628
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130601",
+        "name": "Das Island LNG Terminal",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "status": "operating",
+        "lat": 25.1612628,
+        "lon": 52.875876,
+        "owner": "BP PLC",
+        "operator": "Abu Dhabi Gas Liquefaction Company",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "AE"
+        },
+        "capacity_mtpa": 5.7
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130431",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          86.965264,
+          20.821109
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130431",
+        "name": "Dhamra LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 20.821109,
+        "lon": 86.965264,
+        "owner": "Dhamra LNG Terminal Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130437",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          87.55,
+          21.68
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130437",
+        "name": "Digha FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 21.68,
+        "lon": 87.55,
+        "owner": "H-Energy Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 3.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130250",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          30.3186466,
+          31.3490481
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130250",
+        "name": "Egyptian LNG Terminal",
+        "country": "EG",
+        "countryName": "Egypt",
+        "status": "operating",
+        "lat": 31.3490481,
+        "lon": 30.3186466,
+        "owner": "El Beheira Natural Gas Liquefaction Co",
+        "operator": "Egyptian LNG",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_mtpa": 7.2
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130884",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.334731,
+          24.769704
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130884",
+        "name": "Energas FSRU",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "proposed",
+        "lat": 24.769704,
+        "lon": 67.334731,
+        "owner": "Energas Terminal Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 5.75
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130298",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.3688752,
+          24.7907232
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130298",
+        "name": "Engro Elengy FSRU",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "operating",
+        "lat": 24.7907232,
+        "lon": 67.3688752,
+        "owner": "ETPL",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 10.7
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130611",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.333333,
+          24.766667
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130611",
+        "name": "Engro FSRU 2",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "cancelled",
+        "lat": 24.766667,
+        "lon": 67.333333,
+        "owner": "Engro Corp",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 4.5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130662",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.337425,
+          13.259407
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130662",
+        "name": "Ennore LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 13.259407,
+        "lon": 80.337425,
+        "owner": "Indian Oil Corp Ltd",
+        "operator": "Indian Oil LNG",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 10.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130602",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          56.375397,
+          25.319096
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130602",
+        "name": "Fujairah LNG Terminal",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "status": "cancelled",
+        "lat": 25.319096,
+        "lon": 56.375397,
+        "owner": "EmiratesLNG",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "AE"
+        },
+        "capacity_mtpa": 9.6
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130445",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.279,
+          16.975
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130445",
+        "name": "GAIL Kakinada FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 16.975,
+        "lon": 82.279,
+        "owner": "Andhra Pradesh Gas Distribution Corp Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131078",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.3119,
+          24.7718
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131078",
+        "name": "GEIL FSRU",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "cancelled",
+        "lat": 24.7718,
+        "lon": 67.3119,
+        "owner": "GEIL",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130433",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          83.233333,
+          17.616667
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130433",
+        "name": "Gangavaram LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "shelved",
+        "lat": 17.616667,
+        "lon": 83.233333,
+        "owner": "Petronet LNG",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 10.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130299",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.288333,
+          24.7749916
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130299",
+        "name": "GasPort FSRU",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "operating",
+        "lat": 24.7749916,
+        "lon": 67.288333,
+        "owner": "Pakistan GasPort Consortium Ltd",
+        "operator": "Pakistan GasPort Consortium",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130886",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.334731,
+          24.769704
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130886",
+        "name": "GasPort FSRU 2",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "proposed",
+        "lat": 24.769704,
+        "lon": 67.334731,
+        "owner": "Pakistan GasPort Consortium Ltd",
+        "operator": "Pakistan GasPort Consortium",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 0.69
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131145",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          84.966246,
+          19.301786
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131145",
+        "name": "Gopalpur LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "proposed",
+        "lat": 19.301786,
+        "lon": 84.966246,
+        "owner": "Petronet LNG",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130801",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.279,
+          16.975
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130801",
+        "name": "H-Energy Kakinada LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "shelved",
+        "lat": 16.975,
+        "lon": 82.279,
+        "owner": "East Coast Concessions Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100001061415",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.087662,
+          22.037345
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100001061415",
+        "name": "Haldia FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "proposed",
+        "lat": 22.037345,
+        "lon": 88.087662,
+        "owner": "Invenire Petrodyne Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 3.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130435",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.1,
+          22.033333
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130435",
+        "name": "Haldia LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 22.033333,
+        "lon": 88.1,
+        "owner": "Essar Ports",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130441",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.624,
+          21.098
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130441",
+        "name": "Hazira FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 21.098,
+        "lon": 72.624,
+        "owner": "Essar Global Holdings Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130439",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.624,
+          21.098
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130439",
+        "name": "Hazira LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 21.098,
+        "lon": 72.624,
+        "owner": "Shell Energy India Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 30.12
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130587",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.31,
+          29.235481
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130587",
+        "name": "Iran FLNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "cancelled",
+        "lat": 29.235481,
+        "lon": 50.31,
+        "owner": "Exmar NV",
+        "operator": null,
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 0.5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130583",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.6075,
+          27.476111
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130583",
+        "name": "Iran NIOC LNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "construction",
+        "lat": 27.476111,
+        "lon": 52.6075,
+        "owner": "Saving, Welfare, & Pension Funds of Iran Petroleum Industry",
+        "operator": "National Iranian Oil",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 12.3
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130457",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          71.3667,
+          20.8667
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130457",
+        "name": "Jafrabad FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "construction",
+        "lat": 20.8667,
+        "lon": 71.3667,
+        "owner": "Gujarat Maritime Board",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 10.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130443",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          73.2061395,
+          17.3040113
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130443",
+        "name": "Jaigarh LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "construction",
+        "lat": 17.3040113,
+        "lon": 73.2061395,
+        "owner": "AGP City Gas Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 14.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130603",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          55.0667,
+          25.03103
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130603",
+        "name": "Jebel Ali FLNG Terminal",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "status": "operating",
+        "lat": 25.03103,
+        "lon": 55.0667,
+        "owner": "DUSUP",
+        "operator": "DUSUP",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "AE"
+        },
+        "capacity_mtpa": 6.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130585",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.6075,
+          27.476111
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130585",
+        "name": "Kangan LNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "cancelled",
+        "lat": 27.476111,
+        "lon": 52.6075,
+        "owner": "MahTaab Parto Kangan LNG Co",
+        "operator": null,
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 2.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130803",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          79.8438253,
+          10.911092
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130803",
+        "name": "Karaikal FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "proposed",
+        "lat": 10.911092,
+        "lon": 79.8438253,
+        "owner": "Atlantic Gulf and Pacific Co",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 3.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130453",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.135,
+          14.82
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130453",
+        "name": "Karwar FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 14.82,
+        "lon": 74.135,
+        "owner": "Fox Petroleum",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 7.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100001048168",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          47.883483,
+          30.195356
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100001048168",
+        "name": "Khor Al-Zubair FSRU",
+        "country": "IQ",
+        "countryName": "Iraq",
+        "status": "proposed",
+        "lat": 30.195356,
+        "lon": 47.883483,
+        "owner": null,
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IQ"
+        },
+        "capacity_mtpa": 3.83
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130447",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          76.2261,
+          9.9787
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130447",
+        "name": "Kochi LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 9.9787,
+        "lon": 76.2261,
+        "owner": "Petronet LNG",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130449",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          82.279,
+          16.975
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130449",
+        "name": "Krishna Godavari FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 16.975,
+        "lon": 82.279,
+        "owner": "Krishna Godavari LNG Terminal Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 4.7
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130852",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          80.115081,
+          14.253863
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130852",
+        "name": "Krishnapatnam FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 14.253863,
+        "lon": 80.115081,
+        "owner": "Bharat Gas Resources Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130802",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          88.002516,
+          21.918011
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130802",
+        "name": "Kukrahati LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 21.918011,
+        "lon": 88.002516,
+        "owner": "Bengal Concessions Pvt Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 3.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131054",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          74.81257,
+          12.926024
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131054",
+        "name": "LNG Alliance Mangalore FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "shelved",
+        "lat": 12.926024,
+        "lon": 74.81257,
+        "owner": "LNG Alliance Pte Ltd",
+        "operator": "LNG Alliance",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 4.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131104",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          66.977824,
+          24.834334
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131104",
+        "name": "LNG Easy Floating LNG Terminal",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "shelved",
+        "lat": 24.834334,
+        "lon": 66.977824,
+        "owner": "LNG Easy",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 1.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130297",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.333333,
+          24.766667
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130297",
+        "name": "Mashal LNG Terminal",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "cancelled",
+        "lat": 24.766667,
+        "lon": 67.333333,
+        "owner": "4Gas BV",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 3.5
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130592",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.1609009,
+          29.0713773
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130592",
+        "name": "Mina Al-Ahmadi LNG Terminal",
+        "country": "KW",
+        "countryName": "Kuwait",
+        "status": "idled",
+        "lat": 29.0713773,
+        "lon": 48.1609009,
+        "owner": "Kuwait National Petroleum Co",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "KW",
+          "companyId": "kuwait-petroleum"
+        },
+        "capacity_mtpa": 9.6
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130962",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          72.850767,
+          18.958761
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130962",
+        "name": "Mumbai FSRU",
+        "country": "IN",
+        "countryName": "India",
+        "status": "cancelled",
+        "lat": 18.958761,
+        "lon": 72.850767,
+        "owner": "SP Armada Clean Energy Ventures",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130455",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          69.6668651,
+          22.7374322
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130455",
+        "name": "Mundra LNG Terminal",
+        "country": "IN",
+        "countryName": "India",
+        "status": "operating",
+        "lat": 22.7374322,
+        "lon": 69.6668651,
+        "owner": "S.B. Adani Family Trust",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "IN"
+        },
+        "capacity_mtpa": 5.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130584",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.067964,
+          26.619125
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130584",
+        "name": "North Pars LNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "cancelled",
+        "lat": 26.619125,
+        "lon": 52.067964,
+        "owner": "QatarEnergy",
+        "operator": null,
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 32.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130593",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          59.40748,
+          22.6586
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130593",
+        "name": "Oman Qalhat LNG Terminal",
+        "country": "OM",
+        "countryName": "Oman",
+        "status": "operating",
+        "lat": 22.6586,
+        "lon": 59.40748,
+        "owner": "ITOCHU Corp",
+        "operator": "Oman LNG",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "OM"
+        },
+        "capacity_mtpa": 15.2
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131103",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          66.972761,
+          24.812582
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131103",
+        "name": "Pakistan State Oil LNG Terminal",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "shelved",
+        "lat": 24.812582,
+        "lon": 66.972761,
+        "owner": "Pakistan State Oil Co Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130586",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.6075,
+          27.476111
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130586",
+        "name": "Persian NIOC LNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "cancelled",
+        "lat": 27.476111,
+        "lon": 52.6075,
+        "owner": "National Iranian Gas Export Co",
+        "operator": null,
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 16.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130817",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.5277023,
+          25.9186901
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130817",
+        "name": "Qatar North Field LNG Terminal",
+        "country": "QA",
+        "countryName": "Qatar",
+        "status": "construction",
+        "lat": 25.9186901,
+        "lon": 51.5277023,
+        "owner": "Eni SpA",
+        "operator": "QatarEnergy LNG",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "QA"
+        },
+        "capacity_mtpa": 64.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130594",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.557708,
+          25.908412
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130594",
+        "name": "QatarEnergy LNG (N)",
+        "country": "QA",
+        "countryName": "Qatar",
+        "status": "operating",
+        "lat": 25.908412,
+        "lon": 51.557708,
+        "owner": "QatarEnergy",
+        "operator": "QatarEnergy LNG",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "QA"
+        },
+        "capacity_mtpa": 40.8
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130598",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          51.54435,
+          25.891475
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130598",
+        "name": "QatarEnergy LNG (S)",
+        "country": "QA",
+        "countryName": "Qatar",
+        "status": "operating",
+        "lat": 25.891475,
+        "lon": 51.54435,
+        "owner": "QatarEnergy",
+        "operator": "QatarEnergy LNG",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "QA"
+        },
+        "capacity_mtpa": 36.3
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130627",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          55.752355,
+          26.951056
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130627",
+        "name": "Qeshm LNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "cancelled",
+        "lat": 26.951056,
+        "lon": 55.752355,
+        "owner": "Tak-Iranian Gas Co",
+        "operator": null,
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 3.45
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130604",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.7389,
+          24.1483
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130604",
+        "name": "Ruwais FSRU",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "status": "operating",
+        "lat": 24.1483,
+        "lon": 52.7389,
+        "owner": "Abu Dhabi National Oil Co",
+        "operator": "Excelerate Energy",
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "AE",
+          "companyId": "adnoc"
+        },
+        "capacity_mtpa": 3.8
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000131105",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.65226,
+          24.13523
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000131105",
+        "name": "Ruwais LNG Terminal",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "status": "construction",
+        "lat": 24.13523,
+        "lon": 52.65226,
+        "owner": "TotalEnergies SE",
+        "operator": "Abu Dhabi Gas Liquefaction Company",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "AE"
+        },
+        "capacity_mtpa": 9.6
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130972",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          55.387511,
+          25.379099
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130972",
+        "name": "Sharjah FSRU",
+        "country": "AE",
+        "countryName": "United Arab Emirates",
+        "status": "cancelled",
+        "lat": 25.379099,
+        "lon": 55.387511,
+        "owner": "Sharjah National Oil Corp",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "AE"
+        },
+        "capacity_mtpa": 7.67
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100001048176",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.963801,
+          29.376271
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100001048176",
+        "name": "Sheikh Sabah LNG Terminal",
+        "country": "JO",
+        "countryName": "Jordan",
+        "status": "proposed",
+        "lat": 29.376271,
+        "lon": 34.963801,
+        "owner": null,
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "JO"
+        },
+        "capacity_mtpa": 5.48
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130916",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          52.067964,
+          26.619125
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130916",
+        "name": "South Pars LNG Terminal",
+        "country": "IR",
+        "countryName": "Iran",
+        "status": "cancelled",
+        "lat": 26.619125,
+        "lon": 52.067964,
+        "owner": "National Iranian Oil Co",
+        "operator": null,
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "IR"
+        },
+        "capacity_mtpa": 10.0
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130686",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          32.3403948,
+          29.6025441
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130686",
+        "name": "Sumed BW FSRU",
+        "country": "EG",
+        "countryName": "Egypt",
+        "status": "retired",
+        "lat": 29.6025441,
+        "lon": 32.3403948,
+        "owner": "EGAS",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "EG"
+        },
+        "capacity_mtpa": 5.7
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130887",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          67.21,
+          24.72
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130887",
+        "name": "Tabeer LNG Terminal",
+        "country": "PK",
+        "countryName": "Pakistan",
+        "status": "proposed",
+        "lat": 24.72,
+        "lon": 67.21,
+        "owner": "Tabeer Energy Marketing (Pvt) Ltd",
+        "operator": null,
+        "terminalType": "import_terminal",
+        "terminalRole": "import",
+        "linkedContext": {
+          "countryCode": "PK"
+        },
+        "capacity_mtpa": 5.7
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "terminal-t100000130605",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          48.18115,
+          13.9812
+        ]
+      },
+      "properties": {
+        "id": "terminal-t100000130605",
+        "name": "Yemen LNG Terminal",
+        "country": "YE",
+        "countryName": "Yemen",
+        "status": "mothballed",
+        "lat": 13.9812,
+        "lon": 48.18115,
+        "owner": "Yemen LNG Company Ltd",
+        "operator": "Yemen LNG Company",
+        "terminalType": "export_terminal",
+        "terminalRole": "export",
+        "linkedContext": {
+          "countryCode": "YE"
+        },
+        "capacity_mtpa": 6.7
+      }
+    }
+  ]
+}
