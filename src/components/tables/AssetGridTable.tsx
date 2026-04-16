@@ -189,7 +189,7 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
       textColumn("name", "NAME", (row) => row.name, undefined, "44%"),
       textColumn("country", "COUNTRY", (row) => row.countryName, undefined, "20%"),
       numericColumn("capacity", "CAPACITY", (row) => getRefineryCapacity(row), (row) => formatCapacityCompact(getRefineryCapacity(row)), "18%"),
-      textColumn("status", "STATUS", (row) => row.status.toUpperCase(), (row) => formatStatusLabel(row.status).toUpperCase(), "18%")
+      statusColumn("status", "STATUS", (row) => row.status.toUpperCase(), "18%")
     ];
   }
 
@@ -198,7 +198,7 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
       textColumn("name", "NAME", (row) => row.name, undefined, "44%"),
       textColumn("country", "COUNTRY", (row) => row.countryName, undefined, "20%"),
       numericColumn("capacity", "CAPACITY", (row) => getPipelineCapacity(row), (row) => row.primaryMetric, "18%"),
-      textColumn("status", "STATUS", (row) => row.status.toUpperCase(), (row) => formatStatusLabel(row.status).toUpperCase(), "18%")
+      statusColumn("status", "STATUS", (row) => row.status.toUpperCase(), "18%")
     ];
   }
 
@@ -209,7 +209,7 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
       numericColumn("production", "PRODUCTION", (row) => getFieldProduction(row), (row) =>
         getFieldProduction(row) ? formatCapacityCompact(getFieldProduction(row)) : "--", "18%"
       ),
-      textColumn("status", "STATUS", (row) => row.status.toUpperCase(), (row) => formatStatusLabel(row.status).toUpperCase(), "18%")
+      statusColumn("status", "STATUS", (row) => row.status.toUpperCase(), "18%")
     ];
   }
 
@@ -220,7 +220,7 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
       numericColumn("capacity", "CAPACITY", (row) => getTerminalCapacity(row), (row) =>
         getTerminalMtpa(row) ? formatMtpa(getTerminalMtpa(row)) : row.primaryMetric, "18%"
       ),
-      textColumn("status", "STATUS", (row) => row.status.toUpperCase(), (row) => formatStatusLabel(row.status).toUpperCase(), "18%")
+      statusColumn("status", "STATUS", (row) => row.status.toUpperCase(), "18%")
     ];
   }
 
@@ -229,7 +229,7 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
       textColumn("name", "NAME", (row) => row.name, undefined, "44%"),
       textColumn("country", "COUNTRY", (row) => row.countryName, undefined, "20%"),
       numericColumn("transit", "TRANSIT", (row) => getChokepointTransit(row), (row) => row.primaryMetric, "18%"),
-      textColumn("status", "STATUS", (row) => row.status.toUpperCase(), (row) => formatStatusLabel(row.status).toUpperCase(), "18%")
+      statusColumn("status", "STATUS", (row) => row.status.toUpperCase(), "18%")
     ];
   }
 
@@ -239,6 +239,52 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
     textColumn("country", "COUNTRY", (row) => row.countryName, undefined, "18%"),
     textColumn("metric", "METRIC", (row) => row.primaryMetric, undefined, "24%")
   ];
+}
+
+const STATUS_PILL_COLORS: Record<string, string> = {
+  operational: "#00C853",
+  operating: "#00C853",
+  construction: "#FF8C00",
+  in_development: "#FF8C00",
+  proposed: "#FF8C00",
+  planned_startup: "#FF8C00",
+  planned_maintenance: "#FFD600",
+  unplanned_incident: "#FF1744",
+  mothballed: "#FF1744",
+  idle: "#FF1744",
+  idled: "#FF1744",
+  decommissioning: "#FF1744",
+  retired: "#FF1744",
+  cancelled: "#FF1744",
+  shelved: "#FF1744"
+};
+
+function statusColumn(
+  id: string,
+  label: string,
+  accessor: (row: AssetGridRow) => string,
+  width?: string
+): ColumnDef<AssetGridRow> {
+  return {
+    accessorFn: accessor,
+    cell: ({ row }) => {
+      const raw = row.original.status;
+      const display = formatStatusLabel(raw).toUpperCase();
+      const color = STATUS_PILL_COLORS[raw] ?? "#666666";
+      return (
+        <span
+          className={styles.statusPill}
+          style={{ borderColor: color, color }}
+          title={display}
+        >
+          {display}
+        </span>
+      );
+    },
+    header: label,
+    id,
+    meta: { label, width }
+  };
 }
 
 function textColumn(
