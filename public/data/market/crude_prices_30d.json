@@ -1,5 +1,5 @@
 {
-  "source": "EIA v2 petroleum/pri/spt (refreshed 2026-04-15)",
+  "source": "EIA v2 petroleum/pri/spt (refreshed 2026-04-16)",
   "mode": "STATIC_SNAPSHOT",
   "asOf": "2026-04-13",
   "note": "Refreshed nightly by scripts/update_market_data.ts. Mode stays STATIC_SNAPSHOT because the client still reads from this file — the freshness comes from daily cron overwrites, not from a live client fetch.",
