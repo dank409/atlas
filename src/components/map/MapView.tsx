@@ -9,6 +9,7 @@ import { createLineSourceDefinition, createPointSourceDefinition, type GeoJsonPa
 import type { DatasetId, InfrastructureAsset } from "../../types/Infrastructure";
 import type { OutageEvent } from "../../types/outageEvent";
 import type { FirmsSnapshot } from "../../types/firms";
+import type { MapDisplaySettings } from "../../types/mapDisplaySettings";
 import { getAssetTypeLabel } from "../../utils/infrastructure";
 import {
   FEEDSTOCK_RISK_DEPENDENCY_THRESHOLD,
@@ -61,6 +62,7 @@ interface MapViewProps {
   scenarioState?: ScenarioVisualState;
   selectedAssetId: string | null;
   visibleAssets: InfrastructureAsset[];
+  mapDisplaySettings?: MapDisplaySettings;
 }
 
 const ASSET_INTERACTIVE_LAYER_IDS = [
@@ -97,7 +99,8 @@ export function MapView({
   firmsSnapshot = null,
   scenarioState = IDLE_SCENARIO_VISUAL_STATE,
   selectedAssetId,
-  visibleAssets
+  visibleAssets,
+  mapDisplaySettings
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -483,6 +486,47 @@ export function MapView({
       padding: 80
     });
   }, [selectedAssetId]);
+
+  // Map display settings: point size, size-by, color-by, labels.
+  // Uses setPaintProperty / setLayoutProperty for live updates without
+  // re-adding layers. Label layers are created lazily on first toggle.
+  useEffect(() => {
+    const map = mapRef.current;
+
+    if (!map || !map.isStyleLoaded() || !mapDisplaySettings) {
+      return;
+    }
+
+    const scale = mapDisplaySettings.pointSize / 3;
+
+    // --- Point Size + Size By ---
+    if (map.getLayer("refineries-layer")) {
+      setPaint(map, "refineries-layer", "circle-radius",
+        buildRadiusExpression("capacity_bpd", mapDisplaySettings.sizeBy, scale, 10000, 4, 15));
+    }
+    if (map.getLayer("fields-layer")) {
+      const fieldProp = mapDisplaySettings.sizeBy === "reserves" ? "reserves_mmboe" : "production_bpd";
+      const fieldMax = mapDisplaySettings.sizeBy === "reserves" ? 5000 : 1000000;
+      setPaint(map, "fields-layer", "circle-radius",
+        buildRadiusExpression(fieldProp, mapDisplaySettings.sizeBy, scale, 1, 3, 9, fieldMax));
+    }
+    if (map.getLayer("terminals-layer")) {
+      setPaint(map, "terminals-layer", "circle-radius",
+        buildRadiusExpression("capacity_mtpa", mapDisplaySettings.sizeBy, scale, 1, 4, 13, 50));
+    }
+
+    // --- Color By ---
+    applyColorBySettings(map, mapDisplaySettings.colorBy);
+
+    // --- Labels toggle ---
+    ensureAssetLabelLayers(map);
+    const labelVisibility = mapDisplaySettings.showLabels ? "visible" : "none";
+    for (const layerId of ASSET_LABEL_LAYER_IDS) {
+      if (map.getLayer(layerId)) {
+        map.setLayoutProperty(layerId, "visibility", labelVisibility);
+      }
+    }
+  }, [mapDisplaySettings]);
 
   if (hasError) {
     return <div className={styles.emptyState}>MAP DATA SOURCES OFFLINE</div>;
@@ -1581,6 +1625,12 @@ function getBasemapStyleUrl(mode: BasemapMode): string {
 // Basemap mode picker is a 3-segment toggle — all modes visible at
 // once so the user can see which mode they are in and jump directly
 // to any other mode without cycling through an intermediate state.
+const ASSET_LABEL_LAYER_IDS = [
+  "refineries-label-layer",
+  "fields-label-layer",
+  "terminals-label-layer"
+] as const;
+
 export const BASEMAP_MODE_OPTIONS: readonly BasemapMode[] = ["dark", "satellite", "firms"] as const;
 
 export const BASEMAP_MODE_LABELS: Record<BasemapMode, string> = {
@@ -1663,5 +1713,133 @@ function applyBasemapModeStyling(map: mapboxgl.Map, mode: BasemapMode) {
   if (map.getLayer("firms-alert-layer")) {
     map.setLayoutProperty("firms-alert-layer", "icon-size", 1);
     map.setPaintProperty("firms-alert-layer", "icon-opacity", 1);
+  }
+}
+
+// --- Map Display Settings helpers ---
+
+import type { ColorByOption, SizeByOption } from "../../types/mapDisplaySettings";
+
+/* setPaintProperty's generic overloads are too strict for dynamic
+   expressions built at runtime. This thin wrapper avoids per-call
+   casts while keeping the rest of the file type-safe. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function setPaint(map: mapboxgl.Map, layer: string, prop: any, value: any) {
+  map.setPaintProperty(layer, prop, value);
+}
+
+function buildRadiusExpression(
+  property: string,
+  sizeBy: SizeByOption,
+  scale: number,
+  divisor: number,
+  minRadius: number,
+  maxRadius: number,
+  maxValue?: number
+): number | unknown[] {
+  const sMin = Math.round(minRadius * scale * 10) / 10;
+  const sMax = Math.round(maxRadius * scale * 10) / 10;
+
+  if (sizeBy === "uniform") {
+    return Math.round(((sMin + sMax) / 2) * 10) / 10;
+  }
+
+  // For capacity-style sqrt scaling (refineries default)
+  if (!maxValue) {
+    return [
+      "interpolate",
+      ["linear"],
+      ["sqrt", ["/", ["coalesce", ["get", property], 0], divisor]],
+      0,
+      sMin,
+      12,
+      sMax
+    ];
+  }
+
+  // For linear interpolation with a known max (fields, terminals)
+  return [
+    "interpolate",
+    ["linear"],
+    ["coalesce", ["get", property], 0],
+    0,
+    sMin,
+    maxValue,
+    sMax
+  ];
+}
+
+function applyColorBySettings(map: mapboxgl.Map, colorBy: ColorByOption) {
+  const statusColorExpr = [
+    "match", ["get", "status"],
+    "operational", "#00C853",
+    "operating", "#00C853",
+    "planned_startup", "#FF8C00",
+    "planned_maintenance", "#FFD600",
+    "unplanned_incident", "#FF1744",
+    "construction", "#2196F3",
+    "unknown", "#666666",
+    "#555555"
+  ];
+  const hydrocarbonColorExpr = [
+    "match", ["get", "fieldType"],
+    "oil", "#FF8C00",
+    "gas", "#64B5F6",
+    "mixed", "#E0E0E0",
+    "condensate", "#FFCC80",
+    "#999999"
+  ];
+
+  if (map.getLayer("refineries-layer")) {
+    setPaint(
+      map, "refineries-layer", "circle-color",
+      colorBy === "status" ? statusColorExpr : "#FF8C00"
+    );
+  }
+  if (map.getLayer("fields-layer")) {
+    setPaint(
+      map, "fields-layer", "circle-color",
+      colorBy === "hydrocarbon" ? hydrocarbonColorExpr : statusColorExpr
+    );
+  }
+  if (map.getLayer("terminals-layer")) {
+    const termExpr = colorBy === "hydrocarbon"
+      ? ["match", ["get", "terminalRole"], "export", "#FF8C00", "import", "#64B5F6", "#E0E0E0"]
+      : statusColorExpr;
+    setPaint(map, "terminals-layer", "circle-color", termExpr);
+  }
+}
+
+function ensureAssetLabelLayers(map: mapboxgl.Map) {
+  const labelConfig: Array<{ id: string; source: string }> = [
+    { id: "refineries-label-layer", source: "refineries" },
+    { id: "fields-label-layer", source: "fields" },
+    { id: "terminals-label-layer", source: "terminals" }
+  ];
+
+  for (const { id, source } of labelConfig) {
+    if (map.getLayer(id) || !map.getSource(source)) {
+      continue;
+    }
+
+    map.addLayer({
+      id,
+      layout: {
+        "text-field": ["get", "name"],
+        "text-font": ["DIN Pro Medium", "Arial Unicode MS Regular"],
+        "text-offset": [0, 1.2],
+        "text-anchor": "top",
+        "text-size": 10,
+        "text-max-width": 12,
+        visibility: "none"
+      },
+      paint: {
+        "text-color": "#E0E0E0",
+        "text-halo-color": "#000000",
+        "text-halo-width": 1
+      },
+      source,
+      type: "symbol"
+    });
   }
 }

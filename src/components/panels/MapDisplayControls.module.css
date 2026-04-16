@@ -1,0 +1,96 @@
+.controlGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.controlRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.controlLabel {
+  color: #666666;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider {
+  appearance: none;
+  background: #222222;
+  flex: 1;
+  height: 4px;
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  background: #ff8c00;
+  border: none;
+  cursor: pointer;
+  height: 12px;
+  width: 12px;
+}
+
+.slider::-moz-range-thumb {
+  background: #ff8c00;
+  border: none;
+  cursor: pointer;
+  height: 12px;
+  width: 12px;
+}
+
+.sliderValue {
+  color: #ff8c00;
+  font-size: 11px;
+  min-width: 12px;
+  text-align: right;
+}
+
+.selectInput {
+  appearance: none;
+  background: #000000;
+  border: 1px solid #333333;
+  color: #e0e0e0;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 6px 8px;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.selectInput:focus {
+  border-color: #ff8c00;
+  outline: none;
+}
+
+.toggleButton,
+.toggleButtonActive {
+  background: transparent;
+  border: 1px solid #555555;
+  color: #cccccc;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.toggleButtonActive {
+  background: #ff8c00;
+  border-color: #ff8c00;
+  color: #000000;
+}

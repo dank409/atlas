@@ -5,6 +5,7 @@ import type { AssetGridRow, DatasetId, InfrastructureAsset } from "../../types/I
 import type { OutageEvent } from "../../types/outageEvent";
 import type { FirmsSnapshot } from "../../types/firms";
 import type { ScenarioVisualState } from "../../utils/scenarioMapStyles";
+import type { MapDisplaySettings } from "../../types/mapDisplaySettings";
 import styles from "./MapWorkspaceMain.module.css";
 
 // MapView is imported statically here. App.tsx code-splits this whole
@@ -40,6 +41,7 @@ interface MapWorkspaceMainProps {
   scenarioState: ScenarioVisualState;
   selectedAssetId: string | null;
   visibleAssets: InfrastructureAsset[];
+  mapDisplaySettings?: MapDisplaySettings;
 }
 
 export function MapWorkspaceMain({
@@ -59,7 +61,8 @@ export function MapWorkspaceMain({
   firmsSnapshot = null,
   scenarioState,
   selectedAssetId,
-  visibleAssets
+  visibleAssets,
+  mapDisplaySettings
 }: MapWorkspaceMainProps) {
   const workspaceClassName = [
     styles.workspace,
@@ -83,6 +86,7 @@ export function MapWorkspaceMain({
           scenarioState={scenarioState}
           selectedAssetId={selectedAssetId}
           visibleAssets={visibleAssets}
+          mapDisplaySettings={mapDisplaySettings}
         />
       </div>
       <Panel

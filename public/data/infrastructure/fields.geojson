@@ -3,7 +3,7 @@
   "_metadata": {
     "source": "Global Energy Monitor - Global Oil and Gas Extraction Tracker",
     "downloadDate": "2026-03",
-    "recordCount": 479,
+    "recordCount": 439,
     "license": "CC BY 4.0",
     "sourceUrl": "https://globalenergymonitor.org/projects/global-oil-gas-extraction-tracker/download-data/"
   },
@@ -434,33 +434,6 @@
           "countryCode": "IR"
         },
         "production_bpd": 185000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313008",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          73.1768,
-          33.1537
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313008",
-        "name": "Adhi Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.1537,
-        "lon": 73.1768,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 11516
       }
     },
     {
@@ -1336,33 +1309,6 @@
         "linkedContext": {
           "countryCode": "OM"
         }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000304958",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          72.93,
-          21.595
-        ]
-      },
-      "properties": {
-        "id": "field-l100000304958",
-        "name": "Ankleshwar Oil and Gas Field (Gujarat, India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Cambay",
-        "fieldType": "mixed",
-        "lat": 21.595,
-        "lon": 72.93,
-        "linkedContext": {
-          "countryCode": "IN"
-        },
-        "production_bpd": 18419
       }
     },
     {
@@ -2406,33 +2352,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000313011",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          67.455,
-          29.7467
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313011",
-        "name": "Bolan East Oil Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Mari Petroleum",
-        "basin": null,
-        "fieldType": "oil",
-        "lat": 29.7467,
-        "lon": 67.455,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 427
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312272",
       "geometry": {
         "type": "Point",
@@ -2674,86 +2593,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321271",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          82.207,
-          16.282
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321271",
-        "name": "Cluster 1 Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "in_development",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Krishna-Godavari",
-        "fieldType": "mixed",
-        "lat": 16.282,
-        "lon": 82.207,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000321269",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          82.207,
-          16.282
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321269",
-        "name": "Cluster 2 Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Krishna-Godavari",
-        "fieldType": "mixed",
-        "lat": 16.282,
-        "lon": 82.207,
-        "linkedContext": {
-          "countryCode": "IN"
-        },
-        "production_bpd": 25000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000321265",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.076,
-          18.711
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321265",
-        "name": "D-1 Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Mumbai",
-        "fieldType": "mixed",
-        "lat": 18.711,
-        "lon": 71.076,
-        "linkedContext": {
-          "countryCode": "IN"
-        },
-        "production_bpd": 30000
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312188",
       "geometry": {
         "type": "Point",
@@ -2860,32 +2699,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321309",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          72.6253,
-          20.3947
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321309",
-        "name": "Daman Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Mumbai Offshore",
-        "fieldType": "gas",
-        "lat": 20.3947,
-        "lon": 72.6253,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000319112",
       "geometry": {
         "type": "Point",
@@ -2964,32 +2777,6 @@
           "countryCode": "IR"
         },
         "production_bpd": 160000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000321264",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          82.531,
-          17.054
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321264",
-        "name": "Deen Dayal West Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Krishna-Godavari",
-        "fieldType": "mixed",
-        "lat": 17.054,
-        "lon": 82.531,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
       }
     },
     {
@@ -3893,33 +3680,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321308",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          94.692,
-          26.769
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321308",
-        "name": "Geleki Oil and Gas Field (Assam, India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "ONGC",
-        "basin": "Assam-Arakan",
-        "fieldType": "mixed",
-        "lat": 26.769,
-        "lon": 94.692,
-        "linkedContext": {
-          "countryCode": "IN"
-        },
-        "production_bpd": 7808
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312519",
       "geometry": {
         "type": "Point",
@@ -4501,32 +4261,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321235",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          94.217,
-          26.2099
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321235",
-        "name": "Hazarigaon Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "in_development",
-        "operator": "Vedanta",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 26.2099,
-        "lon": 94.217,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000317438",
       "geometry": {
         "type": "Point",
@@ -4998,33 +4732,6 @@
         "linkedContext": {
           "countryCode": "EG"
         }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313021",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.2407,
-          28.2238
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313021",
-        "name": "Kandhkot Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 28.2238,
-        "lon": 69.2407,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 3
       }
     },
     {
@@ -5745,33 +5452,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321253",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          79.56,
-          11.075
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321253",
-        "name": "Kuthalam Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Cauvery",
-        "fieldType": "mixed",
-        "lat": 11.075,
-        "lon": 79.56,
-        "linkedContext": {
-          "countryCode": "IN"
-        },
-        "production_bpd": 301
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312242",
       "geometry": {
         "type": "Point",
@@ -5821,33 +5501,6 @@
         "linkedContext": {
           "countryCode": "IR"
         }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313024",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.314,
-          26.9642
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313024",
-        "name": "Latif Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "United Energy Pakistan",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 26.9642,
-        "lon": 69.314,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 31
       }
     },
     {
@@ -6250,87 +5903,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000313026",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.1996,
-          33.2909
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313026",
-        "name": "Makori Deep Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.2909,
-        "lon": 71.1996,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 1461
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313027",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.3094,
-          33.266
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313027",
-        "name": "Makori East Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.266,
-        "lon": 71.3094,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 13495
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313025",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.1996,
-          33.2909
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313025",
-        "name": "Makori Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "mothballed",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.2909,
-        "lon": 71.1996,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 1
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312214",
       "geometry": {
         "type": "Point",
@@ -6380,33 +5952,6 @@
         "linkedContext": {
           "countryCode": "SY"
         }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313028",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.1931,
-          33.3863
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313028",
-        "name": "Mamikhel Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.3863,
-        "lon": 71.1931,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 13495
       }
     },
     {
@@ -6519,33 +6064,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000313029",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          70.8479,
-          33.2617
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313029",
-        "name": "Manzalai Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.2617,
-        "lon": 70.8479,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 330
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312535",
       "geometry": {
         "type": "Point",
@@ -6569,60 +6087,6 @@
           "countryCode": "OM"
         },
         "production_bpd": 7000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313030",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.0669,
-          33.4315
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313030",
-        "name": "Maramzai Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.4315,
-        "lon": 71.0669,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 5426
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313031",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          70.9644,
-          33.3469
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313031",
-        "name": "Mardankhel Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.3469,
-        "lon": 70.9644,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 3328
       }
     },
     {
@@ -6870,60 +6334,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000313033",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          67.5008,
-          27.6537
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313033",
-        "name": "Mazarani Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 27.6537,
-        "lon": 67.5008,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 7
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313034",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.6116,
-          33.2222
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313034",
-        "name": "Mela Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Oil and Gas Development Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.2222,
-        "lon": 71.6116,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 1455
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000317441",
       "geometry": {
         "type": "Point",
@@ -7105,32 +6515,6 @@
         "lon": 30.7772,
         "linkedContext": {
           "countryCode": "EG"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313100",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          83.9559,
-          16.529
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313100",
-        "name": "MJ Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Reliance Industries",
-        "basin": "Krishna-Godavari Basin",
-        "fieldType": "gas",
-        "lat": 16.529,
-        "lon": 83.9559,
-        "linkedContext": {
-          "countryCode": "IN"
         }
       }
     },
@@ -7396,33 +6780,6 @@
           "countryCode": "IR"
         },
         "production_bpd": 26000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313037",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.2589,
-          33.2023
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313037",
-        "name": "Nashpa Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Oil and Gas Development Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.2023,
-        "lon": 71.2589,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 18270
       }
     },
     {
@@ -8222,33 +7579,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000313038",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.3561,
-          28.0832
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313038",
-        "name": "Qadirpur Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Oil and Gas Development Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 28.0832,
-        "lon": 69.3561,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 245
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000320618",
       "geometry": {
         "type": "Point",
@@ -8647,32 +7977,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321266",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.786,
-          25.266
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321266",
-        "name": "Raageshwari Deep Gas Oil and Gas Field (Rajasthan, India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Vedanta",
-        "basin": "Rajasthan Barmer",
-        "fieldType": "mixed",
-        "lat": 25.266,
-        "lon": 71.786,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312185",
       "geometry": {
         "type": "Point",
@@ -8991,32 +8295,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000321311",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          72.396,
-          18.313
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321311",
-        "name": "Ratna Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Mumbai",
-        "fieldType": "mixed",
-        "lat": 18.313,
-        "lon": 72.396,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312412",
       "geometry": {
         "type": "Point",
@@ -9118,59 +8396,6 @@
         "linkedContext": {
           "countryCode": "EG"
         }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313098",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          82.618,
-          16.177
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313098",
-        "name": "R Cluster Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Reliance Industries",
-        "basin": "Krishna-Godavari Basin",
-        "fieldType": "gas",
-        "lat": 16.177,
-        "lon": 82.618,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313040",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          67.2756,
-          26.5638
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313040",
-        "name": "Rehman Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Polish Oil and Gas",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 26.5638,
-        "lon": 67.2756,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 3
       }
     },
     {
@@ -9277,33 +8502,6 @@
         "linkedContext": {
           "countryCode": "JO"
         }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313041",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          67.2808,
-          26.6506
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313041",
-        "name": "Rizq Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Polish Oil and Gas",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 26.6506,
-        "lon": 67.2808,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 1
       }
     },
     {
@@ -10156,86 +9354,6 @@
           "countryCode": "IR"
         },
         "production_bpd": 70000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313044",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          68.6136,
-          25.9514
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313044",
-        "name": "Shahdadpur East Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "gas",
-        "lat": 25.9514,
-        "lon": 68.6136,
-        "linkedContext": {
-          "countryCode": "PK"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313043",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          68.5875,
-          25.9367
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313043",
-        "name": "Shahdadpur Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 25.9367,
-        "lon": 68.5875,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 961
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313045",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          68.5334,
-          25.95
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313045",
-        "name": "Shahdadpur West Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 25.95,
-        "lon": 68.5334,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 211
       }
     },
     {
@@ -11273,32 +10391,6 @@
     },
     {
       "type": "Feature",
-      "id": "field-l100000318252",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          73.6586,
-          26.4613
-        ]
-      },
-      "properties": {
-        "id": "field-l100000318252",
-        "name": "SSG/SSF Oil and Gas Asset (Rajasthan, India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Focus Energy",
-        "basin": "Rajasthan",
-        "fieldType": "mixed",
-        "lat": 26.4613,
-        "lon": 73.6586,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
       "id": "field-l100000312010",
       "geometry": {
         "type": "Point",
@@ -11322,33 +10414,6 @@
           "countryCode": "IQ"
         },
         "production_bpd": 30000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313047",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          69.2047,
-          28.6345
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313047",
-        "name": "Sui Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "Pakistan Petroleum",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 28.6345,
-        "lon": 69.2047,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 42
       }
     },
     {
@@ -11427,32 +10492,6 @@
         "lon": 53.0917,
         "linkedContext": {
           "countryCode": "IR"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313049",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          68.9388,
-          26.8289
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313049",
-        "name": "Tajjal Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "United Energy Pakistan",
-        "basin": null,
-        "fieldType": "gas",
-        "lat": 26.8289,
-        "lon": 68.9388,
-        "linkedContext": {
-          "countryCode": "PK"
         }
       }
     },
@@ -11692,60 +10731,6 @@
           "countryCode": "SY"
         },
         "production_bpd": 2000
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313050",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.7576,
-          33.5315
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313050",
-        "name": "Tolanj Gas Field Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.5315,
-        "lon": 71.7576,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 7
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000313051",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.606,
-          33.5182
-        ]
-      },
-      "properties": {
-        "id": "field-l100000313051",
-        "name": "Tolanj West Gas Field Oil and Gas Field (Pakistan)",
-        "country": "PK",
-        "countryName": "Pakistan",
-        "status": "operating",
-        "operator": "MOL Pakistan Oil and Gas Company",
-        "basin": null,
-        "fieldType": "mixed",
-        "lat": 33.5182,
-        "lon": 71.606,
-        "linkedContext": {
-          "countryCode": "PK"
-        },
-        "production_bpd": 11
       }
     },
     {
@@ -12119,58 +11104,6 @@
         "lon": 53.0494,
         "linkedContext": {
           "countryCode": "IR"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000318025",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          71.8554,
-          19.0558
-        ]
-      },
-      "properties": {
-        "id": "field-l100000318025",
-        "name": "Vasai Oil and Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Mumbai Offshore",
-        "fieldType": "mixed",
-        "lat": 19.0558,
-        "lon": 71.8554,
-        "linkedContext": {
-          "countryCode": "IN"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "id": "field-l100000321297",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          82.2678,
-          16.2521
-        ]
-      },
-      "properties": {
-        "id": "field-l100000321297",
-        "name": "Vasistha Gas Field (India)",
-        "country": "IN",
-        "countryName": "India",
-        "status": "operating",
-        "operator": "Oil and Natural Gas Corporation",
-        "basin": "Krishna Godavari",
-        "fieldType": "gas",
-        "lat": 16.2521,
-        "lon": 82.2678,
-        "linkedContext": {
-          "countryCode": "IN"
         }
       }
     },

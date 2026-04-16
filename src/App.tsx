@@ -6,6 +6,7 @@ import { Panel } from "./components/common/Panel";
 import { SidebarTabs, type SidebarTabOption } from "./components/common/SidebarTabs";
 import { DatasetCatalogPanel } from "./components/panels/DatasetCatalogPanel";
 import { MapContentPanel } from "./components/panels/MapContentPanel";
+import { MapDisplayControls } from "./components/panels/MapDisplayControls";
 import { ContextPanelStack } from "./components/panels/ContextPanelStack";
 import { ClearSelectionBar } from "./components/panels/ClearSelectionBar";
 import { AssetGridTable } from "./components/tables/AssetGridTable";
@@ -43,6 +44,7 @@ import { useBrentHistorical } from "./hooks/useBrentHistorical";
 import { useFirms } from "./hooks/useFirms";
 import type { TerminalActivityEntry } from "./types/Activity";
 import type { FirmsWindowHours } from "./types/firms";
+import { DEFAULT_MAP_DISPLAY_SETTINGS, type MapDisplaySettings } from "./types/mapDisplaySettings";
 import type {
   CompanyProfile,
   CountryProfile,
@@ -141,6 +143,7 @@ export function App() {
   const [firmsWindowHours, setFirmsWindowHours] = useState<FirmsWindowHours>(72);
   const [firmsConfidenceThreshold, setFirmsConfidenceThreshold] = useState<number>(80);
   const [isFirmsLayerEnabled, setIsFirmsLayerEnabled] = useState<boolean>(true);
+  const [mapDisplaySettings, setMapDisplaySettings] = useState<MapDisplaySettings>(DEFAULT_MAP_DISPLAY_SETTINGS);
   const firms = useFirms({
     assets,
     baselineByAssetId: firmsBaselineByAssetId,
@@ -733,6 +736,7 @@ export function App() {
           scenarioState={scenarioVisualState}
           selectedAssetId={workspaceState.selectedAssetId}
           visibleAssets={visibleAssets}
+          mapDisplaySettings={mapDisplaySettings}
         />
       </Suspense>
     );
@@ -826,14 +830,20 @@ export function App() {
               />
             </>
           ) : (
-            <MapContentPanel
-              activeDatasetIds={workspaceState.activeDatasetIds}
-              assets={assets}
-              filtersByDataset={workspaceState.filtersByDataset}
-              focusedDataset={focusedDataset}
-              onFilterChange={handleFilterChange}
-              onToggleDataset={handleToggleDataset}
-            />
+            <>
+              <MapContentPanel
+                activeDatasetIds={workspaceState.activeDatasetIds}
+                assets={assets}
+                filtersByDataset={workspaceState.filtersByDataset}
+                focusedDataset={focusedDataset}
+                onFilterChange={handleFilterChange}
+                onToggleDataset={handleToggleDataset}
+              />
+              <MapDisplayControls
+                settings={mapDisplaySettings}
+                onChange={setMapDisplaySettings}
+              />
+            </>
           )}
         </div>
       }
