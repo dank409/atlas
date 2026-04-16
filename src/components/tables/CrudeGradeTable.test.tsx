@@ -43,8 +43,9 @@ const basrahHeavy: CrudeGrade = {
 };
 
 const snapshot: CrudeGradeSnapshot = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-15",
+  cadence: "CURATED",
+  classification: "CURATED",
   source: "Curated",
   grades: [arabLight, murban, basrahHeavy]
 };
@@ -142,7 +143,7 @@ describe("CrudeGradeTable", () => {
   it("surfaces the snapshot mode and source attribution in the meta row", () => {
     render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
 
-    expect(screen.getByText("STATIC_SNAPSHOT")).toBeInTheDocument();
+    expect(screen.getByText("CURATED CURATED")).toBeInTheDocument();
     expect(screen.getByText(/SOURCE: Curated/)).toBeInTheDocument();
     expect(screen.getByText("GRADES: 3")).toBeInTheDocument();
     expect(screen.getByText("PRODUCERS: 3")).toBeInTheDocument();

@@ -160,7 +160,8 @@ describe("loadStaticFirmsDetections", () => {
       confidenceThreshold: 80
     });
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.detections).toHaveLength(1);
     expect(snapshot.detections[0].id).toBe("hit-1");
   });
@@ -209,7 +210,8 @@ describe("loadFirmsDetections", () => {
       confidenceThreshold: 80
     });
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.detections).toHaveLength(1);
   });
 
@@ -253,7 +255,8 @@ describe("loadFirmsDetections", () => {
       confidenceThreshold: 80
     });
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.source).toBe("static-fallback");
   });
 });

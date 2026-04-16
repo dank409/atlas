@@ -3,8 +3,7 @@ import type { OutageEvent, OutageEventSnapshot } from "../types/outageEvent";
 // Curated outage-event log. Static-only — there is no live feed and the
 // curator replaces this file as new events land. Follows the same shape
 // as iceSettlements.ts / refineryFeedstock.ts: fetch, sanitise, throw
-// when empty, force mode = STATIC_SNAPSHOT on the return value per
-// CLAUDE.md Data Integrity Rule #6.
+// when empty, and return explicit curated metadata.
 
 const STATIC_SNAPSHOT_PATH = "/data/events/outages.json";
 
@@ -40,7 +39,8 @@ export async function loadOutageEventSnapshot(): Promise<OutageEventSnapshot> {
 
   return {
     asOf: payload.asOf,
-    mode: "STATIC_SNAPSHOT",
+    cadence: "CURATED",
+    classification: "CURATED",
     source: payload.source,
     note: payload.note,
     events

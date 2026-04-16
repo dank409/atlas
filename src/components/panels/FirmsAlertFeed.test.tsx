@@ -81,8 +81,9 @@ const normalAnomaly: FirmsFacilityAnomaly = {
 };
 
 const snapshot: FirmsSnapshot = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-14T12:00:00Z",
+  cadence: "NRT_SATELLITE",
+  classification: "OBSERVED",
   windowHours: 72,
   confidenceThreshold: 80,
   detections: [],
@@ -174,13 +175,13 @@ describe("FirmsAlertFeed", () => {
     expect(screen.getByText(/NO ELEVATED OR ALERT/)).toBeInTheDocument();
   });
 
-  it("renders the STATIC_SNAPSHOT mode badge with its data attribute", () => {
+  it("renders the NRT SATELLITE provenance badge with its data attribute", () => {
     const { container } = render(
       <FirmsAlertFeed snapshot={snapshot} isLoading={false} error={null} />
     );
-    const badge = container.querySelector('[data-mode="STATIC_SNAPSHOT"]');
+    const badge = container.querySelector('[data-mode="NRT_SATELLITE"]');
     expect(badge).not.toBeNull();
-    expect(badge?.textContent?.trim()).toBe("STATIC");
+    expect(badge?.textContent?.trim()).toBe("OBSERVED NRT SATELLITE");
   });
 
   it("keeps the jeddah reference available to prevent dead-code lint", () => {

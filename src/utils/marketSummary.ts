@@ -1,20 +1,20 @@
+import {
+  formatCadenceLabel,
+  formatClassificationLabel,
+  type DataCadence,
+  type DataClassification
+} from "../types/DataSource";
 import type {
   BenchmarkQuote,
+  BrentTimespreadSnapshot,
+  BrentWtiSpreadHistory,
   CrudeMarketSummary,
   CrudePriceSnapshot,
   DmeOmanSnapshot,
   MurbanSnapshot,
   PricePoint
 } from "../types/Market";
-
-// Builds the derived market summary (latest Brent / WTI / DME Oman /
-// Murban quotes + spreads) that the market tape and situation room
-// surfaces consume. Extracted from the hook so it can be unit-tested
-// without pulling React in.
-//
-// WTI is still computed because EIA ships it for free alongside Brent,
-// but it is no longer surfaced on the primary market tape — see
-// eiaPrices.ts header comment for the "why" (Middle East framing).
+import type { IceBrentSettlementSnapshot } from "../types/IceSettlements";
 
 interface BuildSummaryArgs {
   crude: CrudePriceSnapshot;
@@ -25,41 +25,22 @@ interface BuildSummaryArgs {
 export function buildCrudeMarketSummary(
   argsOrSnapshot: CrudePriceSnapshot | BuildSummaryArgs
 ): CrudeMarketSummary | null {
-  // Back-compat: accept a bare CrudePriceSnapshot so existing callers
-  // that only pass Brent/WTI keep working until they upgrade.
   const args: BuildSummaryArgs =
-    "crude" in argsOrSnapshot
-      ? argsOrSnapshot
-      : { crude: argsOrSnapshot };
+    "crude" in argsOrSnapshot ? argsOrSnapshot : { crude: argsOrSnapshot };
 
-  const brentQuote = buildBenchmarkQuote("BRENT", args.crude.series.brent);
-  const wtiQuote = buildBenchmarkQuote("WTI", args.crude.series.wti);
+  const brentQuote = buildBenchmarkQuote("BRENT", args.crude.series.brent, args.crude);
+  const wtiQuote = buildBenchmarkQuote("WTI", args.crude.series.wti, args.crude);
 
   if (!brentQuote || !wtiQuote) {
     return null;
   }
 
   const dmeOmanQuote = args.dmeOman
-    ? buildBenchmarkQuote("DME_OMAN", args.dmeOman.series.dmeOman)
+    ? buildBenchmarkQuote("DME_OMAN", args.dmeOman.series.dmeOman, args.dmeOman)
     : null;
   const murbanQuote = args.murban
-    ? buildBenchmarkQuote("MURBAN", args.murban.series.murban)
+    ? buildBenchmarkQuote("MURBAN", args.murban.series.murban, args.murban)
     : null;
-
-  // Brent–Oman spread is the east-of-Suez arbitrage signal: positive
-  // means Oman is trading at a discount and Gulf barrels are incentivised
-  // west. Undefined when DME Oman is unavailable — callers must handle.
-  const brentDmeOmanSpread =
-    dmeOmanQuote !== null
-      ? round2(brentQuote.value - dmeOmanQuote.value)
-      : undefined;
-
-  // Tape mode badge: the primary Gulf benchmark (DME Oman) wins if it
-  // loaded. Brent may be LIVE via EIA, but the tape is framed around
-  // Gulf crude — so if DME Oman is STATIC (which it currently always
-  // is), the tape should say STATIC. Falls back to crude mode only when
-  // the Gulf leg failed to load.
-  const mode = args.dmeOman?.mode ?? args.crude.mode;
 
   return {
     asOf: args.crude.asOf || brentQuote.asOf,
@@ -67,16 +48,74 @@ export function buildCrudeMarketSummary(
     wti: wtiQuote,
     dmeOman: dmeOmanQuote ?? undefined,
     murban: murbanQuote ?? undefined,
-    spread: round2(wtiQuote.value - brentQuote.value),
-    brentDmeOmanSpread,
-    mode,
+    brentWtiSpread: round2(brentQuote.value - wtiQuote.value),
+    brentDmeOmanSpread:
+      dmeOmanQuote !== null ? round2(brentQuote.value - dmeOmanQuote.value) : undefined,
+    cadence: args.crude.cadence,
+    classification: args.crude.classification,
     source: args.crude.source
+  };
+}
+
+export function buildBrentWtiSpreadHistory(
+  snapshot: CrudePriceSnapshot
+): BrentWtiSpreadHistory {
+  const brentByDate = new Map(snapshot.series.brent.map((point) => [point.date, point.value]));
+  const spreadSeries = snapshot.series.wti
+    .filter((point) => brentByDate.has(point.date))
+    .map((point) => ({
+      date: point.date,
+      value: round2((brentByDate.get(point.date) ?? 0) - point.value)
+    }));
+
+  return {
+    asOf: snapshot.asOf,
+    cadence: snapshot.cadence,
+    classification: snapshot.classification,
+    note: snapshot.note,
+    source: snapshot.source,
+    series: { brentWti: spreadSeries }
+  };
+}
+
+export function buildBrentTimespreadSnapshot(
+  snapshot: IceBrentSettlementSnapshot
+): BrentTimespreadSnapshot | null {
+  const m1 = snapshot.strip.find((point) => point.month === 1)?.priceUsd;
+  const m2 = snapshot.strip.find((point) => point.month === 2)?.priceUsd;
+  const m6 = snapshot.strip.find((point) => point.month === 6)?.priceUsd;
+  const m12 = snapshot.strip.find((point) => point.month === 12)?.priceUsd;
+
+  if (
+    typeof m1 !== "number" ||
+    typeof m2 !== "number" ||
+    typeof m6 !== "number" ||
+    typeof m12 !== "number"
+  ) {
+    return null;
+  }
+
+  const promptSpread = round2(m1 - m2);
+  const m1MinusM12 = round2(m1 - m12);
+
+  return {
+    asOf: snapshot.asOf,
+    cadence: snapshot.cadence,
+    classification: snapshot.classification,
+    note: snapshot.note,
+    source: snapshot.source,
+    m1MinusM2: promptSpread,
+    m1MinusM6: round2(m1 - m6),
+    m1MinusM12,
+    structure:
+      m1MinusM12 > 0.15 ? "BACKWARDATION" : m1MinusM12 < -0.15 ? "CONTANGO" : "FLAT"
   };
 }
 
 function buildBenchmarkQuote(
   name: BenchmarkQuote["name"],
-  series: PricePoint[]
+  series: PricePoint[],
+  snapshot: Pick<CrudePriceSnapshot, "cadence" | "classification" | "source">
 ): BenchmarkQuote | null {
   if (!series.length) {
     return null;
@@ -85,14 +124,18 @@ function buildBenchmarkQuote(
   const latest = series[series.length - 1];
   const previous = series.length > 1 ? series[series.length - 2] : null;
   const change = previous ? round2(latest.value - previous.value) : 0;
-  const changePct = previous && previous.value !== 0 ? round2((change / previous.value) * 100) : 0;
+  const changePct =
+    previous && previous.value !== 0 ? round2((change / previous.value) * 100) : 0;
 
   return {
     name,
+    asOf: latest.date,
+    cadence: snapshot.cadence,
+    classification: snapshot.classification,
+    source: snapshot.source,
     value: round2(latest.value),
     change,
-    changePct,
-    asOf: latest.date
+    changePct
   };
 }
 
@@ -117,4 +160,18 @@ export function formatChangePct(changePct: number) {
 export function formatSpread(spread: number) {
   const sign = spread > 0 ? "+" : "";
   return `${sign}${spread.toFixed(2)}`;
+}
+
+export function formatDataStamp(options: {
+  asOf: string;
+  cadence: DataCadence;
+  classification: DataClassification;
+  source: string;
+}) {
+  return [
+    formatClassificationLabel(options.classification),
+    formatCadenceLabel(options.cadence),
+    options.source,
+    options.asOf
+  ].join(" | ");
 }

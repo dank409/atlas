@@ -1,3 +1,9 @@
+import {
+  formatCadenceLabel,
+  formatClassificationLabel,
+  type DataCadence,
+  type DataClassification
+} from "../../types/DataSource";
 import { useMemo } from "react";
 import type { FuturesCurveResult, FuturesCurvePoint, FuturesCurveAlpha } from "../../utils/futuresCurveModel";
 import { computeFuturesCurveAlpha } from "../../utils/futuresCurveModel";
@@ -14,8 +20,8 @@ interface FuturesCurveChartProps {
    * two-line layout.
    */
   observedStrip?: IceBrentStripPoint[] | null;
-  /** Mode badge for the observed strip — LIVE or STATIC_SNAPSHOT. */
-  observedMode?: "LIVE" | "STATIC_SNAPSHOT" | null;
+  observedCadence?: DataCadence | null;
+  observedClassification?: DataClassification | null;
   /** As-of date of the observed strip for the source line. */
   observedAsOf?: string | null;
   /**
@@ -43,7 +49,8 @@ interface FuturesCurveChartProps {
 export function FuturesCurveChart({
   result,
   observedStrip = null,
-  observedMode = null,
+  observedCadence = null,
+  observedClassification = null,
   observedAsOf = null,
   isCompact = false
 }: FuturesCurveChartProps) {
@@ -82,12 +89,12 @@ export function FuturesCurveChart({
             >
               {regimeLabel}
             </span>
-            {observedMode ? (
+            {observedCadence && observedClassification ? (
               <span
                 className={styles.regimeBadge}
-                data-tone={observedMode === "LIVE" ? "green" : "amber"}
+                data-tone={observedClassification === "OBSERVED" ? "green" : "amber"}
               >
-                {observedMode === "LIVE" ? "LIVE" : "STATIC"}
+                {formatClassificationLabel(observedClassification)} {formatCadenceLabel(observedCadence)}
               </span>
             ) : null}
           </div>
@@ -139,10 +146,10 @@ export function FuturesCurveChart({
       >
         {/* Faint horizontal gridlines aligned with y-axis ticks. Terminal
             grammar: #1a1a1a is just visible against #000. */}
-        {ticks.map((tick) => (
+        {ticks.map((tick, index) => (
           <line
             className={styles.gridLine}
-            key={`grid-${tick.value}`}
+            key={`grid-${index}-${tick.value}`}
             x1={plot.paddingLeft}
             y1={tick.y}
             x2={plot.width - plot.paddingRight}
@@ -151,10 +158,10 @@ export function FuturesCurveChart({
         ))}
 
         {/* Y-axis tick labels ($/bbl). */}
-        {ticks.map((tick) => (
+        {ticks.map((tick, index) => (
           <text
             className={styles.axisLabel}
-            key={`tick-${tick.value}`}
+            key={`tick-${index}-${tick.value}`}
             x={plot.paddingLeft - 6}
             y={tick.y + 3}
             textAnchor="end"

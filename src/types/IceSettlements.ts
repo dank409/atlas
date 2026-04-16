@@ -1,4 +1,4 @@
-import type { PriceSeriesMode } from "./Market";
+import type { DataSourceMetadata } from "./DataSource";
 
 /**
  * ICE Futures Europe Brent forward strip — M1 through M12 end-of-day
@@ -19,15 +19,7 @@ export interface IceBrentStripPoint {
   priceUsd: number;
 }
 
-export interface IceBrentSettlementSnapshot {
-  /** ISO date of the settlement session the strip represents. */
-  asOf: string;
-  /** LIVE (scraped / API) vs STATIC_SNAPSHOT (checked-in fallback). */
-  mode: PriceSeriesMode;
+export interface IceBrentSettlementSnapshot extends DataSourceMetadata {
   /** Ordered M1..M12 strip, always length === 12. */
   strip: IceBrentStripPoint[];
-  /** Human-readable data provenance. */
-  source: string;
-  /** Optional free-form note for the snapshot JSON. */
-  note?: string;
 }

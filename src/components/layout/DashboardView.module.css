@@ -39,13 +39,15 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
   grid-template-rows:
-    minmax(0, 1.3fr)
-    minmax(0, 1.3fr)
-    minmax(0, 1fr);
+    minmax(0, 1.2fr)
+    minmax(0, 1.2fr)
+    minmax(0, 1fr)
+    minmax(0, 0.9fr);
   grid-template-areas:
     "bypass  curve   curve"
     "hist    hist    alert"
-    "choke   market  firms";
+    "choke   market  inventory"
+    "firms   firms   firms";
   gap: 8px;
   min-height: 0;
   flex: 1 1 auto;
@@ -83,6 +85,12 @@
 
 .slotMarket {
   grid-area: market;
+  min-height: 0;
+  min-width: 0;
+}
+
+.slotInventory {
+  grid-area: inventory;
   min-height: 0;
   min-width: 0;
 }

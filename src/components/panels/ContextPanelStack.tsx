@@ -1,5 +1,17 @@
 import { Panel } from "../common/Panel";
 import {
+  formatCadenceLabel,
+  formatClassificationLabel
+} from "../../types/DataSource";
+import type { ExposureRegistryEntry } from "../../types/Exposure";
+import type {
+  CompanyProfile,
+  CountryProfile,
+  InfrastructureAsset
+} from "../../types/Infrastructure";
+import type { FirmsSnapshot } from "../../types/firms";
+import type { OutageEventSnapshot } from "../../types/outageEvent";
+import {
   formatCapacity,
   formatLengthKm,
   formatMtpa,
@@ -7,315 +19,415 @@ import {
   formatTransitVolume
 } from "../../utils/formatters";
 import { getAssetTypeLabel } from "../../utils/infrastructure";
-import type {
-  CompanyProfile,
-  CountryProfile,
-  InfrastructureAsset
-} from "../../types/Infrastructure";
 import styles from "./ContextPanelStack.module.css";
 
 interface ContextPanelStackProps {
   companiesById: Record<string, CompanyProfile>;
   countriesByCode: Record<string, CountryProfile>;
-  /**
-   * Click-to-expand drill-down handlers. Mirror the same pattern the
-   * asset/grade/dashboard tables use: when provided, the OPERATOR
-   * and COUNTRY context sections become clickable cards that open
-   * full-screen overlays. Omitted → the sections render inert, so
-   * the component stays renderable in isolation (ContextPanelStack
-   * unit tests do not provide these props).
-   */
+  exposureByTargetId?: Record<string, ExposureRegistryEntry>;
+  firmsSnapshot?: FirmsSnapshot | null;
   onInspectCompany?: (company: CompanyProfile) => void;
   onInspectCountry?: (country: CountryProfile) => void;
+  outageEvents?: OutageEventSnapshot | null;
   selectedAsset: InfrastructureAsset | null;
 }
 
 export function ContextPanelStack({
-  companiesById,
   countriesByCode,
-  onInspectCompany,
-  onInspectCountry,
+  exposureByTargetId = {},
+  firmsSnapshot = null,
+  outageEvents = null,
   selectedAsset
 }: ContextPanelStackProps) {
-  const company = selectedAsset?.linkedContext?.companyId
-    ? companiesById[selectedAsset.linkedContext.companyId] ?? null
-    : null;
   const countryCode = selectedAsset?.linkedContext?.countryCode ?? selectedAsset?.country;
   const country = countryCode ? countriesByCode[countryCode] ?? null : null;
-
-  // Covered-country list is derived live from the profile registry so that
-  // authoring a new country JSON entry automatically updates this placeholder
-  // — no hardcoded list to drift.
-  const coveredCountryNames = Object.values(countriesByCode)
-    .map((entry) => entry.name.toUpperCase())
-    .sort((a, b) => a.localeCompare(b));
-
-  const isOperatorUnmapped = Boolean(selectedAsset) && !company;
-  const isCountryUnmapped = Boolean(selectedAsset) && !country;
+  const exposureEntry = selectedAsset ? exposureByTargetId[selectedAsset.id] ?? null : null;
+  const countryExposure = country ? exposureByTargetId[country.code] ?? null : null;
+  const matchedAnomaly = selectedAsset
+    ? firmsSnapshot?.anomalies.find((anomaly) => anomaly.asset.id === selectedAsset.id) ?? null
+    : null;
+  const linkedOutages = selectedAsset
+    ? (outageEvents?.events ?? []).filter(
+        (event) =>
+          event.assetId === selectedAsset.id || (!event.assetId && event.country === selectedAsset.countryName)
+      )
+    : [];
 
   return (
     <div className={styles.stack}>
       <Panel
-        title="ASSET DETAIL"
+        title="STRUCTURAL PROFILE"
         badge={selectedAsset ? getAssetTypeLabel(selectedAsset) : "NONE"}
       >
-        {selectedAsset ? <AssetDetail asset={selectedAsset} /> : <Placeholder text="SELECT AN ASSET FROM THE MAP OR GRID." />}
-      </Panel>
-      <Panel
-        title="OPERATOR CONTEXT"
-        badge={isOperatorUnmapped ? "COMING SOON" : company && onInspectCompany ? "EXPAND ▸" : undefined}
-      >
-        {company ? (
-          <CompanyContext company={company} onInspect={onInspectCompany} />
-        ) : selectedAsset ? (
-          <UnmappedOperatorNotice asset={selectedAsset} />
+        {selectedAsset ? (
+          <Section rows={buildStructuralRows(selectedAsset)} footer="CADENCE: QUARTERLY" />
         ) : (
-          <Placeholder text="SELECT AN ASSET TO SEE OPERATOR CONTEXT." />
+          <Placeholder text="SELECT AN ASSET FROM THE MAP OR GRID." />
         )}
       </Panel>
+
       <Panel
-        title="COUNTRY CONTEXT"
-        badge={isCountryUnmapped ? "COMING SOON" : country && onInspectCountry ? "EXPAND ▸" : undefined}
+        title="OBSERVED SIGNALS"
+        badge={
+          firmsSnapshot
+            ? `${formatClassificationLabel(firmsSnapshot.classification)} ${formatCadenceLabel(firmsSnapshot.cadence)}`
+            : "NO DATA"
+        }
       >
-        {country ? (
-          <CountryContext country={country} onInspect={onInspectCountry} />
-        ) : selectedAsset ? (
-          <UnmappedCountryNotice
-            asset={selectedAsset}
-            coveredCountryNames={coveredCountryNames}
+        {selectedAsset ? (
+          <ObservedSignalsSection
+            anomaly={matchedAnomaly}
+            linkedOutages={linkedOutages}
           />
         ) : (
-          <Placeholder text="SELECT AN ASSET TO SEE COUNTRY CONTEXT." />
+          <Placeholder text="SELECT AN ASSET TO SEE FIRMS AND OUTAGE SIGNALS." />
+        )}
+      </Panel>
+
+      <Panel
+        title="CURATED DEPENDENCY"
+        badge={country ? country.code : "UNSCORED"}
+      >
+        {selectedAsset ? (
+          <CuratedDependencySection
+            asset={selectedAsset}
+            country={country}
+            countryExposure={countryExposure}
+            exposureEntry={exposureEntry}
+          />
+        ) : (
+          <Placeholder text="SELECT AN ASSET TO SEE ROUTE AND CHOKEPOINT DEPENDENCY." />
+        )}
+      </Panel>
+
+      <Panel
+        title="MODELED EXPOSURE"
+        badge={exposureBadge(exposureEntry)}
+      >
+        {selectedAsset ? (
+          <ModeledExposureSection
+            asset={selectedAsset}
+            countriesByCode={countriesByCode}
+            exposureEntry={exposureEntry}
+          />
+        ) : (
+          <Placeholder text="SELECT AN ASSET TO SEE MODELED EXPOSURE." />
         )}
       </Panel>
     </div>
   );
 }
 
-function UnmappedOperatorNotice({ asset }: { asset: InfrastructureAsset }) {
-  const operatorLabel = "operator" in asset && asset.operator ? asset.operator : "--";
+function ObservedSignalsSection({
+  anomaly,
+  linkedOutages
+}: {
+  anomaly: FirmsSnapshot["anomalies"][number] | null;
+  linkedOutages: OutageEventSnapshot["events"];
+}) {
+  if (!anomaly && linkedOutages.length === 0) {
+    return <Placeholder text="NO OBSERVED SIGNALS IN WINDOW." />;
+  }
 
   return (
     <div className={styles.section}>
-      <div className={styles.primaryName}>UNMAPPED OPERATOR</div>
-      <div className={styles.paragraph}>
-        Profile forthcoming. This operator is not yet in the curated company
-        registry.
-      </div>
-      <div className={styles.rows}>
-        <div className={styles.row}>
-          <span className={styles.label}>Country</span>
-          <span className={styles.value}>{asset.countryName}</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.label}>Last known operator</span>
-          <span className={styles.value}>{operatorLabel}</span>
-        </div>
-      </div>
+      {anomaly ? (
+        <>
+          <div className={styles.primaryName}>FIRMS ANOMALY</div>
+          <div className={styles.rows}>
+            <Row label="Severity" value={anomaly.severity} />
+            <Row label="Window count" value={String(anomaly.windowCount)} />
+            <Row label="Latest detection" value={anomaly.latestDetectionAt} />
+          </div>
+        </>
+      ) : null}
+
+      {linkedOutages.length > 0 ? (
+        <>
+          <div className={styles.primaryName}>LINKED OUTAGES</div>
+          <div className={styles.rows}>
+            {linkedOutages.slice(0, 3).map((event) => (
+              <Row
+                key={event.id}
+                label={event.date}
+                value={`${event.name} (${event.severity})`}
+              />
+            ))}
+          </div>
+        </>
+      ) : null}
     </div>
   );
 }
 
-function UnmappedCountryNotice({
+function CuratedDependencySection({
   asset,
-  coveredCountryNames
+  country,
+  countryExposure,
+  exposureEntry
 }: {
   asset: InfrastructureAsset;
-  coveredCountryNames: string[];
+  country: CountryProfile | null;
+  countryExposure: ExposureRegistryEntry | null;
+  exposureEntry: ExposureRegistryEntry | null;
 }) {
-  const coverageLabel =
-    coveredCountryNames.length > 0 ? coveredCountryNames.join(" · ") : "--";
+  const rows = [
+    {
+      label: "Country dependency",
+      value: country?.chokepointDependency ?? "UNSCORED"
+    },
+    {
+      label: "Primary chokepoint",
+      value: readExposureValue(exposureEntry, "primaryChokepointLabel")
+    },
+    {
+      label: "Export route",
+      value: readExposureValue(exposureEntry, "exportRoute")
+    },
+    {
+      label: "Bypass capacity",
+      value:
+        typeof countryExposure?.targetKind === "string" &&
+        countryExposure.targetKind === "country" &&
+        typeof countryExposure.bypassCapacityMbpd === "number"
+          ? `${countryExposure.bypassCapacityMbpd.toFixed(1)} MBPD`
+          : "UNSCORED"
+    }
+  ];
+
+  if (asset.assetKind === "refinery") {
+    rows.push({
+      label: "Dependency score",
+      value:
+        typeof asset.hormuzDependency === "number"
+          ? `${Math.round(asset.hormuzDependency * 100)}%`
+          : "UNSCORED"
+    });
+  }
+
+  return <Section rows={rows} />;
+}
+
+function ModeledExposureSection({
+  asset,
+  countriesByCode,
+  exposureEntry
+}: {
+  asset: InfrastructureAsset;
+  countriesByCode: Record<string, CountryProfile>;
+  exposureEntry: ExposureRegistryEntry | null;
+}) {
+  if (!exposureEntry) {
+    return <Placeholder text="UNSCORED. NO CURATED EXPOSURE ENTRY." />;
+  }
+
+  if (exposureEntry.targetKind === "chokepoint") {
+    const countryNames = exposureEntry.affectedCountryCodes
+      .map((code) => countriesByCode[code]?.name ?? code)
+      .join(" · ");
+
+    return (
+      <Section
+        rows={[
+          {
+            label: "Baseline transit",
+            value: `${exposureEntry.baselineTransitMbpd.toFixed(1)} MBPD`
+          },
+          {
+            label: "Bypass capacity",
+            value:
+              typeof exposureEntry.bypassCapacityMbpd === "number"
+                ? `${exposureEntry.bypassCapacityMbpd.toFixed(1)} MBPD`
+                : "UNSCORED"
+          },
+          {
+            label: "Modeled at-risk",
+            value:
+              typeof exposureEntry.modeledAtRiskMbpd === "number"
+                ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+                : "UNSCORED"
+          },
+          {
+            label: "Affected countries",
+            value: countryNames || "UNSCORED"
+          },
+          {
+            label: "Export systems",
+            value: exposureEntry.exportSystems.join(" · ") || "UNSCORED"
+          }
+        ]}
+      />
+    );
+  }
+
+  if (exposureEntry.targetKind === "asset") {
+    return (
+      <Section
+        rows={[
+          {
+            label: "Modeled at-risk",
+            value:
+              typeof exposureEntry.modeledAtRiskMbpd === "number"
+                ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+                : "UNSCORED"
+          },
+          {
+            label: "Dependency score",
+            value:
+              typeof exposureEntry.dependencyScore === "number"
+                ? `${Math.round(exposureEntry.dependencyScore * 100)}%`
+                : "UNSCORED"
+          },
+          {
+            label: "Benchmarks",
+            value: exposureEntry.relevantBenchmarks?.join(" · ") ?? "UNSCORED"
+          },
+          {
+            label: "Primary chokepoint",
+            value: exposureEntry.primaryChokepointLabel ?? "UNSCORED"
+          }
+        ]}
+        footer={exposureEntry.note}
+      />
+    );
+  }
 
   return (
-    <div className={styles.section}>
-      <div className={styles.primaryName}>UNMAPPED COUNTRY</div>
-      <div className={styles.paragraph}>
-        Profile forthcoming. Other Middle East countries ship in a future
-        release.
-      </div>
-      <div className={styles.rows}>
-        <div className={styles.row}>
-          <span className={styles.label}>Selected country</span>
-          <span className={styles.value}>{asset.countryName}</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.label}>Region coverage today</span>
-          <span className={styles.value}>{coverageLabel}</span>
-        </div>
-      </div>
-    </div>
+    <Section
+      rows={[
+        {
+          label: "Modeled at-risk",
+          value:
+            typeof exposureEntry.modeledAtRiskMbpd === "number"
+              ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+              : "UNSCORED"
+        },
+        {
+          label: "Seaborne exports",
+          value:
+            typeof exposureEntry.seaborneExportsMbpd === "number"
+              ? `${exposureEntry.seaborneExportsMbpd.toFixed(1)} MBPD`
+              : "UNSCORED"
+        },
+        {
+          label: "Primary chokepoint",
+          value: exposureEntry.primaryChokepointLabel ?? "UNSCORED"
+        }
+      ]}
+      footer={exposureEntry.note}
+    />
   );
 }
 
-function AssetDetail({ asset }: { asset: InfrastructureAsset }) {
+function Section({
+  rows,
+  footer
+}: {
+  rows: Array<{ label: string; value: string }>;
+  footer?: string;
+}) {
   return (
     <div className={styles.section}>
-      <div className={styles.primaryName}>{asset.name}</div>
-      <div className={styles.summaryLine}>
-        {asset.countryName} | {formatStatusLabel(asset.status).toUpperCase()}
-      </div>
       <div className={styles.rows}>
-        {buildAssetRows(asset).map((row) => (
-          <div
-            className={styles.row}
-            key={`${asset.id}-${row.label}`}
-          >
-            <span className={styles.label}>{row.label}</span>
-            <span className={styles.value}>{row.value}</span>
-          </div>
+        {rows.map((row) => (
+          <Row key={`${row.label}-${row.value}`} label={row.label} value={row.value} />
         ))}
       </div>
-      <div className={styles.attribution}>SOURCE: {asset._metadata.source}</div>
-      <div className={styles.attribution}>UPDATED: {asset._metadata.downloadDate}</div>
+      {footer ? <div className={styles.attribution}>{footer}</div> : null}
     </div>
   );
 }
 
-function CompanyContext({
-  company,
-  onInspect
-}: {
-  company: CompanyProfile;
-  onInspect?: (company: CompanyProfile) => void;
-}) {
-  const body = (
-    <>
-      <div className={styles.primaryName}>{company.name}</div>
-      <div className={styles.paragraph}>{company.summary}</div>
-      <div className={styles.rows}>
-        <div className={styles.row}>
-          <span className={styles.label}>Domicile</span>
-          <span className={styles.value}>{company.domicile}</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.label}>Website</span>
-          <span className={styles.value}>{company.website}</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.label}>Tickers</span>
-          <span className={styles.value}>{company.tickers.join(" | ") || "--"}</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.label}>Benchmarks</span>
-          <span className={styles.value}>{company.benchmarks.join(" | ") || "--"}</span>
-        </div>
-      </div>
-      <div className={styles.attribution}>SOURCE: {company.source}</div>
-      <div className={styles.attribution}>UPDATED: {company.updated}</div>
-    </>
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className={styles.row}>
+      <span className={styles.label}>{label}</span>
+      <span className={styles.value}>{value}</span>
+    </div>
   );
-
-  // When an inspect callback is provided, the entire section becomes
-  // a clickable card (button element so keyboard + a11y come along
-  // for free). Hover tints the primary name amber — same affordance
-  // the asset grid and dashboard tables use.
-  if (onInspect) {
-    return (
-      <button
-        className={`${styles.section} ${styles.clickableSection}`}
-        onClick={() => onInspect(company)}
-        title={`Expand ${company.name} profile`}
-        type="button"
-      >
-        {body}
-      </button>
-    );
-  }
-
-  return <div className={styles.section}>{body}</div>;
-}
-
-function CountryContext({
-  country,
-  onInspect
-}: {
-  country: CountryProfile;
-  onInspect?: (country: CountryProfile) => void;
-}) {
-  const body = (
-    <>
-      <div className={styles.primaryName}>{country.name}</div>
-      <div className={styles.paragraph}>{country.summary}</div>
-      <div className={styles.rows}>
-        <div className={styles.row}>
-          <span className={styles.label}>Key grades</span>
-          <span className={styles.value}>{country.keyGrades.join(" | ") || "--"}</span>
-        </div>
-        <div className={styles.row}>
-          <span className={styles.label}>Chokepoint dependency</span>
-          <span className={styles.value}>{country.chokepointDependency}</span>
-        </div>
-      </div>
-      <div className={styles.attribution}>SOURCE: {country.source}</div>
-      <div className={styles.attribution}>UPDATED: {country.updated}</div>
-    </>
-  );
-
-  if (onInspect) {
-    return (
-      <button
-        className={`${styles.section} ${styles.clickableSection}`}
-        onClick={() => onInspect(country)}
-        title={`Expand ${country.name} profile`}
-        type="button"
-      >
-        {body}
-      </button>
-    );
-  }
-
-  return <div className={styles.section}>{body}</div>;
 }
 
 function Placeholder({ text }: { text: string }) {
   return <div className={styles.placeholder}>{text}</div>;
 }
 
-function buildAssetRows(asset: InfrastructureAsset) {
+function buildStructuralRows(asset: InfrastructureAsset) {
   if (asset.assetKind === "refinery") {
     return [
-      { label: "Owner", value: asset.owner },
-      { label: "Operator", value: asset.operator },
+      { label: "Name", value: asset.name },
+      { label: "Country", value: asset.countryName },
+      { label: "Status", value: formatStatusLabel(asset.status).toUpperCase() },
       { label: "Capacity", value: asset.capacity_bpd ? formatCapacity(asset.capacity_bpd) : "--" },
-      { label: "Ticker", value: asset.linkedContext?.ticker ?? asset.ticker ?? "--" },
-      { label: "FIRMS radius", value: `${asset.firmsRadius_km ?? "--"} km` }
+      { label: "Operator", value: asset.operator || "--" },
+      { label: "Source", value: asset._metadata.source }
     ];
   }
 
   if (asset.assetKind === "pipeline") {
     return [
-      { label: "Owner", value: asset.owner },
-      { label: "Operator", value: asset.operator ?? "--" },
+      { label: "Name", value: asset.name },
+      { label: "Status", value: formatStatusLabel(asset.status).toUpperCase() },
       { label: "Hydrocarbon", value: asset.hydrocarbon.replaceAll("_", " ").toUpperCase() },
       { label: "Capacity", value: asset.capacity_boed ? formatCapacity(asset.capacity_boed).replace("bpd", "BOE/D") : "--" },
       { label: "Length", value: asset.length_km ? formatLengthKm(asset.length_km) : "--" },
-      { label: "Ticker", value: asset.linkedContext?.ticker ?? asset.ticker ?? "--" }
-    ];
-  }
-
-  if (asset.assetKind === "chokepoint") {
-    return [
-      { label: "Transit volume", value: formatTransitVolume(asset.transitVolume_mbpd) },
-      {
-        label: "Benchmarks",
-        value: asset.linkedContext?.benchmarkRefs?.join(" | ") ?? "--"
-      }
+      { label: "Source", value: asset._metadata.source }
     ];
   }
 
   if (asset.assetKind === "terminal") {
     return [
-      { label: "Owner", value: asset.owner ?? "--" },
+      { label: "Name", value: asset.name },
+      { label: "Role", value: asset.terminalRole ?? asset.terminalType ?? "--" },
+      { label: "Capacity", value: asset.capacity_mtpa ? formatMtpa(asset.capacity_mtpa) : asset.capacity_bpd ? formatCapacity(asset.capacity_bpd) : "--" },
       { label: "Operator", value: asset.operator ?? "--" },
-      { label: "Terminal type", value: asset.terminalRole ?? asset.terminalType ?? "--" },
-      { label: "Capacity", value: asset.capacity_mtpa ? formatMtpa(asset.capacity_mtpa) : asset.capacity_bpd ? formatCapacity(asset.capacity_bpd) : "--" }
+      { label: "Source", value: asset._metadata.source }
+    ];
+  }
+
+  if (asset.assetKind === "chokepoint") {
+    return [
+      { label: "Name", value: asset.name },
+      { label: "Transit", value: formatTransitVolume(asset.transitVolume_mbpd) },
+      {
+        label: "Benchmarks",
+        value: asset.linkedContext?.benchmarkRefs?.join(" · ") ?? "--"
+      },
+      { label: "Source", value: asset._metadata.source }
     ];
   }
 
   return [
-    { label: "Operator", value: asset.operator ?? "--" },
-    { label: "Basin", value: asset.basin ?? "--" },
-    { label: "Field type", value: asset.fieldType ?? "--" },
-    { label: "Production", value: asset.production_bpd ? formatCapacity(asset.production_bpd) : "--" }
+    { label: "Name", value: asset.name },
+    { label: "Country", value: asset.countryName },
+    { label: "Type", value: asset.fieldType ?? "--" },
+    { label: "Production", value: asset.production_bpd ? formatCapacity(asset.production_bpd) : "--" },
+    { label: "Source", value: asset._metadata.source }
   ];
+}
+
+function exposureBadge(entry: ExposureRegistryEntry | null): string {
+  if (!entry) {
+    return "UNSCORED";
+  }
+
+  if (
+    "modeledAtRiskMbpd" in entry &&
+    typeof entry.modeledAtRiskMbpd === "number"
+  ) {
+    return `~${entry.modeledAtRiskMbpd.toFixed(1)} MBPD`;
+  }
+
+  return "MODELED";
+}
+
+function readExposureValue<T extends string>(
+  entry: ExposureRegistryEntry | null,
+  key: T
+): string {
+  if (!entry || !(key in entry)) {
+    return "UNSCORED";
+  }
+
+  const value = entry[key as keyof ExposureRegistryEntry];
+  return typeof value === "string" && value.length > 0 ? value : "UNSCORED";
 }

@@ -37,6 +37,7 @@ import { MarketTape } from "./components/market/MarketTape";
 import { BypassControlPanel } from "./components/model/BypassControlPanel";
 import { useCrudePrices } from "./hooks/useCrudePrices";
 import { useCrudeGrades } from "./hooks/useCrudeGrades";
+import { useEiaInventory } from "./hooks/useEiaInventory";
 import { useIceSettlements } from "./hooks/useIceSettlements";
 import { useBypassModel } from "./hooks/useBypassModel";
 import { useOutageEvents } from "./hooks/useOutageEvents";
@@ -106,9 +107,18 @@ const INITIAL_WORKSPACE_STATE: MapWorkspaceState = {
 };
 
 export function App() {
-  const { assets, catalog, companiesById, countriesByCode, firmsBaselineByAssetId, error } = useMapWorkspaceData();
+  const {
+    assets,
+    catalog,
+    companiesById,
+    countriesByCode,
+    exposureByTargetId = {},
+    firmsBaselineByAssetId,
+    error
+  } = useMapWorkspaceData();
   const crudePrices = useCrudePrices();
   const crudeGrades = useCrudeGrades();
+  const eiaInventory = useEiaInventory();
   const iceSettlements = useIceSettlements();
   const bypassModel = useBypassModel();
   const outageEvents = useOutageEvents();
@@ -668,6 +678,9 @@ export function App() {
         firmsSnapshot={firms.snapshot}
         firmsIsLoading={firms.isLoading}
         firmsError={firms.error}
+        inventorySnapshot={eiaInventory.snapshot}
+        inventoryIsLoading={eiaInventory.isLoading}
+        inventoryError={eiaInventory.error}
         firmsWindowHours={firmsWindowHours}
         firmsConfidenceThreshold={firmsConfidenceThreshold}
         isFirmsLayerEnabled={isFirmsLayerEnabled}
@@ -679,6 +692,7 @@ export function App() {
         lastUpdate={lastUpdate}
         marketSummary={crudePrices.summary}
         outageEvents={outageEvents.snapshot}
+        timespreads={iceSettlements.timespreads}
         onInspectAsset={handleInspectAsset}
         visibleAssets={visibleAssets}
       />
@@ -771,6 +785,7 @@ export function App() {
           error={crudePrices.error}
           isLoading={crudePrices.isLoading}
           summary={crudePrices.summary}
+          timespreads={iceSettlements.timespreads}
         />
       }
       leftSidebar={
@@ -824,6 +839,9 @@ export function App() {
               <ContextPanelStack
                 companiesById={companiesById}
                 countriesByCode={countriesByCode}
+                exposureByTargetId={exposureByTargetId}
+                firmsSnapshot={firms.snapshot}
+                outageEvents={outageEvents.snapshot}
                 onInspectCompany={handleInspectCompany}
                 onInspectCountry={handleInspectCountry}
                 selectedAsset={selectedAsset}
@@ -851,11 +869,11 @@ export function App() {
         <StatusBar
           activeAssetCount={visibleAssets.length}
           activeDatasetCount={workspaceState.activeDatasetIds.length}
+          firmsSnapshot={firms.snapshot}
           hasError={Boolean(error)}
           lastUpdate={lastUpdate}
           latestActivity={activityLog[0] ?? null}
           marketSummary={crudePrices.summary}
-          sourceCount={workspaceState.activeDatasetIds.length}
         />
       }
     >
@@ -866,6 +884,9 @@ export function App() {
           canGoBack={canGoBackOverlay}
           companiesById={companiesById}
           countriesByCode={countriesByCode}
+          exposureByTargetId={exposureByTargetId}
+          firmsSnapshot={firms.snapshot}
+          outageEvents={outageEvents.snapshot}
           onBack={handlePopOverlay}
           onClose={handleCloseOverlay}
           onInspectCompany={handleDrillIntoCompany}
@@ -893,6 +914,7 @@ export function App() {
         <CountryDetailOverlay
           country={currentOverlay.country}
           canGoBack={canGoBackOverlay}
+          exposureEntry={exposureByTargetId[currentOverlay.country.code]}
           onBack={handlePopOverlay}
           onClose={handleCloseOverlay}
         />

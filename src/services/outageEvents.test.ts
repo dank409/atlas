@@ -29,8 +29,9 @@ const redSea: OutageEvent = {
 };
 
 const healthyPayload = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-15",
+  cadence: "CURATED" as const,
+  classification: "CURATED" as const,
   source: "Curated",
   events: [redSea, abqaiq]
 };
@@ -40,7 +41,7 @@ describe("loadOutageEventSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads events from the canonical path and forces STATIC_SNAPSHOT mode", async () => {
+  it("loads events from the canonical path and marks them CURATED", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -53,7 +54,8 @@ describe("loadOutageEventSnapshot", () => {
 
     const snapshot = await loadOutageEventSnapshot();
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.events).toHaveLength(2);
     expect(snapshot.source).toBe("Curated");
   });

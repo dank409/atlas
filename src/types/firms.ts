@@ -1,3 +1,5 @@
+import type { DataSourceMetadata } from "./DataSource";
+
 // NASA FIRMS (Fire Information for Resource Management System) types.
 // CLAUDE.md P0 #10 and the "FIRMS Implementation Notes" section.
 //
@@ -80,13 +82,10 @@ export interface FirmsFacilityAnomaly {
 
 export type FirmsWindowHours = 24 | 72 | 168;
 
-export interface FirmsSnapshot {
-  mode: "LIVE" | "STATIC_SNAPSHOT";
-  asOf: string;
+export interface FirmsSnapshot extends DataSourceMetadata {
   windowHours: FirmsWindowHours;
   confidenceThreshold: number;
   detections: FirmsDetection[];
   matches: FirmsGeofenceMatch[];
   anomalies: FirmsFacilityAnomaly[];
-  source: string;
 }

@@ -1,3 +1,5 @@
+import type { DataSourceMetadata } from "./DataSource";
+
 // Intentionally camelCase filename, matching the convention the rest of
 // src/types/ held before the rename pass. The prompt that introduced this
 // file calls it out as a deliberate one-off deviation — do NOT PascalCase
@@ -12,10 +14,7 @@ export interface RefineryFeedstockEntry {
   note: string;
 }
 
-export interface RefineryFeedstockSnapshot {
-  mode: "LIVE" | "STATIC_SNAPSHOT";
-  asOf: string;
-  source: string;
+export interface RefineryFeedstockSnapshot extends DataSourceMetadata {
   methodology: string;
   entries: RefineryFeedstockEntry[];
 }

@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import type { ExposureRegistryEntry } from "../../types/Exposure";
 import type { CountryProfile } from "../../types/Infrastructure";
 import styles from "../tables/AssetDetailOverlay.module.css";
 
 interface CountryDetailOverlayProps {
   country: CountryProfile;
   canGoBack?: boolean;
+  exposureEntry?: ExposureRegistryEntry | null;
   onBack?: () => void;
   onClose: () => void;
 }
@@ -19,6 +21,7 @@ interface CountryDetailOverlayProps {
 export function CountryDetailOverlay({
   country,
   canGoBack = false,
+  exposureEntry = null,
   onBack,
   onClose
 }: CountryDetailOverlayProps) {
@@ -49,6 +52,31 @@ export function CountryDetailOverlay({
       value: `${(country.keyRefineriesBpd / 1000).toFixed(0)}K BPD`
     });
   }
+  datumRows.push({
+    label: "SEABORNE EXPORTS",
+    value:
+      exposureEntry &&
+      exposureEntry.targetKind === "country" &&
+      typeof exposureEntry.seaborneExportsMbpd === "number"
+        ? `${exposureEntry.seaborneExportsMbpd.toFixed(1)} MBPD`
+        : "UNSCORED"
+  });
+  datumRows.push({
+    label: "MODELED AT-RISK",
+    value:
+      exposureEntry &&
+      exposureEntry.targetKind === "country" &&
+      typeof exposureEntry.modeledAtRiskMbpd === "number"
+        ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+        : "UNSCORED"
+  });
+  datumRows.push({
+    label: "PRIMARY CHOKEPOINT",
+    value:
+      exposureEntry && exposureEntry.targetKind === "country"
+        ? exposureEntry.primaryChokepointLabel ?? "UNSCORED"
+        : "UNSCORED"
+  });
 
   const chokepointRows: Array<{ label: string; value: string }> = [];
   if (country.chokepointScores) {
@@ -136,6 +164,8 @@ export function CountryDetailOverlay({
         <div className={styles.footer}>
           <div className={styles.footerMeta}>
             <span>SOURCE: {country.source}</span>
+            <span className={styles.separator}>|</span>
+            <span>CADENCE: CURATED</span>
             <span className={styles.separator}>|</span>
             <span>UPDATED: {country.updated}</span>
           </div>

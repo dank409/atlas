@@ -1,8 +1,9 @@
 import { loadMurbanSnapshot } from "./murban";
 
 const healthyPayload = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-14",
+  cadence: "CURATED" as const,
+  classification: "CURATED" as const,
   source: "IFAD test snapshot",
   series: {
     murban: [
@@ -17,7 +18,7 @@ describe("loadMurbanSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads the Murban snapshot from the canonical path and forces STATIC_SNAPSHOT mode", async () => {
+  it("loads the Murban snapshot from the canonical path and marks it CURATED", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -30,7 +31,8 @@ describe("loadMurbanSnapshot", () => {
 
     const snapshot = await loadMurbanSnapshot();
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.series.murban).toHaveLength(2);
     expect(snapshot.source).toBe("IFAD test snapshot");
   });

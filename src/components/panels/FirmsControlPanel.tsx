@@ -1,4 +1,8 @@
 import type { FirmsSnapshot, FirmsWindowHours } from "../../types/firms";
+import {
+  formatCadenceLabel,
+  formatClassificationLabel
+} from "../../types/DataSource";
 import styles from "./FirmsControlPanel.module.css";
 
 // Window + confidence + visibility controls for the FIRMS pipeline.
@@ -31,7 +35,6 @@ export function FirmsControlPanel({
   onChangeConfidence,
   onToggleEnabled
 }: FirmsControlPanelProps) {
-  const mode = snapshot?.mode ?? "STATIC_SNAPSHOT";
   const asOf = snapshot?.asOf ?? "--";
   const detectionCount = snapshot?.detections.length ?? 0;
   const matchCount = snapshot?.matches.length ?? 0;
@@ -39,8 +42,10 @@ export function FirmsControlPanel({
   return (
     <div className={styles.wrap}>
       <div className={styles.metaRow}>
-        <span className={styles.modeBadge} data-mode={mode}>
-          {mode === "LIVE" ? "LIVE" : "STATIC"}
+        <span className={styles.modeBadge} data-mode={snapshot?.cadence ?? "CURATED"}>
+          {snapshot
+            ? `${formatClassificationLabel(snapshot.classification)} ${formatCadenceLabel(snapshot.cadence)}`
+            : "CURATED"}
         </span>
         <span className={styles.separator}>|</span>
         <span>AS OF {asOf.slice(0, 16).replace("T", " ")}</span>

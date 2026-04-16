@@ -6,7 +6,7 @@ import type {
 // Static-only loader for the curated refinery → Hormuz-dependency map.
 // No live equivalent — the underlying data moves when operator assays
 // change, which is measured in months. Follows the same pattern as
-// iceSettlements.ts so the UI can uniformly badge mode = STATIC_SNAPSHOT.
+// iceSettlements.ts so the UI can uniformly badge it as curated.
 
 const STATIC_SNAPSHOT_PATH = "/data/reference/refinery_feedstock.json";
 
@@ -26,7 +26,8 @@ export async function loadRefineryFeedstockSnapshot(): Promise<RefineryFeedstock
 
   return {
     asOf: payload.asOf,
-    mode: "STATIC_SNAPSHOT",
+    cadence: "CURATED",
+    classification: "CURATED",
     source: payload.source,
     methodology: payload.methodology,
     entries

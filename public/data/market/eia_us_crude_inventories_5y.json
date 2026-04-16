@@ -1,0 +1,21 @@
+{
+  "asOf": "2026-04-15",
+  "source": "EIA Weekly Petroleum Status Report (seed snapshot)",
+  "seriesName": "US Commercial Crude Excluding SPR",
+  "units": "million_barrels",
+  "series": [
+    { "date": "2026-01-21", "value": 421.5, "fiveYearAverage": 432.1, "fiveYearMin": 408.3, "fiveYearMax": 455.4 },
+    { "date": "2026-01-28", "value": 424.2, "fiveYearAverage": 431.6, "fiveYearMin": 407.1, "fiveYearMax": 453.9 },
+    { "date": "2026-02-04", "value": 428.8, "fiveYearAverage": 430.8, "fiveYearMin": 406.4, "fiveYearMax": 452.7 },
+    { "date": "2026-02-11", "value": 430.9, "fiveYearAverage": 429.7, "fiveYearMin": 404.9, "fiveYearMax": 450.2 },
+    { "date": "2026-02-18", "value": 433.1, "fiveYearAverage": 428.9, "fiveYearMin": 403.5, "fiveYearMax": 448.4 },
+    { "date": "2026-02-25", "value": 435.6, "fiveYearAverage": 427.8, "fiveYearMin": 401.7, "fiveYearMax": 446.3 },
+    { "date": "2026-03-04", "value": 437.4, "fiveYearAverage": 426.9, "fiveYearMin": 400.2, "fiveYearMax": 444.1 },
+    { "date": "2026-03-11", "value": 434.8, "fiveYearAverage": 425.8, "fiveYearMin": 398.6, "fiveYearMax": 441.9 },
+    { "date": "2026-03-18", "value": 431.2, "fiveYearAverage": 424.7, "fiveYearMin": 397.8, "fiveYearMax": 439.8 },
+    { "date": "2026-03-25", "value": 428.1, "fiveYearAverage": 423.9, "fiveYearMin": 396.2, "fiveYearMax": 437.2 },
+    { "date": "2026-04-01", "value": 425.9, "fiveYearAverage": 423.1, "fiveYearMin": 395.4, "fiveYearMax": 435.8 },
+    { "date": "2026-04-08", "value": 423.6, "fiveYearAverage": 422.2, "fiveYearMin": 394.8, "fiveYearMax": 434.1 },
+    { "date": "2026-04-15", "value": 421.8, "fiveYearAverage": 421.5, "fiveYearMin": 394.2, "fiveYearMax": 432.7 }
+  ]
+}

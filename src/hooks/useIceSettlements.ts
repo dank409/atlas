@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import { loadIceBrentSettlementSnapshot } from "../services/iceSettlements";
 import type { IceBrentSettlementSnapshot } from "../types/IceSettlements";
+import type { BrentTimespreadSnapshot } from "../types/Market";
+import { buildBrentTimespreadSnapshot } from "../utils/marketSummary";
+import { useMemo } from "react";
 
 interface UseIceSettlementsResult {
   error: Error | null;
   isLoading: boolean;
   snapshot: IceBrentSettlementSnapshot | null;
+  timespreads: BrentTimespreadSnapshot | null;
 }
 
 /**
@@ -56,9 +60,15 @@ export function useIceSettlements(): UseIceSettlementsResult {
     };
   }, []);
 
+  const timespreads = useMemo(
+    () => (snapshot ? buildBrentTimespreadSnapshot(snapshot) : null),
+    [snapshot]
+  );
+
   return {
     error,
     isLoading,
-    snapshot
+    snapshot,
+    timespreads
   };
 }

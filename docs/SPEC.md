@@ -82,21 +82,22 @@ Contents (left to right):
 - **Time window toggles**: `24H` `3D` `7D` `30D` — only applicable when FIRMS layer is active. Otherwise hidden or grayed.
 - **Separator**
 - **View mode switches**: `MAP` `TABLE` `DASH` — tab-style toggles. Active = amber text + 2px bottom border. Inactive = `#666` text.
-- **Right side**: Current time (HH:MM:SS, updating every second, monospace), timezone label.
+- **Right side**: No cosmetic clock. Reserve the space for command/search and view toggles.
 
 ### 1.3 Status Bar
 
 Height: 28px. Background: `#0A0A0A`. Top border: 1px solid `#222`.
 
 Contents (left to right):
-- **Connection indicator**: Small circle (8px). Green pulsing = data sources reachable. Yellow = some sources degraded. Red = offline. Followed by text: `CONNECTED` / `DEGRADED` / `OFFLINE`.
-- **Separator**: `·`
-- **FIRMS status**: `FIRMS: [N] detections · [timestamp]` — shows last FIRMS fetch time and count of displayed detections.
-- **Separator**
-- **EIA status**: `EIA: BRENT $XX.XX · [date]` — latest Brent price as a quick reference.
-- **Separator**
 - **Region**: `REGION: MIDDLE EAST`
-- **Right side**: `SOURCES: [N]/[M] ACTIVE` — how many data sources are responding out of total configured.
+- **Separator**: `·`
+- **Workspace status**: `WORKSPACE: READY` or `WORKSPACE: PARTIAL` based on loaded catalog coverage.
+- **Separator**
+- **FIRMS provenance**: `FIRMS: NRT SATELLITE · OBSERVED · [timestamp]`
+- **Separator**
+- **Market provenance**: `MARKET: EOD · OBSERVED · [date]`
+- **Separator**
+- **Map cadence**: `MAP: QUARTERLY · [date]`
 
 ### 1.4 Keyboard Shortcuts
 

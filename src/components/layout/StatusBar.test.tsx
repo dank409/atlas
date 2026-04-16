@@ -1,3 +1,4 @@
+import type { FirmsSnapshot } from "../../types/firms";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { StatusBar } from "./StatusBar";
@@ -10,43 +11,64 @@ const summary: CrudeMarketSummary = {
     value: 82.5,
     change: 0.4,
     changePct: 0.5,
-    asOf: "2026-04-14"
+    asOf: "2026-04-14",
+    cadence: "EOD",
+    classification: "OBSERVED",
+    source: "EIA"
   },
   wti: {
     name: "WTI",
     value: 78.0,
     change: -0.2,
     changePct: -0.3,
-    asOf: "2026-04-14"
+    asOf: "2026-04-14",
+    cadence: "EOD",
+    classification: "OBSERVED",
+    source: "EIA"
   },
-  spread: -4.5,
-  mode: "LIVE",
+  brentWtiSpread: 4.5,
+  cadence: "EOD",
+  classification: "OBSERVED",
   source: "EIA"
 };
 
+const firmsSnapshot: FirmsSnapshot = {
+  asOf: "2026-04-14T12:00:00Z",
+  cadence: "NRT_SATELLITE",
+  classification: "OBSERVED",
+  confidenceThreshold: 80,
+  detections: [],
+  matches: [],
+  anomalies: [],
+  source: "NASA FIRMS",
+  windowHours: 72
+};
+
 describe("StatusBar", () => {
-  it("renders CONNECTED status and the full stat row when there is no error", () => {
+  it("renders cadence-first workspace context without connectivity theater", () => {
     render(
       <StatusBar
         activeAssetCount={312}
         activeDatasetCount={4}
+        firmsSnapshot={firmsSnapshot}
         hasError={false}
         lastUpdate="2026-04-14"
         marketSummary={summary}
-        sourceCount={4}
       />
     );
 
-    expect(screen.getByText("CONNECTED")).toBeInTheDocument();
     expect(screen.getByText("REGION: MIDDLE EAST")).toBeInTheDocument();
-    expect(screen.getByText(/EIA: BRENT \$82\.50 · 2026-04-14/)).toBeInTheDocument();
+    expect(screen.getByText("WORKSPACE: READY")).toBeInTheDocument();
+    expect(screen.getByText(/MARKET: BRENT \$82\.50 \| OBSERVED \| EOD/)).toBeInTheDocument();
+    expect(screen.getByText(/FIRMS: OBSERVED \| NRT SATELLITE/)).toBeInTheDocument();
     expect(screen.getByText("DATASETS: 4")).toBeInTheDocument();
     expect(screen.getByText("VISIBLE ASSETS: 312")).toBeInTheDocument();
-    expect(screen.getByText("LAST UPDATE: 2026-04-14")).toBeInTheDocument();
-    expect(screen.getByText("SOURCES: 4 ACTIVE")).toBeInTheDocument();
+    expect(screen.getByText("MAP: QUARTERLY | 2026-04-14")).toBeInTheDocument();
+    expect(screen.queryByText("CONNECTED")).not.toBeInTheDocument();
+    expect(screen.queryByText(/SOURCES:/)).not.toBeInTheDocument();
   });
 
-  it("shows OFFLINE status and forces source count to 0 on error", () => {
+  it("shows PARTIAL workspace state on error without pretending sources are offline", () => {
     render(
       <StatusBar
         activeAssetCount={0}
@@ -54,15 +76,14 @@ describe("StatusBar", () => {
         hasError={true}
         lastUpdate="--"
         marketSummary={null}
-        sourceCount={4}
       />
     );
 
-    expect(screen.getByText("OFFLINE")).toBeInTheDocument();
-    expect(screen.getByText("SOURCES: 0 ACTIVE")).toBeInTheDocument();
+    expect(screen.getByText("WORKSPACE: PARTIAL")).toBeInTheDocument();
+    expect(screen.queryByText("OFFLINE")).not.toBeInTheDocument();
   });
 
-  it("falls back to EIA: -- when no market summary is provided", () => {
+  it("falls back to NO OPEN DATA labels when market and FIRMS summaries are missing", () => {
     render(
       <StatusBar
         activeAssetCount={10}
@@ -70,10 +91,10 @@ describe("StatusBar", () => {
         hasError={false}
         lastUpdate="2026-04-14"
         marketSummary={null}
-        sourceCount={1}
       />
     );
 
-    expect(screen.getByText("EIA: --")).toBeInTheDocument();
+    expect(screen.getByText("MARKET: NO OPEN DATA")).toBeInTheDocument();
+    expect(screen.getByText("FIRMS: NO OPEN DATA")).toBeInTheDocument();
   });
 });

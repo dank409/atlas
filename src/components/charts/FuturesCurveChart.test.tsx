@@ -64,7 +64,8 @@ describe("FuturesCurveChart (Phase 2 three-line mode with observed strip)", () =
       <FuturesCurveChart
         result={result}
         observedStrip={SEED_OBSERVED_STRIP}
-        observedMode="STATIC_SNAPSHOT"
+        observedCadence="EOD"
+        observedClassification="CURATED"
         observedAsOf="2026-04-14"
       />
     );
@@ -72,7 +73,7 @@ describe("FuturesCurveChart (Phase 2 three-line mode with observed strip)", () =
     expect(screen.getByText("OBSERVED ICE BRENT STRIP")).toBeInTheDocument();
     expect(screen.getByText("MKT M1")).toBeInTheDocument();
     expect(screen.getByText("ALPHA (MKT-MODEL)")).toBeInTheDocument();
-    expect(screen.getByText("STATIC")).toBeInTheDocument();
+    expect(screen.getByText("CURATED EOD")).toBeInTheDocument();
     expect(screen.getByText("$92.30")).toBeInTheDocument();
   });
 
@@ -82,7 +83,8 @@ describe("FuturesCurveChart (Phase 2 three-line mode with observed strip)", () =
       <FuturesCurveChart
         result={result}
         observedStrip={SEED_OBSERVED_STRIP}
-        observedMode="STATIC_SNAPSHOT"
+        observedCadence="EOD"
+        observedClassification="CURATED"
         observedAsOf="2026-04-14"
       />
     );
@@ -90,17 +92,18 @@ describe("FuturesCurveChart (Phase 2 three-line mode with observed strip)", () =
     expect(screen.getByText(/UNDERPRICING/)).toBeInTheDocument();
   });
 
-  it("renders LIVE badge when observedMode is LIVE", () => {
+  it("renders an OBSERVED EOD badge when the strip is observed EOD data", () => {
     const result = buildFuturesCurve(60);
     render(
       <FuturesCurveChart
         result={result}
         observedStrip={SEED_OBSERVED_STRIP}
-        observedMode="LIVE"
+        observedCadence="EOD"
+        observedClassification="OBSERVED"
       />
     );
 
-    expect(screen.getByText("LIVE")).toBeInTheDocument();
+    expect(screen.getByText("OBSERVED EOD")).toBeInTheDocument();
   });
 });
 

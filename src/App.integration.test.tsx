@@ -242,6 +242,57 @@ const workspaceData = {
       source: "Curated country profile",
       updated: "2026-04-13"
     }
+  },
+  exposureByTargetId: {
+    AE: {
+      targetId: "AE",
+      targetKind: "country",
+      primaryChokepointId: "chokepoint-hormuz",
+      primaryChokepointLabel: "Strait of Hormuz",
+      seaborneExportsMbpd: 3.2,
+      affectedVolumeMbpd: 1.1,
+      bypassCapacityMbpd: 1.5,
+      affectedSharePercent: 34,
+      exportRoute: "Abu Dhabi / Fujairah",
+      source: "Curated country exposure registry",
+      asOf: "2026-04-13"
+    },
+    SA: {
+      targetId: "SA",
+      targetKind: "country",
+      primaryChokepointId: "chokepoint-hormuz",
+      primaryChokepointLabel: "Strait of Hormuz",
+      seaborneExportsMbpd: 6.3,
+      affectedVolumeMbpd: 2.4,
+      bypassCapacityMbpd: 5,
+      affectedSharePercent: 38,
+      exportRoute: "East-West / Yanbu",
+      source: "Curated country exposure registry",
+      asOf: "2026-04-13"
+    },
+    "refinery-ruwais": {
+      targetId: "refinery-ruwais",
+      targetKind: "asset",
+      primaryChokepointId: "chokepoint-hormuz",
+      primaryChokepointLabel: "Strait of Hormuz",
+      affectedVolumeMbpd: 0.4,
+      affectedSharePercent: 48,
+      dependencyScore: 0.48,
+      exportRoute: "Abu Dhabi / Fujairah",
+      source: "Curated asset exposure registry",
+      asOf: "2026-04-13"
+    },
+    "pipeline-east-west": {
+      targetId: "pipeline-east-west",
+      targetKind: "asset",
+      primaryChokepointId: "chokepoint-hormuz",
+      primaryChokepointLabel: "Strait of Hormuz",
+      affectedVolumeMbpd: 5,
+      affectedSharePercent: 24,
+      exportRoute: "East-West / Yanbu",
+      source: "Curated asset exposure registry",
+      asOf: "2026-04-13"
+    }
   }
 };
 
@@ -346,7 +397,7 @@ describe("App MAP workspace", () => {
     fireEvent.click((await within(gridPanel).findByText("Ruwais Refinery")).closest("tr")!);
     fireEvent.click(await screen.findByRole("button", { name: /VIEW ON MAP/i }));
 
-    const detailPanel = (await screen.findByText("ASSET DETAIL")).closest("section")!;
+    const detailPanel = (await screen.findByText("STRUCTURAL PROFILE")).closest("section")!;
     expect(within(detailPanel).getByText("Ruwais Refinery")).toBeInTheDocument();
   });
 
@@ -358,11 +409,11 @@ describe("App MAP workspace", () => {
     });
 
     fireEvent.click(screen.getByRole("button", { name: /East-West Crude Oil Pipeline/i }));
-    const operatorPanel = screen.getByText("OPERATOR CONTEXT").closest("section")!;
+    const dependencyPanel = screen.getByText("CURATED DEPENDENCY").closest("section")!;
 
     expect(await screen.findByText("MAP SELECTED: pipeline-east-west")).toBeInTheDocument();
-    expect(within(operatorPanel).getByText("Saudi Aramco")).toBeInTheDocument();
-    expect(within(operatorPanel).getByText(/Arab Light/)).toBeInTheDocument();
+    expect(within(dependencyPanel).getByText("East-West / Yanbu")).toBeInTheDocument();
+    expect(within(dependencyPanel).getByText("Strait of Hormuz")).toBeInTheDocument();
   });
 
   it("focuses search with slash, clears selection with escape, and opens a shortcuts overlay with question mark", async () => {
@@ -413,10 +464,10 @@ describe("App MAP workspace", () => {
     expect(screen.queryByText("MAP CONTENT")).not.toBeInTheDocument();
 
     // Row click → inspect overlay → VIEW ON MAP commits selection
-    // and auto-reopens the right rail so ASSET DETAIL is visible.
+    // and auto-reopens the right rail so the thesis context panels are visible.
     fireEvent.click((await within(gridPanel).findByText("Ruwais Refinery")).closest("tr")!);
     fireEvent.click(await screen.findByRole("button", { name: /VIEW ON MAP/i }));
-    const detailPanel = await screen.findByText("ASSET DETAIL");
+    const detailPanel = await screen.findByText("STRUCTURAL PROFILE");
     expect(detailPanel).toBeInTheDocument();
     expect(within(detailPanel.closest("section")!).getByText("Ruwais Refinery")).toBeInTheDocument();
   });

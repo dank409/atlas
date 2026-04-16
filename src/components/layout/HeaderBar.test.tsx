@@ -37,7 +37,7 @@ const searchResult = {
 };
 
 describe("HeaderBar", () => {
-  it("renders terminal navigation and switches view modes", () => {
+  it("renders macro navigation, omits the clock, and switches view modes", () => {
     const onChangeView = vi.fn();
     const onCommandSubmit = vi.fn();
     const onSearchQueryChange = vi.fn();
@@ -62,10 +62,11 @@ describe("HeaderBar", () => {
     expect(screen.getByPlaceholderText("TYPE COMMAND OR SEARCH")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "TABLE" }));
-    fireEvent.click(screen.getByRole("button", { name: "DASH" }));
+    fireEvent.click(screen.getByRole("button", { name: "MACRO" }));
 
     expect(onChangeView).toHaveBeenNthCalledWith(1, "table");
     expect(onChangeView).toHaveBeenNthCalledWith(2, "dash");
+    expect(screen.queryByText(/UTC|EDT|EST/)).not.toBeInTheDocument();
   });
 
   it("shows search results and emits selection events", () => {

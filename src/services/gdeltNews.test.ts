@@ -94,7 +94,7 @@ describe("loadGdeltNewsSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("returns a LIVE snapshot when GDELT responds with articles", async () => {
+  it("returns an observed snapshot when GDELT responds with articles", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -113,15 +113,17 @@ describe("loadGdeltNewsSnapshot", () => {
 
     const snapshot = await loadGdeltNewsSnapshot();
 
-    expect(snapshot.mode).toBe("LIVE");
+    expect(snapshot.classification).toBe("OBSERVED");
+    expect(snapshot.cadence).toBe("CURATED");
     expect(snapshot.headlines.length).toBeGreaterThan(0);
     expect(snapshot.query).toContain("Hormuz");
   });
 
-  it("falls back to STATIC_SNAPSHOT when GDELT returns a plain-text error", async () => {
+  it("falls back to a curated snapshot when GDELT returns a plain-text error", async () => {
     const staticPayload: GdeltNewsSnapshot = {
       asOf: "2026-04-14T00:00:00Z",
-      mode: "STATIC_SNAPSHOT",
+      cadence: "CURATED",
+      classification: "CURATED",
       query: "seed",
       headlines: [
         {
@@ -161,15 +163,17 @@ describe("loadGdeltNewsSnapshot", () => {
 
     const snapshot = await loadGdeltNewsSnapshot();
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.headlines).toHaveLength(1);
     expect(snapshot.headlines[0].title).toBe("Seed headline");
   });
 
-  it("falls back to STATIC_SNAPSHOT when GDELT returns an empty article list", async () => {
+  it("falls back to a curated snapshot when GDELT returns an empty article list", async () => {
     const staticPayload: GdeltNewsSnapshot = {
       asOf: "2026-04-14T00:00:00Z",
-      mode: "STATIC_SNAPSHOT",
+      cadence: "CURATED",
+      classification: "CURATED",
       query: "seed",
       headlines: [
         {
@@ -205,7 +209,8 @@ describe("loadGdeltNewsSnapshot", () => {
     );
 
     const snapshot = await loadGdeltNewsSnapshot();
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.headlines[0].title).toBe("Fallback headline");
   });
 });

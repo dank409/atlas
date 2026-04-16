@@ -1,4 +1,4 @@
-import type { PriceSeriesMode } from "./Market";
+import type { DataSourceMetadata } from "./DataSource";
 
 // Canonical crude-grade taxonomy for the region. The buckets are defined
 // by the classic API/sulfur quadrant used across EIA, Platts, and ICE
@@ -25,9 +25,6 @@ export interface CrudeGrade {
   note: string;
 }
 
-export interface CrudeGradeSnapshot {
-  mode: PriceSeriesMode;
-  asOf: string;
-  source: string;
+export interface CrudeGradeSnapshot extends DataSourceMetadata {
   grades: CrudeGrade[];
 }

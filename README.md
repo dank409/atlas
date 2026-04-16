@@ -82,10 +82,10 @@ and scheduled by
 Full architecture in [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md)
 section 11.
 
-**Every surface in the app labels its mode.** The status bar shows
-`EIA: BRENT $100.72 · 2026-04-13` with a `LIVE` or `STATIC` badge,
-the market tape shows `STATIC | AS OF <date>`, and every panel
-shows its source + last-updated date. Staleness is never hidden.
+**Every surface in the app labels its provenance.** The status bar,
+market tape, and overlays show `SOURCE`, `AS OF`, `CADENCE`, and
+whether a number is `OBSERVED`, `CURATED`, or `MODELED`. Staleness
+is never hidden.
 
 ---
 
@@ -158,7 +158,7 @@ src/
 ├── components/
 │   ├── map/              Map container, layers, overlays (Mapbox GL)
 │   ├── layout/           AppShell, header, status bar, dashboard, panels
-│   ├── panels/           Context rail (operator, country, FIRMS controls)
+│   ├── panels/           Context rail (structural, observed, dependency, exposure)
 │   ├── tables/           Asset grid + crude grade table + detail overlays
 │   ├── charts/           Forward curve, Brent historical (hand-rolled SVG)
 │   ├── market/           Market tape, Brent sparkline
@@ -166,8 +166,8 @@ src/
 │   ├── common/           Panel primitive (click-to-expand support)
 │   └── model/            Scenario slider, bypass control panel
 ├── hooks/                useFirms, useCrudePrices, useOutageEvents, etc.
-├── services/             Loaders for every JSON file with LIVE/STATIC
-│                          fallback pattern (CLAUDE.md Data Integrity Rule #6)
+├── services/             Loaders for every JSON file plus cadence /
+│                          provenance metadata and fallback handling
 ├── utils/                bypassModel, futuresCurveModel, firms anomaly
 │                          scoring — pure functions, unit-tested
 ├── types/                Every data model as a TypeScript interface

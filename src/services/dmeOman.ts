@@ -3,10 +3,8 @@ import type { DmeOmanSnapshot, PricePoint } from "../types/Market";
 // DME (Dubai Mercantile Exchange) Oman M1 settlements. The published
 // DME daily settlement file is a PDF behind an IP-whitelisted CDN — no
 // free public JSON endpoint — so this service is static-only by design.
-// Mode is always STATIC_SNAPSHOT and the tape badges it as such per
-// CLAUDE.md Data Integrity Rule #6. When a future deployment wires up
-// a scraper or licensed feed, add a `loadLive*` path here mirroring the
-// eiaPrices.ts shape and flip mode to LIVE.
+// The snapshot is explicitly marked curated rather than pretending to be
+// a client-side live feed.
 
 const STATIC_SNAPSHOT_PATH = "/data/market/dme_oman_30d.json";
 
@@ -26,7 +24,8 @@ export async function loadDmeOmanSnapshot(): Promise<DmeOmanSnapshot> {
 
   return {
     asOf: payload.asOf,
-    mode: "STATIC_SNAPSHOT",
+    cadence: "CURATED",
+    classification: "CURATED",
     series: { dmeOman: series },
     source: payload.source,
     note: payload.note

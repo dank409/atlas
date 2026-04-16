@@ -49,7 +49,8 @@ describe("loadCrudePriceSnapshot — live EIA value sanitisation", () => {
 
     const snapshot = await loadCrudePriceSnapshot();
 
-    expect(snapshot.mode).toBe("LIVE");
+    expect(snapshot.cadence).toBe("EOD");
+    expect(snapshot.classification).toBe("OBSERVED");
     expect(snapshot.series.brent).toEqual([
       { date: "2026-04-11", value: 80.1 },
       { date: "2026-04-13", value: 82.5 }

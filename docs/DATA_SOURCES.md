@@ -319,12 +319,12 @@ Country profiles are manually curated from multiple public sources. They are NOT
 | Reuters Energy | Reuters limits free RSS access | May need alternative |
 
 ### Fallback Strategy
-If live RSS is unreliable, curate a set of bookmarked source links and display as a reference panel rather than a live feed. Honesty about what's live vs static is important.
+If RSS is unreliable, curate a set of bookmarked source links and display them as a reference panel rather than a fake live feed. Honesty about what is observed, curated, or stale is important.
 
 Degraded-mode requirements (must be visible in UI):
-- Show source status as `DEGRADED` or `OFFLINE` in the status bar when feeds fail.
 - Keep the last successful fetch timestamp and label it as stale when outdated.
-- Mark fallback entries with an explicit source mode label (for example: `STATIC FALLBACK`, `LAST KNOWN`, or `LIVE RSS`) so users can distinguish live vs curated content.
+- Mark fallback entries with explicit cadence / provenance labels (for example: `CURATED`, `LAST KNOWN`, `EOD`, or `NRT SATELLITE`) so users can distinguish observed vs curated content.
+- Never imply continuous connectivity for feeds that are EOD, weekly, or manual.
 
 ---
 
@@ -452,7 +452,7 @@ load the page.
 These files stay human-curated because no free public endpoint
 provides a reliable JSON feed. A bad auto-refresh would put wrong
 numbers in front of a trader, which is worse than a stale file
-labelled `STATIC_SNAPSHOT`.
+labelled `CURATED`.
 
 | File | Why it stays curated |
 |---|---|
@@ -515,4 +515,3 @@ architecture.
 
 - Script: [`scripts/update_market_data.ts`](../scripts/update_market_data.ts)
 - Workflow: [`.github/workflows/daily_data_refresh.yml`](../.github/workflows/daily_data_refresh.yml)
-

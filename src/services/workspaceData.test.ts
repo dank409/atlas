@@ -68,8 +68,9 @@ const emptyCountries = {
 };
 
 const feedstockPayload = {
-  mode: "STATIC_SNAPSHOT" as const,
   asOf: "2026-04-15",
+  cadence: "CURATED" as const,
+  classification: "CURATED" as const,
   source: "test",
   methodology: "test",
   entries: [
@@ -107,6 +108,22 @@ describe("loadMapWorkspaceData — refinery feedstock enrichment", () => {
             return { ok: true, json: async () => emptyCompanies };
           case "/data/reference/countries.json":
             return { ok: true, json: async () => emptyCountries };
+          case "/data/reference/exposure_registry.json":
+            return {
+              ok: true,
+              json: async () => ({
+                asOf: "2026-04-16",
+                source: "test",
+                methodology: "test",
+                entries: [
+                  {
+                    targetId: "refinery-ir-abadan-refinery",
+                    targetKind: "asset",
+                    displayName: "Abadan Refinery"
+                  }
+                ]
+              })
+            };
           case "/data/reference/refinery_feedstock.json":
             return { ok: true, json: async () => feedstockPayload };
           default:

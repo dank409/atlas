@@ -1,17 +1,18 @@
-import type { PricePoint, PriceSeriesMode } from "../types/Market";
+import type { DataCadence, DataClassification } from "../types/DataSource";
+import type { PricePoint } from "../types/Market";
 
 // Historical Brent series for the situation-room historical chart.
 // Distinct from eiaPrices.ts (which fetches 30 days for the market
 // tape) because the chart wants years of context, not a tight window.
 // Static-only seed for now — a future scripts/refreshBrentHistory.ts
-// can pull ~5y from EIA v2 once VITE_EIA_API_KEY is provisioned. When
-// that lands, add a LIVE branch mirroring the eiaPrices.ts shape.
+// can pull ~5y from EIA v2 once VITE_EIA_API_KEY is provisioned.
 
 const STATIC_SNAPSHOT_PATH = "/data/market/brent_historical_5y.json";
 
 export interface BrentHistoricalSnapshot {
-  mode: PriceSeriesMode;
   asOf: string;
+  cadence: DataCadence;
+  classification: DataClassification;
   source: string;
   note?: string;
   frequency: "daily" | "weekly";
@@ -34,7 +35,8 @@ export async function loadBrentHistoricalSnapshot(): Promise<BrentHistoricalSnap
 
   return {
     asOf: payload.asOf,
-    mode: "STATIC_SNAPSHOT",
+    cadence: "EOD",
+    classification: "OBSERVED",
     source: payload.source,
     note: payload.note,
     frequency: payload.frequency ?? "weekly",

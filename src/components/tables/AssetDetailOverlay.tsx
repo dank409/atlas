@@ -1,9 +1,12 @@
 import { useEffect } from "react";
+import type { ExposureRegistryEntry } from "../../types/Exposure";
 import type {
   CompanyProfile,
   CountryProfile,
   InfrastructureAsset
 } from "../../types/Infrastructure";
+import type { FirmsSnapshot } from "../../types/firms";
+import type { OutageEventSnapshot } from "../../types/outageEvent";
 import {
   formatCapacityCompact,
   formatLengthKm,
@@ -35,8 +38,11 @@ interface AssetDetailOverlayProps {
    */
   companiesById?: Record<string, CompanyProfile>;
   countriesByCode?: Record<string, CountryProfile>;
+  exposureByTargetId?: Record<string, ExposureRegistryEntry>;
+  firmsSnapshot?: FirmsSnapshot | null;
   onInspectCompany?: (company: CompanyProfile) => void;
   onInspectCountry?: (country: CountryProfile) => void;
+  outageEvents?: OutageEventSnapshot | null;
 }
 
 /**
@@ -61,8 +67,11 @@ export function AssetDetailOverlay({
   onViewOnMap,
   companiesById,
   countriesByCode,
+  exposureByTargetId = {},
+  firmsSnapshot = null,
   onInspectCompany,
-  onInspectCountry
+  onInspectCountry,
+  outageEvents = null
 }: AssetDetailOverlayProps) {
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -92,8 +101,18 @@ export function AssetDetailOverlay({
   const handleInspectCountryRow = resolvedCountry && onInspectCountry
     ? () => onInspectCountry(resolvedCountry)
     : undefined;
+  const exposureEntry = exposureByTargetId[asset.id] ?? null;
+  const matchedAnomaly =
+    firmsSnapshot?.anomalies.find((anomaly) => anomaly.asset.id === asset.id) ?? null;
+  const linkedOutageCount = (outageEvents?.events ?? []).filter(
+    (event) =>
+      event.assetId === asset.id || (!event.assetId && event.country === asset.countryName)
+  ).length;
 
   const rows = buildRows(asset, {
+    exposureEntry,
+    linkedOutageCount,
+    matchedAnomaly,
     onInspectCompany: handleInspectCompanyRow,
     onInspectCountry: handleInspectCountryRow
   });
@@ -161,6 +180,8 @@ export function AssetDetailOverlay({
           <div className={styles.footerMeta}>
             <span>SOURCE: {asset._metadata.source}</span>
             <span className={styles.separator}>|</span>
+            <span>CADENCE: QUARTERLY</span>
+            <span className={styles.separator}>|</span>
             <span>UPDATED: {asset._metadata.downloadDate}</span>
           </div>
           <button
@@ -192,6 +213,9 @@ interface DetailRow {
 }
 
 interface BuildRowsContext {
+  exposureEntry: ExposureRegistryEntry | null;
+  linkedOutageCount: number;
+  matchedAnomaly: FirmsSnapshot["anomalies"][number] | null;
   onInspectCompany: (() => void) | undefined;
   onInspectCountry: (() => void) | undefined;
 }
@@ -200,7 +224,13 @@ function buildRows(
   asset: InfrastructureAsset,
   context: BuildRowsContext
 ): DetailRow[] {
-  const { onInspectCompany, onInspectCountry } = context;
+  const {
+    exposureEntry,
+    linkedOutageCount,
+    matchedAnomaly,
+    onInspectCompany,
+    onInspectCountry
+  } = context;
 
   const rows: DetailRow[] = [
     {
@@ -208,7 +238,16 @@ function buildRows(
       value: asset.countryName || "--",
       onClick: onInspectCountry
     },
-    { label: "STATUS", value: formatStatusLabel(asset.status).toUpperCase() }
+    { label: "STATUS", value: formatStatusLabel(asset.status).toUpperCase() },
+    { label: "CADENCE", value: "QUARTERLY" },
+    {
+      label: "FIRMS SIGNAL",
+      value: matchedAnomaly ? `${matchedAnomaly.severity} (${matchedAnomaly.windowCount})` : "NO SIGNAL"
+    },
+    {
+      label: "OUTAGES",
+      value: linkedOutageCount > 0 ? `${linkedOutageCount} LINKED` : "NONE LINKED"
+    }
   ];
 
   if (asset.assetKind === "refinery") {
@@ -229,11 +268,34 @@ function buildRows(
       },
       { label: "TYPE", value: (asset.type || "--").toUpperCase() },
       {
-        label: "HORMUZ DEP.",
+        label: "DEPENDENCY SCORE",
         value:
           typeof asset.hormuzDependency === "number"
             ? `${Math.round(asset.hormuzDependency * 100)}%`
-            : "--"
+            : "UNSCORED"
+      },
+      {
+        label: "EXPORT ROUTE",
+        value:
+          exposureEntry && exposureEntry.targetKind === "asset"
+            ? exposureEntry.exportRoute ?? "UNSCORED"
+            : "UNSCORED"
+      },
+      {
+        label: "CHOKEPOINT",
+        value:
+          exposureEntry && exposureEntry.targetKind === "asset"
+            ? exposureEntry.primaryChokepointLabel ?? "UNSCORED"
+            : "UNSCORED"
+      },
+      {
+        label: "MODELED EXP.",
+        value:
+          exposureEntry &&
+          exposureEntry.targetKind === "asset" &&
+          typeof exposureEntry.modeledAtRiskMbpd === "number"
+            ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+            : "UNSCORED"
       },
       {
         label: "LAT / LON",
@@ -275,6 +337,15 @@ function buildRows(
         value: [asset.startPoint, asset.endPoint].filter(Boolean).join(" → ") || "--"
       },
       {
+        label: "MODELED EXP.",
+        value:
+          exposureEntry &&
+          exposureEntry.targetKind === "asset" &&
+          typeof exposureEntry.modeledAtRiskMbpd === "number"
+            ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+            : "UNSCORED"
+      },
+      {
         label: "GEOMETRY",
         value: asset.geometryConfidence === "high" ? "SURVEYED" : "SCHEMATIC"
       }
@@ -301,6 +372,15 @@ function buildRows(
       {
         label: "LAT / LON",
         value: `${asset.lat.toFixed(3)}, ${asset.lon.toFixed(3)}`
+      },
+      {
+        label: "MODELED EXP.",
+        value:
+          exposureEntry &&
+          exposureEntry.targetKind === "asset" &&
+          typeof exposureEntry.modeledAtRiskMbpd === "number"
+            ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+            : "UNSCORED"
       }
     );
   }
@@ -338,6 +418,13 @@ function buildRows(
       {
         label: "LAT / LON",
         value: `${asset.lat.toFixed(3)}, ${asset.lon.toFixed(3)}`
+      },
+      {
+        label: "EXPORT ROUTE",
+        value:
+          exposureEntry && exposureEntry.targetKind === "asset"
+            ? exposureEntry.exportRoute ?? "UNSCORED"
+            : "UNSCORED"
       }
     );
   }
@@ -351,6 +438,24 @@ function buildRows(
       {
         label: "BENCHMARKS",
         value: asset.linkedContext?.benchmarkRefs?.join(" | ") || "--"
+      },
+      {
+        label: "BYPASS CAP.",
+        value:
+          exposureEntry &&
+          exposureEntry.targetKind === "chokepoint" &&
+          typeof exposureEntry.bypassCapacityMbpd === "number"
+            ? `${exposureEntry.bypassCapacityMbpd.toFixed(1)} MBPD`
+            : "UNSCORED"
+      },
+      {
+        label: "AT-RISK FLOW",
+        value:
+          exposureEntry &&
+          exposureEntry.targetKind === "chokepoint" &&
+          typeof exposureEntry.modeledAtRiskMbpd === "number"
+            ? `~${exposureEntry.modeledAtRiskMbpd.toFixed(1)} MBPD`
+            : "UNSCORED"
       }
     );
   }

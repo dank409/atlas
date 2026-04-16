@@ -3,8 +3,7 @@ import type { CrudeGrade, CrudeGradeSnapshot } from "../types/CrudeGrade";
 // Middle East crude-grade reference table — P0 #11 in CLAUDE.md. Served
 // from a checked-in static snapshot; there is no live equivalent (assay
 // data only moves when operators publish new fact sheets, which is
-// measured in months). Mode is always STATIC_SNAPSHOT so downstream UI
-// can badge the table honestly per Data Integrity Rule #6.
+// measured in months). The snapshot is explicitly marked curated.
 
 const STATIC_SNAPSHOT_PATH = "/data/reference/crude_grades.json";
 
@@ -24,7 +23,8 @@ export async function loadCrudeGradeSnapshot(): Promise<CrudeGradeSnapshot> {
 
   return {
     asOf: payload.asOf,
-    mode: "STATIC_SNAPSHOT",
+    cadence: "CURATED",
+    classification: "CURATED",
     source: payload.source,
     grades
   };
