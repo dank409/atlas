@@ -49,7 +49,7 @@ export interface LoadFirmsArgs {
 
 /**
  * Fetch + sanitise + confidence-filter detections. This function
- * returns ONLY the raw detection list plus mode — downstream callers
+ * returns ONLY the raw detection list plus provenance — downstream callers
  * (hooks/useFirms) layer geofencing and anomaly scoring on top.
  *
  * The return shape is a partial FirmsSnapshot so the hook can fill in
@@ -68,12 +68,13 @@ export async function loadFirmsDetections(
       const filtered = filterByConfidence(liveDetections, args.confidenceThreshold);
       if (filtered.length > 0) {
         return {
-          mode: "LIVE",
           asOf: new Date().toISOString(),
+          cadence: "NRT_SATELLITE",
+          classification: "OBSERVED",
           windowHours: args.windowHours,
           confidenceThreshold: args.confidenceThreshold,
           detections: filtered,
-          source: "NASA FIRMS VIIRS_SNPP_NRT (live)"
+          source: "NASA FIRMS VIIRS_SNPP_NRT"
         };
       }
       // Empty live response is not an error — but the tape still needs
@@ -109,8 +110,9 @@ export async function loadStaticFirmsDetections(
   const filtered = filterByConfidence(detections, args.confidenceThreshold);
 
   return {
-    mode: "STATIC_SNAPSHOT",
     asOf: payload.asOf ?? new Date().toISOString(),
+    cadence: "CURATED",
+    classification: "CURATED",
     windowHours: args.windowHours,
     confidenceThreshold: args.confidenceThreshold,
     detections: filtered,

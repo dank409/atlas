@@ -1,4 +1,8 @@
 import { useEffect, useState } from "react";
+import {
+  formatCadenceLabel,
+  formatClassificationLabel
+} from "../../types/DataSource";
 import type {
   FirmsFacilityAnomaly,
   FirmsSnapshot,
@@ -53,8 +57,9 @@ export function FirmsAlertFeed({ snapshot, isLoading, error }: FirmsAlertFeedPro
   return (
     <div className={styles.wrap}>
       <div className={styles.metaRow}>
-        <span className={styles.modeBadge} data-mode={snapshot.mode}>
-          {snapshot.mode === "LIVE" ? "LIVE" : "STATIC"}
+        <span className={styles.modeBadge} data-mode={snapshot.cadence}>
+          {formatClassificationLabel(snapshot.classification)}{" "}
+          {formatCadenceLabel(snapshot.cadence)}
         </span>
         <span className={styles.separator}>|</span>
         <span>WINDOW {formatWindowLabel(snapshot.windowHours)}</span>

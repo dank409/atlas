@@ -29,12 +29,14 @@
   text-transform: uppercase;
 }
 
-.modeBadge[data-mode="LIVE"] {
+.modeBadge[data-mode="NRT_SATELLITE"],
+.modeBadge[data-mode="EOD"] {
   color: #00c853;
   border-color: #00c853;
 }
 
-.modeBadge[data-mode="STATIC_SNAPSHOT"] {
+.modeBadge[data-mode="CURATED"],
+.modeBadge[data-mode="QUARTERLY"] {
   color: #ffd600;
   border-color: #ffd600;
 }

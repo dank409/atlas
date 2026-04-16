@@ -28,8 +28,9 @@ const murban: CrudeGrade = {
 };
 
 const healthyPayload: CrudeGradeSnapshot = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-15",
+  cadence: "CURATED",
+  classification: "CURATED",
   source: "Curated",
   grades: [arabLight, murban]
 };
@@ -39,7 +40,7 @@ describe("loadCrudeGradeSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads grades from the canonical reference path and forces STATIC_SNAPSHOT mode", async () => {
+  it("loads grades from the canonical reference path and marks them CURATED", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -52,7 +53,8 @@ describe("loadCrudeGradeSnapshot", () => {
 
     const snapshot = await loadCrudeGradeSnapshot();
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.grades).toHaveLength(2);
     expect(snapshot.grades[0].name).toBe("Arab Light");
     expect(snapshot.source).toBe("Curated");

@@ -1,22 +1,10 @@
 import type { CrudePriceSnapshot, PricePoint } from "../types/Market";
 
-// Per docs/DATA_SOURCES.md section 3 the live EIA daily spot price endpoint
-// is /v2/petroleum/pri/spt/data/. We support a live fetch when VITE_EIA_API_KEY
-// is provisioned, and fall back to the checked-in static snapshot so the UI
-// always has something to render. Every code path produces a CrudePriceSnapshot
-// with a `mode` of LIVE or STATIC_SNAPSHOT — downstream surfaces label
-// staleness explicitly per the CLAUDE.md "never hide staleness" rule.
-//
-// NOTE ON WTI: WTI is still fetched alongside Brent because EIA publishes
-// both for free on the same endpoint, so the incremental cost is one extra
-// URL param. It is INTENTIONALLY NOT surfaced on the primary market tape
-// or in the situation-room MARKET BRIEF — Atlas is a Middle East terminal,
-// the Gulf benchmarks (Brent + DME Oman + Murban) are the headline set,
-// and CLAUDE.md's Connecting Thread stress test explicitly names "a second
-// US benchmark when DME Oman is missing" as chrome to drop. WTI remains
-// available through `CrudeMarketSummary.wti` for any consumer that wants
-// it (e.g. a future WTI-Brent spread panel in the dashboard); future
-// contributors should NOT "clean up" this fetch thinking it is dead code.
+// Per docs/DATA_SOURCES.md section 3 the EIA daily spot-price endpoint
+// is /v2/petroleum/pri/spt/data/. We support an API fetch when
+// VITE_EIA_API_KEY is provisioned, and fall back to the checked-in
+// static snapshot so the UI always has something to render. Every code
+// path produces explicit cadence/classification metadata.
 
 const STATIC_SNAPSHOT_PATH = "/data/market/crude_prices_30d.json";
 const EIA_BASE = "https://api.eia.gov/v2/petroleum/pri/spt/data/";
@@ -60,9 +48,10 @@ async function loadLiveCrudePrices(apiKey: string): Promise<CrudePriceSnapshot> 
 
   return {
     asOf,
-    mode: "LIVE",
+    cadence: "EOD",
+    classification: "OBSERVED",
     series: { brent, wti },
-    source: "EIA v2 petroleum/pri/spt (live)"
+    source: "EIA v2 petroleum/pri/spt"
   };
 }
 
@@ -118,6 +107,7 @@ async function loadStaticCrudePrices(): Promise<CrudePriceSnapshot> {
 
   return {
     ...payload,
-    mode: "STATIC_SNAPSHOT"
+    cadence: "EOD",
+    classification: "OBSERVED"
   };
 }

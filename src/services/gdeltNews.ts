@@ -12,7 +12,7 @@ import type {
 //   4. is legally permissive for display with attribution
 //
 // That combination makes it the ONLY source in the ATLAS feed graph
-// that can safely run in pure LIVE mode directly from the browser —
+// that can safely run in pure observed mode directly from the browser —
 // no GitHub Actions proxy required. We still keep a STATIC_SNAPSHOT
 // fallback so the UI always has something to render when:
 //   - GDELT is rate-limiting us (strict 1 req / 5s per IP)
@@ -89,10 +89,11 @@ async function loadLiveGdeltNews(query: string): Promise<GdeltNewsSnapshot> {
 
   return {
     asOf: new Date().toISOString(),
-    mode: "LIVE",
+    cadence: "CURATED",
+    classification: "OBSERVED",
     query,
     headlines,
-    source: "GDELT 2.0 Doc API (live)"
+    source: "GDELT 2.0 Doc API"
   };
 }
 
@@ -111,7 +112,8 @@ async function loadStaticGdeltNews(): Promise<GdeltNewsSnapshot> {
 
   return {
     ...payload,
-    mode: "STATIC_SNAPSHOT"
+    cadence: "CURATED",
+    classification: "CURATED"
   };
 }
 

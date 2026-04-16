@@ -1,4 +1,4 @@
-import { useEffect, useState, type Ref } from "react";
+import type { Ref } from "react";
 import styles from "./HeaderBar.module.css";
 import { ViewMode } from "../../types/View";
 import type { InfrastructureAsset } from "../../types/Infrastructure";
@@ -29,8 +29,6 @@ export function HeaderBar({
   searchQuery,
   searchResults
 }: HeaderBarProps) {
-  const time = useTickingClock();
-
   return (
     <div className={styles.headerBar}>
       <div className={styles.brand}>ATLAS</div>
@@ -103,7 +101,7 @@ export function HeaderBar({
           onClick={() => onChangeView("dash")}
           type="button"
         >
-          DASH
+          MACRO
         </button>
         <button
           className={activeView === "grades" ? styles.activeTab : styles.tab}
@@ -120,41 +118,11 @@ export function HeaderBar({
           role="status"
         >
           <span className={styles.scenarioDot} />
-          SCENARIO MODE: ACTIVE · HORMUZ {scenarioDisruptionPct.toFixed(0)}%
+          SCENARIO LAB · HORMUZ {scenarioDisruptionPct.toFixed(0)}%
         </div>
       ) : null}
-      <div className={styles.clock}>{time}</div>
     </div>
   );
-}
-
-// Bloomberg terminals pulse the clock every second — a frozen clock was the
-// fastest way to fail the "is this real" test, so we tick on an interval
-// rather than relying on render-time `new Date()`.
-function useTickingClock() {
-  const [now, setNow] = useState(() => formatClock(new Date()));
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      setNow(formatClock(new Date()));
-    }, 1000);
-
-    return () => {
-      window.clearInterval(interval);
-    };
-  }, []);
-
-  return now;
-}
-
-function formatClock(date: Date) {
-  return new Intl.DateTimeFormat("en-CA", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-    timeZoneName: "short"
-  }).format(date);
 }
 
 function buildSearchMeta(asset: InfrastructureAsset) {

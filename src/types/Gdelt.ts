@@ -1,4 +1,4 @@
-import type { PriceSeriesMode } from "./Market";
+import type { DataSourceMetadata } from "./DataSource";
 
 /**
  * GDELT 2.0 Doc API — raw article record as returned by
@@ -58,21 +58,13 @@ export interface GdeltHeadline {
 
 /**
  * Snapshot the service returns to the hook. Follows the same
- * LIVE / STATIC_SNAPSHOT dual-mode pattern as `CrudePriceSnapshot`
+ * Observed / curated provenance pattern aligned with the market snapshots
  * and `IceBrentSettlementSnapshot` so downstream UI can badge the
  * mode explicitly (CLAUDE.md rule #6: never hide staleness).
  */
-export interface GdeltNewsSnapshot {
-  /** ISO timestamp when the snapshot was materialised. */
-  asOf: string;
-  /** LIVE (hit GDELT directly) vs STATIC_SNAPSHOT (seed fallback). */
-  mode: PriceSeriesMode;
+export interface GdeltNewsSnapshot extends DataSourceMetadata {
   /** The query phrase used — surfaced to the UI for provenance. */
   query: string;
   /** Ordered most-recent-first. Always non-empty in a valid snapshot. */
   headlines: GdeltHeadline[];
-  /** Human-readable provenance line. */
-  source: string;
-  /** Optional free-form note for seed JSON. */
-  note?: string;
 }

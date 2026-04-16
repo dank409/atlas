@@ -8,6 +8,10 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import type { CrudeGrade, CrudeGradeSnapshot } from "../../types/CrudeGrade";
+import {
+  formatCadenceLabel,
+  formatClassificationLabel
+} from "../../types/DataSource";
 import styles from "./CrudeGradeTable.module.css";
 
 interface CrudeGradeTableProps {
@@ -58,7 +62,8 @@ export function CrudeGradeTable({
     return <div className={styles.emptyState}>NO CRUDE GRADES IN THE REFERENCE TABLE.</div>;
   }
 
-  const modeClassName = snapshot?.mode === "LIVE" ? styles.modeLive : styles.modeStatic;
+  const modeClassName =
+    snapshot?.classification === "OBSERVED" ? styles.modeLive : styles.modeStatic;
   const producerCount = new Set(grades.map((grade) => grade.producerIso)).size;
   const totalProductionMbpd = grades.reduce((sum, grade) => sum + grade.productionMbpd, 0);
 
@@ -73,7 +78,11 @@ export function CrudeGradeTable({
         <span className={styles.separator}>|</span>
         <span>AS OF: {snapshot?.asOf ?? "--"}</span>
         <span className={styles.separator}>|</span>
-        <span className={modeClassName}>{snapshot?.mode ?? "STATIC_SNAPSHOT"}</span>
+        <span className={modeClassName}>
+          {snapshot
+            ? `${formatClassificationLabel(snapshot.classification)} ${formatCadenceLabel(snapshot.cadence)}`
+            : "CURATED"}
+        </span>
       </div>
       <div className={styles.tableWrap}>
         <table className={styles.table}>

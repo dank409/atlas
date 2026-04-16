@@ -1,11 +1,14 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 import { ContextPanelStack } from "./ContextPanelStack";
+import type { ExposureRegistryEntry } from "../../types/Exposure";
 import type {
   CompanyProfile,
   CountryProfile,
   InfrastructureAsset
 } from "../../types/Infrastructure";
+import type { FirmsSnapshot } from "../../types/firms";
+import type { OutageEventSnapshot } from "../../types/outageEvent";
 
 const refinery: InfrastructureAsset = {
   assetKind: "refinery",
@@ -22,6 +25,7 @@ const refinery: InfrastructureAsset = {
   lat: 24.1108,
   lon: 54.0894,
   firmsRadius_km: 5,
+  hormuzDependency: 0.3,
   linkedContext: {
     companyId: "adnoc",
     countryCode: "AE",
@@ -49,7 +53,7 @@ const companiesById: Record<string, CompanyProfile> = {
 
 const countriesByCode: Record<string, CountryProfile> = {
   AE: {
-    chokepointDependency: "HORMUZ",
+    chokepointDependency: "Partial Hormuz hedge via Fujairah bypass.",
     code: "AE",
     keyGrades: ["MURBAN", "UPPER ZAKUM"],
     name: "United Arab Emirates",
@@ -59,8 +63,85 @@ const countriesByCode: Record<string, CountryProfile> = {
   }
 };
 
+const exposureByTargetId: Record<string, ExposureRegistryEntry> = {
+  "refinery-ruwais": {
+    targetId: "refinery-ruwais",
+    targetKind: "asset",
+    displayName: "Ruwais Refinery",
+    dependencyScore: 0.3,
+    exportRoute: "ADCOP / Fujairah bypass corridor",
+    primaryChokepointId: "chokepoint-hormuz",
+    primaryChokepointLabel: "Strait of Hormuz",
+    modeledAtRiskMbpd: 0.3,
+    relevantBenchmarks: ["Murban", "Brent-WTI"]
+  },
+  AE: {
+    targetId: "AE",
+    targetKind: "country",
+    displayName: "United Arab Emirates",
+    primaryChokepointId: "chokepoint-hormuz",
+    primaryChokepointLabel: "Strait of Hormuz",
+    seaborneExportsMbpd: 3.4,
+    bypassCapacityMbpd: 1.5,
+    modeledAtRiskMbpd: 1.9
+  }
+};
+
+const firmsSnapshot: FirmsSnapshot = {
+  asOf: "2026-04-14T12:00:00Z",
+  cadence: "NRT_SATELLITE",
+  classification: "OBSERVED",
+  confidenceThreshold: 80,
+  detections: [],
+  matches: [],
+  anomalies: [
+    {
+      asset: {
+        id: "refinery-ruwais",
+        name: "Ruwais Refinery",
+        assetType: "refinery",
+        center: { lat: 24.11, lon: 54.09 },
+        radiusKm: 5,
+        owner: "ADNOC",
+        capacityBpd: 837000
+      },
+      windowCount: 4,
+      baselineMean: 1.2,
+      baselineStdev: 0.6,
+      zScore: 4.7,
+      ratioToBaseline: 3.3,
+      severity: "ALERT",
+      latestDetectionAt: "2026-04-14T10:00:00Z"
+    }
+  ],
+  source: "NASA FIRMS",
+  windowHours: 72
+};
+
+const outageEvents: OutageEventSnapshot = {
+  asOf: "2026-04-15",
+  cadence: "CURATED",
+  classification: "CURATED",
+  source: "Curated",
+  events: [
+    {
+      id: "ruwais-outage",
+      date: "2026-04-10",
+      name: "Ruwais Unit Fire",
+      country: "United Arab Emirates",
+      assetId: "refinery-ruwais",
+      severity: "MEDIUM",
+      category: "accident",
+      outageVolumeBpd: 120000,
+      durationDays: 4,
+      summary: "Contained process-unit fire.",
+      resolved: true
+    }
+  ]
+};
+
 describe("ContextPanelStack", () => {
-  it("shows 'select an asset' placeholder copy in all three panels when no asset is selected", () => {
+  it("shows four context placeholders when no asset is selected", () => {
     render(
       <ContextPanelStack
         companiesById={companiesById}
@@ -70,157 +151,56 @@ describe("ContextPanelStack", () => {
     );
 
     expect(screen.getByText("SELECT AN ASSET FROM THE MAP OR GRID.")).toBeInTheDocument();
-    expect(screen.getByText("SELECT AN ASSET TO SEE OPERATOR CONTEXT.")).toBeInTheDocument();
-    expect(screen.getByText("SELECT AN ASSET TO SEE COUNTRY CONTEXT.")).toBeInTheDocument();
-    // "COMING SOON" badge must NOT render until a user selects an asset — it
-    // would misrepresent the idle empty state as a coverage gap.
-    expect(screen.queryByText("COMING SOON")).not.toBeInTheDocument();
+    expect(screen.getByText("SELECT AN ASSET TO SEE FIRMS AND OUTAGE SIGNALS.")).toBeInTheDocument();
+    expect(screen.getByText("SELECT AN ASSET TO SEE ROUTE AND CHOKEPOINT DEPENDENCY.")).toBeInTheDocument();
+    expect(screen.getByText("SELECT AN ASSET TO SEE MODELED EXPOSURE.")).toBeInTheDocument();
   });
 
-  it("renders asset, operator, and country detail when everything links", () => {
+  it("renders structural, observed, curated, and modeled context for a scored asset", () => {
     render(
       <ContextPanelStack
         companiesById={companiesById}
         countriesByCode={countriesByCode}
+        exposureByTargetId={exposureByTargetId}
+        firmsSnapshot={firmsSnapshot}
+        outageEvents={outageEvents}
         selectedAsset={refinery}
       />
     );
+
+    expect(screen.getByText("STRUCTURAL PROFILE")).toBeInTheDocument();
+    expect(screen.getByText("OBSERVED SIGNALS")).toBeInTheDocument();
+    expect(screen.getByText("CURATED DEPENDENCY")).toBeInTheDocument();
+    expect(screen.getByText("MODELED EXPOSURE")).toBeInTheDocument();
 
     expect(screen.getByText("Ruwais Refinery")).toBeInTheDocument();
-    // "United Arab Emirates" appears as both the asset summary line (scoped
-    // to the refinery) and the country-context panel primaryName, so match
-    // all and expect at least two.
-    expect(screen.getAllByText(/United Arab Emirates/).length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText("ADNOC")).toBeInTheDocument();
-    expect(screen.getByText("Abu Dhabi National Oil Company.")).toBeInTheDocument();
-    expect(screen.getByText("Gulf OPEC producer.")).toBeInTheDocument();
-    expect(screen.getByText("HORMUZ")).toBeInTheDocument();
+    expect(screen.getByText("CADENCE: QUARTERLY")).toBeInTheDocument();
+    expect(screen.getByText("ALERT")).toBeInTheDocument();
+    expect(screen.getByText("ADCOP / Fujairah bypass corridor")).toBeInTheDocument();
+    expect(screen.getAllByText("Strait of Hormuz").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("~0.3 MBPD").length).toBeGreaterThanOrEqual(1);
   });
 
-  it("surfaces the asset source and updated-date attribution", () => {
-    render(
-      <ContextPanelStack
-        companiesById={companiesById}
-        countriesByCode={countriesByCode}
-        selectedAsset={refinery}
-      />
-    );
-
-    // Asset source is unique ("OGIM"); company/country share "Curated".
-    expect(screen.getByText("SOURCE: OGIM")).toBeInTheDocument();
-    // Three panels each emit their own UPDATED row — confirm at least one.
-    expect(screen.getAllByText("UPDATED: 2026-04-14").length).toBeGreaterThanOrEqual(1);
-  });
-
-  it("shows the UNMAPPED OPERATOR notice with last-known operator when the asset has no linked company", () => {
-    const unlinkedAsset: InfrastructureAsset = {
-      ...refinery,
-      linkedContext: { countryCode: "AE" }
-    };
-
-    render(
-      <ContextPanelStack
-        companiesById={companiesById}
-        countriesByCode={countriesByCode}
-        selectedAsset={unlinkedAsset}
-      />
-    );
-
-    expect(screen.getByText("UNMAPPED OPERATOR")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Profile forthcoming\. This operator is not yet/)
-    ).toBeInTheDocument();
-    // Last-known-operator row pulls the raw operator field from the asset.
-    // "ADNOC Refining" also appears in the asset-detail panel Operator row,
-    // so we assert there are at least two — one from each panel.
-    expect(screen.getAllByText("ADNOC Refining").length).toBeGreaterThanOrEqual(2);
-    // Country panel still resolves because AE IS in the registry.
-    expect(screen.getByText("Gulf OPEC producer.")).toBeInTheDocument();
-    // Exactly one COMING SOON badge (operator panel), not two.
-    expect(screen.getAllByText("COMING SOON")).toHaveLength(1);
-  });
-
-  it("routes operator and country section clicks through onInspect callbacks when provided", () => {
-    const onInspectCompany = vi.fn();
-    const onInspectCountry = vi.fn();
-
-    render(
-      <ContextPanelStack
-        companiesById={companiesById}
-        countriesByCode={countriesByCode}
-        onInspectCompany={onInspectCompany}
-        onInspectCountry={onInspectCountry}
-        selectedAsset={refinery}
-      />
-    );
-
-    // When drill-down callbacks are supplied, both sections render
-    // as <button> elements with an "EXPAND ▸" badge on the panel
-    // header so the click affordance is visible without hovering.
-    expect(screen.getAllByText("EXPAND ▸")).toHaveLength(2);
-
-    // Operator click → onInspectCompany with the resolved profile.
-    // The button exposes its purpose via a `title` attribute, so
-    // we look it up by title rather than accessible name.
-    fireEvent.click(screen.getByTitle("Expand ADNOC profile"));
-    expect(onInspectCompany).toHaveBeenCalledTimes(1);
-    expect(onInspectCompany).toHaveBeenCalledWith(
-      expect.objectContaining({ id: "adnoc" })
-    );
-    expect(onInspectCountry).not.toHaveBeenCalled();
-
-    // Country click → onInspectCountry with the resolved profile.
-    fireEvent.click(screen.getByTitle("Expand United Arab Emirates profile"));
-    expect(onInspectCountry).toHaveBeenCalledTimes(1);
-    expect(onInspectCountry).toHaveBeenCalledWith(
-      expect.objectContaining({ code: "AE" })
-    );
-  });
-
-  it("shows the UNMAPPED COUNTRY notice with a live covered-country list for countries not in the registry", () => {
+  it("renders UNSCORED modeled context when the asset has no registry entry", () => {
     const iranianRefinery: InfrastructureAsset = {
       ...refinery,
       id: "refinery-abadan",
       name: "Abadan Refinery",
       country: "IR",
       countryName: "Iran",
-      linkedContext: { countryCode: "IR" }
-    };
-
-    const multiCountryRegistry: Record<string, CountryProfile> = {
-      AE: countriesByCode.AE,
-      SA: {
-        chokepointDependency: "HORMUZ",
-        code: "SA",
-        keyGrades: ["ARAB LIGHT"],
-        name: "Saudi Arabia",
-        source: "Curated",
-        summary: "OPEC swing producer.",
-        updated: "2026-04-14"
-      }
+      linkedContext: { countryCode: "IR" },
+      hormuzDependency: undefined
     };
 
     render(
       <ContextPanelStack
         companiesById={companiesById}
-        countriesByCode={multiCountryRegistry}
+        countriesByCode={countriesByCode}
         selectedAsset={iranianRefinery}
       />
     );
 
-    expect(screen.getByText("UNMAPPED COUNTRY")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Profile forthcoming\. Other Middle East countries/)
-    ).toBeInTheDocument();
-    // "Iran" shows up in the asset-detail summary line AND in the unmapped
-    // notice's selected-country row — assert both.
-    expect(screen.getAllByText("Iran").length).toBeGreaterThanOrEqual(2);
-    // Covered list is dynamic — driven by the registry keys, sorted.
-    expect(
-      screen.getByText("SAUDI ARABIA · UNITED ARAB EMIRATES")
-    ).toBeInTheDocument();
-    // Both operator AND country panels have a COMING SOON badge because
-    // neither profile resolves for this asset.
-    expect(screen.getAllByText("COMING SOON")).toHaveLength(2);
+    expect(screen.getByText("UNSCORED. NO CURATED EXPOSURE ENTRY.")).toBeInTheDocument();
+    expect(screen.getAllByText("UNSCORED").length).toBeGreaterThanOrEqual(1);
   });
 });

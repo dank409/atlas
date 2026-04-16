@@ -5,9 +5,10 @@ import type { GdeltNewsSnapshot } from "../../types/Gdelt";
 
 const SAMPLE_SNAPSHOT: GdeltNewsSnapshot = {
   asOf: "2026-04-15T12:00:00Z",
-  mode: "LIVE",
+  cadence: "CURATED",
+  classification: "OBSERVED",
   query: '"Strait of Hormuz" sourcelang:eng',
-  source: "GDELT 2.0 Doc API (live)",
+  source: "GDELT 2.0 Doc API",
   headlines: [
     {
       url: "https://example.com/a",
@@ -121,6 +122,6 @@ describe("NewsTicker", () => {
       <NewsTicker snapshot={SAMPLE_SNAPSHOT} isLoading={false} error={null} />
     );
     expect(container.textContent).toContain("Strait of Hormuz");
-    expect(container.textContent).toContain("GDELT 2.0 Doc API (live)");
+    expect(container.textContent).toContain("GDELT 2.0 Doc API");
   });
 });

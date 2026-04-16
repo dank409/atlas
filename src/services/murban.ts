@@ -2,10 +2,9 @@ import type { MurbanSnapshot, PricePoint } from "../types/Market";
 
 // ICE Futures Abu Dhabi (IFAD) Murban M1 settlements. IFAD publishes an
 // end-of-day settlement summary on their public page but there is no
-// free JSON feed, so — same pattern as dmeOman.ts and eiaPrices.ts
-// static-only fallback — we load a checked-in snapshot and surface mode
-// STATIC_SNAPSHOT explicitly. When a licensed or scraped live feed lands,
-// add a `loadLive*` path mirroring the eiaPrices.ts LIVE branch.
+// free JSON feed, so we load a checked-in snapshot and surface it as a
+// curated benchmark series. When a licensed or scraped feed lands, add a
+// dedicated path with honest cadence metadata.
 
 const STATIC_SNAPSHOT_PATH = "/data/market/murban_30d.json";
 
@@ -25,7 +24,8 @@ export async function loadMurbanSnapshot(): Promise<MurbanSnapshot> {
 
   return {
     asOf: payload.asOf,
-    mode: "STATIC_SNAPSHOT",
+    cadence: "CURATED",
+    classification: "CURATED",
     series: { murban: series },
     source: payload.source,
     note: payload.note

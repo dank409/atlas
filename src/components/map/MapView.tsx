@@ -9,7 +9,11 @@ import { createLineSourceDefinition, createPointSourceDefinition, type GeoJsonPa
 import type { DatasetId, InfrastructureAsset } from "../../types/Infrastructure";
 import type { OutageEvent } from "../../types/outageEvent";
 import type { FirmsSnapshot } from "../../types/firms";
-import type { MapDisplaySettings } from "../../types/mapDisplaySettings";
+import type {
+  ColorByOption,
+  MapDisplaySettings,
+  SizeByOption
+} from "../../types/mapDisplaySettings";
 import { getAssetTypeLabel } from "../../utils/infrastructure";
 import {
   FEEDSTOCK_RISK_DEPENDENCY_THRESHOLD,
@@ -108,6 +112,7 @@ export function MapView({
   const outageEventsRef = useRef<OutageEvent[] | null>(outageEvents);
   const firmsSnapshotRef = useRef<FirmsSnapshot | null>(firmsSnapshot);
   const basemapModeRef = useRef<BasemapMode>(basemapMode);
+  const mapDisplaySettingsRef = useRef<MapDisplaySettings | undefined>(mapDisplaySettings);
   const selectRef = useRef(onSelectAsset);
   const selectedAssetIdRef = useRef<string | null>(selectedAssetId);
   const scenarioStateRef = useRef<ScenarioVisualState>(scenarioState);
@@ -167,6 +172,10 @@ export function MapView({
   }, [basemapMode]);
 
   useEffect(() => {
+    mapDisplaySettingsRef.current = mapDisplaySettings;
+  }, [mapDisplaySettings]);
+
+  useEffect(() => {
     selectRef.current = onSelectAsset;
   }, [onSelectAsset]);
 
@@ -203,6 +212,11 @@ export function MapView({
       );
 
       applyBasemapModeStyling(map, basemapModeRef.current);
+      applyMapDisplaySettings(
+        map,
+        mapDisplaySettingsRef.current,
+        basemapModeRef.current
+      );
 
       if (pendingCameraRef.current) {
         map.jumpTo(pendingCameraRef.current);
@@ -493,49 +507,21 @@ export function MapView({
   useEffect(() => {
     const map = mapRef.current;
 
-    if (!map || !map.isStyleLoaded() || !mapDisplaySettings) {
+    if (!map || !map.isStyleLoaded()) {
       return;
     }
 
-    const scale = mapDisplaySettings.pointSize / 3;
-
-    // --- Point Size + Size By ---
-    if (map.getLayer("refineries-layer")) {
-      setPaint(map, "refineries-layer", "circle-radius",
-        buildRadiusExpression("capacity_bpd", mapDisplaySettings.sizeBy, scale, 10000, 4, 15));
-    }
-    if (map.getLayer("fields-layer")) {
-      const fieldProp = mapDisplaySettings.sizeBy === "reserves" ? "reserves_mmboe" : "production_bpd";
-      const fieldMax = mapDisplaySettings.sizeBy === "reserves" ? 5000 : 1000000;
-      setPaint(map, "fields-layer", "circle-radius",
-        buildRadiusExpression(fieldProp, mapDisplaySettings.sizeBy, scale, 1, 3, 9, fieldMax));
-    }
-    if (map.getLayer("terminals-layer")) {
-      setPaint(map, "terminals-layer", "circle-radius",
-        buildRadiusExpression("capacity_mtpa", mapDisplaySettings.sizeBy, scale, 1, 4, 13, 50));
-    }
-
-    // --- Color By ---
-    applyColorBySettings(map, mapDisplaySettings.colorBy);
-
-    // --- Labels toggle ---
-    ensureAssetLabelLayers(map);
-    const labelVisibility = mapDisplaySettings.showLabels ? "visible" : "none";
-    for (const layerId of ASSET_LABEL_LAYER_IDS) {
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, "visibility", labelVisibility);
-      }
-    }
-  }, [mapDisplaySettings]);
+    applyMapDisplaySettings(map, mapDisplaySettings, basemapMode);
+  }, [basemapMode, mapDisplaySettings]);
 
   if (hasError) {
-    return <div className={styles.emptyState}>MAP DATA SOURCES OFFLINE</div>;
+    return <div className={styles.emptyState}>MAP DATA UNAVAILABLE</div>;
   }
 
   if (!token) {
     return (
       <div className={styles.emptyState}>
-        MAPBOX TOKEN REQUIRED. ADD `VITE_MAPBOX_ACCESS_TOKEN` TO ENABLE THE LIVE MAP VIEW.
+        MAPBOX TOKEN REQUIRED. ADD `VITE_MAPBOX_ACCESS_TOKEN` TO ENABLE MAP VIEW.
       </div>
     );
   }
@@ -1408,7 +1394,8 @@ function buildPointCollection(assets: InfrastructureAsset[], kind: "refinery" | 
               status: asset.status,
               name: asset.name,
               fieldType: asset.fieldType ?? "mixed",
-              production_bpd: asset.production_bpd ?? 0
+              production_bpd: asset.production_bpd ?? 0,
+              reserves_mmboe: asset.reserves_mmboe ?? 0
             }
           };
         }
@@ -1663,10 +1650,13 @@ function applyBasemapModeStyling(map: mapboxgl.Map, mode: BasemapMode) {
     "refineries-layer",
     "refineries-feedstock-risk-layer",
     "refineries-selected-layer",
+    "refineries-label-layer",
     "fields-layer",
     "fields-selected-layer",
+    "fields-label-layer",
     "terminals-layer",
     "terminals-selected-layer",
+    "terminals-label-layer",
     "pipelines-casing-layer",
     "pipelines-layer",
     "pipelines-schematic-layer",
@@ -1718,14 +1708,65 @@ function applyBasemapModeStyling(map: mapboxgl.Map, mode: BasemapMode) {
 
 // --- Map Display Settings helpers ---
 
-import type { ColorByOption, SizeByOption } from "../../types/mapDisplaySettings";
-
 /* setPaintProperty's generic overloads are too strict for dynamic
    expressions built at runtime. This thin wrapper avoids per-call
    casts while keeping the rest of the file type-safe. */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function setPaint(map: mapboxgl.Map, layer: string, prop: any, value: any) {
   map.setPaintProperty(layer, prop, value);
+}
+
+function applyMapDisplaySettings(
+  map: mapboxgl.Map,
+  settings: MapDisplaySettings | undefined,
+  basemapMode: BasemapMode
+) {
+  if (!settings) {
+    return;
+  }
+
+  const scale = settings.pointSize / 3;
+
+  // --- Point Size + Size By ---
+  if (map.getLayer("refineries-layer")) {
+    setPaint(
+      map,
+      "refineries-layer",
+      "circle-radius",
+      buildRadiusExpression("capacity_bpd", settings.sizeBy, scale, 10000, 4, 15)
+    );
+  }
+  if (map.getLayer("fields-layer")) {
+    const fieldProp = settings.sizeBy === "reserves" ? "reserves_mmboe" : "production_bpd";
+    const fieldMax = settings.sizeBy === "reserves" ? 5000 : 1000000;
+    setPaint(
+      map,
+      "fields-layer",
+      "circle-radius",
+      buildRadiusExpression(fieldProp, settings.sizeBy, scale, 1, 3, 9, fieldMax)
+    );
+  }
+  if (map.getLayer("terminals-layer")) {
+    setPaint(
+      map,
+      "terminals-layer",
+      "circle-radius",
+      buildRadiusExpression("capacity_mtpa", settings.sizeBy, scale, 1, 4, 13, 50)
+    );
+  }
+
+  // --- Color By ---
+  applyColorBySettings(map, settings.colorBy);
+
+  // --- Labels toggle ---
+  ensureAssetLabelLayers(map);
+  const labelVisibility =
+    settings.showLabels && basemapMode !== "firms" ? "visible" : "none";
+  for (const layerId of ASSET_LABEL_LAYER_IDS) {
+    if (map.getLayer(layerId)) {
+      map.setLayoutProperty(layerId, "visibility", labelVisibility);
+    }
+  }
 }
 
 function buildRadiusExpression(

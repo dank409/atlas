@@ -223,6 +223,7 @@ export interface MapWorkspaceData {
   catalog: DatasetCatalogEntry[];
   companiesById: Record<string, CompanyProfile>;
   countriesByCode: Record<string, CountryProfile>;
+  exposureByTargetId: Record<string, import("./Exposure").ExposureRegistryEntry>;
   /**
    * Refinery ID → curated Hormuz crude feedstock entry. Sourced from
    * `public/data/reference/refinery_feedstock.json`. The refinery asset

@@ -208,4 +208,18 @@ describe("AssetDetailOverlay", () => {
     );
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+
+  it("renders UNSCORED modeled fields when no exposure registry entry exists", () => {
+    render(
+      <AssetDetailOverlay
+        asset={refinery}
+        exposureByTargetId={{}}
+        onClose={vi.fn()}
+        onViewOnMap={vi.fn()}
+      />
+    );
+
+    expect(screen.getByText("MODELED EXP.")).toBeInTheDocument();
+    expect(screen.getAllByText("UNSCORED").length).toBeGreaterThanOrEqual(1);
+  });
 });

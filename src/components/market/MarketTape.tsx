@@ -1,18 +1,36 @@
-import type { CrudeMarketSummary } from "../../types/Market";
-import { formatChange, formatChangePct, formatPrice, formatSpread } from "../../utils/marketSummary";
+import {
+  formatCadenceLabel,
+  formatClassificationLabel
+} from "../../types/DataSource";
+import type {
+  BrentTimespreadSnapshot,
+  CrudeMarketSummary
+} from "../../types/Market";
+import {
+  formatChange,
+  formatChangePct,
+  formatPrice,
+  formatSpread
+} from "../../utils/marketSummary";
 import styles from "./MarketTape.module.css";
 
 interface MarketTapeProps {
   error: Error | null;
   isLoading: boolean;
   summary: CrudeMarketSummary | null;
+  timespreads?: BrentTimespreadSnapshot | null;
 }
 
-export function MarketTape({ error, isLoading, summary }: MarketTapeProps) {
+export function MarketTape({
+  error,
+  isLoading,
+  summary,
+  timespreads = null
+}: MarketTapeProps) {
   if (isLoading) {
     return (
       <div className={styles.tape}>
-        <div className={styles.loadingLabel}>LOADING MARKET DATA…</div>
+        <div className={styles.loadingLabel}>LOADING MACRO CONTEXT…</div>
       </div>
     );
   }
@@ -20,27 +38,10 @@ export function MarketTape({ error, isLoading, summary }: MarketTapeProps) {
   if (error || !summary) {
     return (
       <div className={styles.tape}>
-        <div className={styles.offlineLabel}>MARKET FEED OFFLINE</div>
+        <div className={styles.offlineLabel}>MACRO DATA UNAVAILABLE</div>
       </div>
     );
   }
-
-  // `summary.mode` is now derived from the DME Oman snapshot mode (see
-  // marketSummary.ts). That keeps the tape badged STATIC whenever the
-  // primary Gulf benchmark is coming from the checked-in snapshot,
-  // even if EIA Brent is streaming LIVE on the same tape.
-  const modeLabel = summary.mode === "LIVE" ? "LIVE" : "STATIC";
-  const brentDirection = directionOf(summary.brent.change);
-  const dmeOmanDirection = summary.dmeOman
-    ? directionOf(summary.dmeOman.change)
-    : "flat";
-  const murbanDirection = summary.murban
-    ? directionOf(summary.murban.change)
-    : "flat";
-  // Brent - Oman is the east-of-Suez arb. Positive = Oman discount;
-  // direction arrow follows the sign so traders get the visual cue.
-  const brentOmanSpread = summary.brentDmeOmanSpread;
-  const spreadDirection = directionOf(brentOmanSpread ?? 0);
 
   return (
     <div
@@ -48,47 +49,69 @@ export function MarketTape({ error, isLoading, summary }: MarketTapeProps) {
       className={styles.tape}
       role="region"
     >
-      <div className={styles.sourceLabel}>GULF</div>
+      <div className={styles.sourceLabel}>MACRO</div>
       <Tile
         changeLabel={`${formatChange(summary.brent.change)} (${formatChangePct(summary.brent.changePct)})`}
-        direction={brentDirection}
+        direction={directionOf(summary.brent.change)}
         label="BRENT"
         value={formatPrice(summary.brent.value)}
+      />
+      <Tile
+        changeLabel={`${formatChange(summary.wti.change)} (${formatChangePct(summary.wti.changePct)})`}
+        direction={directionOf(summary.wti.change)}
+        label="WTI"
+        value={formatPrice(summary.wti.value)}
+      />
+      <Tile
+        changeLabel={
+          summary.brentWtiSpread >= 0 ? "BRENT PREMIUM" : "WTI PREMIUM"
+        }
+        direction={directionOf(summary.brentWtiSpread)}
+        label="BRENT-WTI"
+        value={formatSpread(summary.brentWtiSpread)}
       />
       {summary.dmeOman ? (
         <Tile
           changeLabel={`${formatChange(summary.dmeOman.change)} (${formatChangePct(summary.dmeOman.changePct)})`}
-          direction={dmeOmanDirection}
+          direction={directionOf(summary.dmeOman.change)}
           label="DME OMAN"
           value={formatPrice(summary.dmeOman.value)}
         />
       ) : (
-        <Tile changeLabel="STATIC LOAD FAILED" direction="flat" label="DME OMAN" value="--" />
-      )}
-      {summary.murban ? (
         <Tile
-          changeLabel={`${formatChange(summary.murban.change)} (${formatChangePct(summary.murban.changePct)})`}
-          direction={murbanDirection}
-          label="MURBAN"
-          value={formatPrice(summary.murban.value)}
+          changeLabel="NO OPEN DATA"
+          direction="flat"
+          label="DME OMAN"
+          value="--"
+        />
+      )}
+      {timespreads ? (
+        <Tile
+          changeLabel={timespreads.structure}
+          direction={directionOf(timespreads.m1MinusM2)}
+          label="BRENT M1-M2"
+          value={formatSpread(timespreads.m1MinusM2)}
         />
       ) : (
-        <Tile changeLabel="STATIC LOAD FAILED" direction="flat" label="MURBAN" value="--" />
-      )}
-      {brentOmanSpread !== undefined ? (
         <Tile
-          changeLabel={brentOmanSpread >= 0 ? "OMAN DISCOUNT" : "OMAN PREMIUM"}
-          direction={spreadDirection}
-          label="BRENT-OMAN"
-          value={formatSpread(brentOmanSpread)}
+          changeLabel="NO OPEN DATA"
+          direction="flat"
+          label="BRENT M1-M2"
+          value="--"
         />
-      ) : null}
+      )}
       <div className={styles.metaBlock}>
-        <span className={styles.modeLabel} data-mode={modeLabel.toLowerCase()}>
-          {modeLabel}
+        <span className={styles.metaText}>
+          SPOT | {formatClassificationLabel(summary.classification)} |{" "}
+          {formatCadenceLabel(summary.cadence)} | {summary.source} | {summary.asOf}
         </span>
-        <span className={styles.metaSeparator}>|</span>
-        <span className={styles.metaText}>AS OF {summary.asOf}</span>
+        {timespreads ? (
+          <span className={styles.metaText}>
+            CURVE | {formatClassificationLabel(timespreads.classification)} |{" "}
+            {formatCadenceLabel(timespreads.cadence)} | {timespreads.source} |{" "}
+            {timespreads.asOf}
+          </span>
+        ) : null}
       </div>
     </div>
   );

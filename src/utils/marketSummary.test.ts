@@ -1,8 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildBrentTimespreadSnapshot,
+  buildBrentWtiSpreadHistory,
   buildCrudeMarketSummary,
   formatChange,
   formatChangePct,
+  formatDataStamp,
   formatPrice,
   formatSpread
 } from "./marketSummary";
@@ -11,10 +14,12 @@ import type {
   DmeOmanSnapshot,
   MurbanSnapshot
 } from "../types/Market";
+import type { IceBrentSettlementSnapshot } from "../types/IceSettlements";
 
 const baseSnapshot: CrudePriceSnapshot = {
   asOf: "2026-04-14",
-  mode: "STATIC_SNAPSHOT",
+  cadence: "EOD",
+  classification: "OBSERVED",
   source: "EIA v2 petroleum/pri/spt (static snapshot)",
   series: {
     brent: [
@@ -32,7 +37,8 @@ const baseSnapshot: CrudePriceSnapshot = {
 
 const baseDmeOman: DmeOmanSnapshot = {
   asOf: "2026-04-14",
-  mode: "STATIC_SNAPSHOT",
+  cadence: "CURATED",
+  classification: "CURATED",
   source: "DME",
   series: {
     dmeOman: [
@@ -45,7 +51,8 @@ const baseDmeOman: DmeOmanSnapshot = {
 
 const baseMurban: MurbanSnapshot = {
   asOf: "2026-04-14",
-  mode: "STATIC_SNAPSHOT",
+  cadence: "CURATED",
+  classification: "CURATED",
   source: "IFAD",
   series: {
     murban: [
@@ -66,8 +73,9 @@ describe("buildCrudeMarketSummary", () => {
     expect(summary?.brent.changePct).toBeCloseTo(0.32, 2);
     expect(summary?.wti.value).toBe(73.42);
     expect(summary?.wti.change).toBe(0.32);
-    expect(summary?.spread).toBe(-3.93);
-    expect(summary?.mode).toBe("STATIC_SNAPSHOT");
+    expect(summary?.brentWtiSpread).toBe(3.93);
+    expect(summary?.cadence).toBe("EOD");
+    expect(summary?.classification).toBe("OBSERVED");
     // Gulf fields undefined when only the legacy snapshot is passed.
     expect(summary?.dmeOman).toBeUndefined();
     expect(summary?.murban).toBeUndefined();
@@ -125,6 +133,71 @@ describe("buildCrudeMarketSummary", () => {
   });
 });
 
+describe("macro derivations", () => {
+  it("builds Brent-WTI spread history from aligned dates only", () => {
+    const spreadHistory = buildBrentWtiSpreadHistory({
+      ...baseSnapshot,
+      series: {
+        brent: [
+          { date: "2026-04-10", value: 76.8 },
+          { date: "2026-04-11", value: 77.1 },
+          { date: "2026-04-14", value: 77.35 }
+        ],
+        wti: [
+          { date: "2026-04-10", value: 72.9 },
+          { date: "2026-04-14", value: 73.42 },
+          { date: "2026-04-15", value: 73.55 }
+        ]
+      }
+    });
+
+    expect(spreadHistory.series.brentWti).toEqual([
+      { date: "2026-04-10", value: 3.9 },
+      { date: "2026-04-14", value: 3.93 }
+    ]);
+    expect(spreadHistory.cadence).toBe("EOD");
+    expect(spreadHistory.classification).toBe("OBSERVED");
+  });
+
+  it("builds prompt Brent timespreads from the ICE strip", () => {
+    const snapshot: IceBrentSettlementSnapshot = {
+      asOf: "2026-04-14",
+      cadence: "CURATED",
+      classification: "CURATED",
+      source: "ICE Brent settlements",
+      strip: [
+        { month: 1, contractCode: "BRN M1", priceUsd: 77.35 },
+        { month: 2, contractCode: "BRN M2", priceUsd: 75.8 },
+        { month: 6, contractCode: "BRN M6", priceUsd: 71.15 },
+        { month: 12, contractCode: "BRN M12", priceUsd: 67.1 }
+      ]
+    };
+
+    expect(buildBrentTimespreadSnapshot(snapshot)).toEqual({
+      asOf: "2026-04-14",
+      cadence: "CURATED",
+      classification: "CURATED",
+      source: "ICE Brent settlements",
+      m1MinusM2: 1.55,
+      m1MinusM6: 6.2,
+      m1MinusM12: 10.25,
+      structure: "BACKWARDATION"
+    });
+  });
+
+  it("returns null when the ICE strip is missing required prompt months", () => {
+    const incompleteSnapshot: IceBrentSettlementSnapshot = {
+      asOf: "2026-04-14",
+      cadence: "CURATED",
+      classification: "CURATED",
+      source: "ICE Brent settlements",
+      strip: [{ month: 1, contractCode: "BRN M1", priceUsd: 77.35 }]
+    };
+
+    expect(buildBrentTimespreadSnapshot(incompleteSnapshot)).toBeNull();
+  });
+});
+
 describe("market formatters", () => {
   it("formats prices with a dollar prefix and two decimals", () => {
     expect(formatPrice(77.3)).toBe("$77.30");
@@ -144,5 +217,16 @@ describe("market formatters", () => {
   it("formats spread with sign", () => {
     expect(formatSpread(-3.93)).toBe("-3.93");
     expect(formatSpread(0.75)).toBe("+0.75");
+  });
+
+  it("formats provenance stamps with typed cadence and classification", () => {
+    expect(
+      formatDataStamp({
+        asOf: "2026-04-14",
+        cadence: "EOD",
+        classification: "OBSERVED",
+        source: "EIA"
+      })
+    ).toBe("OBSERVED | EOD | EIA | 2026-04-14");
   });
 });

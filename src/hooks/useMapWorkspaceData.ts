@@ -45,6 +45,7 @@ export function useMapWorkspaceData() {
     catalog: data?.catalog ?? [],
     companiesById: data?.companiesById ?? {},
     countriesByCode: data?.countriesByCode ?? {},
+    exposureByTargetId: data?.exposureByTargetId ?? {},
     feedstockById: data?.feedstockById ?? {},
     firmsBaselineByAssetId: data?.firmsBaselineByAssetId ?? EMPTY_BASELINE_MAP,
     error,

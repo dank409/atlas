@@ -1,3 +1,5 @@
+import type { DataSourceMetadata } from "./DataSource";
+
 // Curated outage / supply-shock events surfaced on the historical Brent
 // chart and the map outage layer. This is CLAUDE.md P0 #15 — the time
 // dimension that lets a trader connect "what broke" to "did the curve
@@ -42,10 +44,6 @@ export interface OutageEvent {
   priceReaction?: OutagePriceReaction;
 }
 
-export interface OutageEventSnapshot {
-  mode: "LIVE" | "STATIC_SNAPSHOT";
-  asOf: string;
-  source: string;
-  note?: string;
+export interface OutageEventSnapshot extends DataSourceMetadata {
   events: OutageEvent[];
 }

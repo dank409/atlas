@@ -1,4 +1,5 @@
 import { DATASET_CATALOG_SEED } from "../constants/datasetCatalog";
+import { loadExposureRegistrySnapshot } from "./exposureRegistry";
 import { loadRefineryFeedstockSnapshot } from "./refineryFeedstock";
 import type {
   ChokepointAsset,
@@ -84,6 +85,7 @@ export async function loadMapWorkspaceData(): Promise<MapWorkspaceData> {
     chokepoints,
     companyProfiles,
     countryProfiles,
+    exposureSnapshot,
     feedstockSnapshot,
     firmsBaselinePayload
   ] = await Promise.all([
@@ -94,6 +96,7 @@ export async function loadMapWorkspaceData(): Promise<MapWorkspaceData> {
     loadGeoJson<ChokepointFeature>("/data/reference/chokepoints.geojson"),
     loadJson<CompanyReferencePayload>("/data/reference/companies.json"),
     loadJson<CountryReferencePayload>("/data/reference/countries.json"),
+    loadExposureRegistrySnapshot(),
     loadRefineryFeedstockSnapshot(),
     loadJson<FirmsBaselinePayload>("/data/firms/baselines.json").catch(
       () => ({ baselines: {} }) as FirmsBaselinePayload
@@ -207,6 +210,9 @@ export async function loadMapWorkspaceData(): Promise<MapWorkspaceData> {
     }),
     companiesById: Object.fromEntries(companyProfiles.companies.map((company) => [company.id, company])),
     countriesByCode: Object.fromEntries(countryProfiles.countries.map((country) => [country.code, country])),
+    exposureByTargetId: Object.fromEntries(
+      exposureSnapshot.entries.map((entry) => [entry.targetId, entry])
+    ),
     feedstockById,
     firmsBaselineByAssetId
   };

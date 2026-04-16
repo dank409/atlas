@@ -21,8 +21,9 @@ const yanbu: RefineryFeedstockEntry = {
 };
 
 const healthyPayload: RefineryFeedstockSnapshot = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-15",
+  cadence: "CURATED",
+  classification: "CURATED",
   source: "Curated",
   methodology: "Expert scoring.",
   entries: [abadan, yanbu]
@@ -33,7 +34,7 @@ describe("loadRefineryFeedstockSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads entries from the canonical reference path and forces STATIC_SNAPSHOT mode", async () => {
+  it("loads entries from the canonical reference path and marks them CURATED", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -46,7 +47,8 @@ describe("loadRefineryFeedstockSnapshot", () => {
 
     const snapshot = await loadRefineryFeedstockSnapshot();
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.entries).toHaveLength(2);
     expect(snapshot.entries[0].refineryId).toBe("refinery-ir-abadan-refinery");
     expect(snapshot.methodology).toContain("Expert");

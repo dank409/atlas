@@ -2,16 +2,25 @@ import { useMemo, useState } from "react";
 import { Panel } from "../common/Panel";
 import { BrentHistoricalChart } from "../charts/BrentHistoricalChart";
 import { FuturesCurveChart } from "../charts/FuturesCurveChart";
+import { InventoryChart } from "../charts/InventoryChart";
 import { FirmsAlertFeed } from "../panels/FirmsAlertFeed";
 import { FirmsControlPanel } from "../panels/FirmsControlPanel";
 import { DashboardTileOverlay } from "./DashboardTileOverlay";
 import { runFuturesCurveScenario } from "../../utils/futuresCurveModel";
 import type { IceBrentSettlementSnapshot } from "../../types/IceSettlements";
 import type { InfrastructureAsset } from "../../types/Infrastructure";
-import type { CrudeMarketSummary } from "../../types/Market";
+import type {
+  BrentTimespreadSnapshot,
+  CrudeMarketSummary,
+  EiaWeeklyInventorySnapshot
+} from "../../types/Market";
 import type { BrentHistoricalSnapshot } from "../../services/brentHistorical";
 import type { OutageEventSnapshot } from "../../types/outageEvent";
 import type { FirmsSnapshot, FirmsWindowHours } from "../../types/firms";
+import {
+  formatCadenceLabel,
+  formatClassificationLabel
+} from "../../types/DataSource";
 import type { BypassModelResult, BypassModelState } from "../../utils/bypassModel";
 import { formatTransitVolume } from "../../utils/formatters";
 import {
@@ -49,6 +58,7 @@ type DashboardTileId =
   | "alert"
   | "choke"
   | "market"
+  | "inventory"
   | "firms";
 
 interface DashboardViewProps {
@@ -57,6 +67,9 @@ interface DashboardViewProps {
   firmsSnapshot: FirmsSnapshot | null;
   firmsIsLoading: boolean;
   firmsError: Error | null;
+  inventorySnapshot: EiaWeeklyInventorySnapshot | null;
+  inventoryIsLoading: boolean;
+  inventoryError: Error | null;
   firmsWindowHours: FirmsWindowHours;
   firmsConfidenceThreshold: number;
   isFirmsLayerEnabled: boolean;
@@ -69,6 +82,7 @@ interface DashboardViewProps {
   marketSummary: CrudeMarketSummary | null;
   outageEvents: OutageEventSnapshot | null;
   onInspectAsset?: (asset: InfrastructureAsset) => void;
+  timespreads?: BrentTimespreadSnapshot | null;
   visibleAssets: InfrastructureAsset[];
 }
 
@@ -78,6 +92,9 @@ export function DashboardView({
   firmsSnapshot,
   firmsIsLoading,
   firmsError,
+  inventorySnapshot,
+  inventoryIsLoading,
+  inventoryError,
   firmsWindowHours,
   firmsConfidenceThreshold,
   isFirmsLayerEnabled,
@@ -90,6 +107,7 @@ export function DashboardView({
   marketSummary,
   outageEvents,
   onInspectAsset,
+  timespreads = null,
   visibleAssets
 }: DashboardViewProps) {
   const [expandedTileId, setExpandedTileId] = useState<DashboardTileId | null>(null);
@@ -159,7 +177,8 @@ export function DashboardView({
     <FuturesCurveChart
       result={futuresCurveResult}
       observedStrip={iceSettlements?.strip ?? null}
-      observedMode={iceSettlements?.mode ?? null}
+      observedCadence={iceSettlements?.cadence ?? null}
+      observedClassification={iceSettlements?.classification ?? null}
       observedAsOf={iceSettlements?.asOf ?? null}
       isCompact={isCompact}
     />
@@ -185,6 +204,20 @@ export function DashboardView({
       error={firmsError}
     />
   );
+
+  const renderInventoryBody = (isCompact: boolean) =>
+    inventorySnapshot ? (
+      <InventoryChart
+        isCompact={isCompact}
+        snapshot={inventorySnapshot}
+      />
+    ) : inventoryIsLoading ? (
+      <div className={styles.sourceLine}>LOADING WEEKLY INVENTORIES…</div>
+    ) : inventoryError ? (
+      <div className={styles.placeholder}>WEEKLY INVENTORIES UNAVAILABLE.</div>
+    ) : (
+      <div className={styles.placeholder}>NO WEEKLY INVENTORY DATA.</div>
+    );
 
   const renderChokeBody = () => (
     <div className={styles.tableShell}>
@@ -240,6 +273,21 @@ export function DashboardView({
           change={marketSummary.brent.change}
           changePct={marketSummary.brent.changePct}
         />
+        <MarketRow
+          label="WTI"
+          value={formatPrice(marketSummary.wti.value)}
+          change={marketSummary.wti.change}
+          changePct={marketSummary.wti.changePct}
+        />
+        <div className={styles.marketSpreadRow}>
+          <span className={styles.marketLabel}>BRENT-WTI</span>
+          <span className={styles.marketValue}>
+            {formatSpread(marketSummary.brentWtiSpread)}
+          </span>
+          <span className={styles.marketTag}>
+            {marketSummary.brentWtiSpread >= 0 ? "BRENT PREMIUM" : "WTI PREMIUM"}
+          </span>
+        </div>
         {marketSummary.dmeOman ? (
           <MarketRow
             label="DME OMAN"
@@ -269,10 +317,30 @@ export function DashboardView({
             </span>
           </div>
         ) : null}
-        {!isCompact ? (
-          <div className={styles.sourceLine}>
-            SOURCE: {marketSummary.source} | AS OF {marketSummary.asOf}
+        {timespreads ? (
+          <div className={styles.marketSpreadRow}>
+            <span className={styles.marketLabel}>BRENT M1-M2</span>
+            <span className={styles.marketValue}>
+              {formatSpread(timespreads.m1MinusM2)}
+            </span>
+            <span className={styles.marketTag}>{timespreads.structure}</span>
           </div>
+        ) : null}
+        {!isCompact ? (
+          <>
+            <div className={styles.sourceLine}>
+              {formatClassificationLabel(marketSummary.classification)} |{" "}
+              {formatCadenceLabel(marketSummary.cadence)} | SOURCE:{" "}
+              {marketSummary.source} | AS OF {marketSummary.asOf}
+            </div>
+            {timespreads ? (
+              <div className={styles.sourceLine}>
+                {formatClassificationLabel(timespreads.classification)} |{" "}
+                {formatCadenceLabel(timespreads.cadence)} | CURVE:{" "}
+                {timespreads.source} | AS OF {timespreads.asOf}
+              </div>
+            ) : null}
+          </>
         ) : null}
       </div>
     ) : (
@@ -288,7 +356,6 @@ export function DashboardView({
     // substantially different renders — the others share structure
     // and just gate chrome.
     if (isCompact) {
-      const mode = firmsSnapshot?.mode ?? "STATIC_SNAPSHOT";
       const windowLabel =
         firmsWindowHours === 24 ? "24H" : firmsWindowHours === 72 ? "72H" : "7D";
       const detectCount = firmsSnapshot?.detections.length ?? 0;
@@ -296,12 +363,12 @@ export function DashboardView({
       return (
         <div className={styles.firmsCompact}>
           <div className={styles.firmsCompactRow}>
-            <span className={styles.firmsCompactLabel}>MODE</span>
+            <span className={styles.firmsCompactLabel}>CADENCE</span>
             <span
               className={styles.firmsCompactValue}
-              data-tone={mode === "LIVE" ? "green" : "amber"}
+              data-tone={firmsSnapshot?.classification === "OBSERVED" ? "green" : "amber"}
             >
-              {mode === "LIVE" ? "LIVE" : "STATIC"}
+              {firmsSnapshot ? formatCadenceLabel(firmsSnapshot.cadence) : "CURATED"}
             </span>
           </div>
           <div className={styles.firmsCompactRow}>
@@ -347,24 +414,25 @@ export function DashboardView({
   // Tile descriptor + overlay helpers
   // ---------------------------------------------------------------
 
-  const bypassBadge = isScenarioActive ? "SCENARIO ACTIVE" : "IDLE";
+  const bypassBadge = isScenarioActive ? "MODELED ACTIVE" : "SCENARIO LAB";
   const curveBadge = futuresCurveRegimeBadge(futuresCurveResult.regime);
   const histBadge = outageEvents
     ? `${outageEvents.events.length} EVENTS`
     : brentHistorical
-      ? "STATIC"
+      ? formatCadenceLabel(brentHistorical.cadence)
       : "LOADING";
   const alertBadge = firmsAlertBadge(firmsSnapshot);
   const chokeBadge = `${chokepoints.length} ACTIVE`;
   const marketBadge = marketSummary
-    ? marketSummary.mode === "LIVE"
-      ? "LIVE"
-      : "STATIC"
+    ? formatCadenceLabel(marketSummary.cadence)
     : "--";
+  const inventoryBadge = inventorySnapshot
+    ? formatCadenceLabel(inventorySnapshot.cadence)
+    : inventoryIsLoading
+      ? "LOADING"
+      : "NO DATA";
   const firmsBadge = firmsSnapshot
-    ? firmsSnapshot.mode === "LIVE"
-      ? "LIVE"
-      : "STATIC"
+    ? formatCadenceLabel(firmsSnapshot.cadence)
     : "--";
 
   // Pick the active tile's full-size content for the overlay. Kept
@@ -376,8 +444,8 @@ export function DashboardView({
           switch (expandedTileId) {
             case "bypass":
               return {
-                title: "BYPASS SCENARIO",
-                kindLabel: "SCENARIO OUTPUT",
+                title: "SCENARIO LAB",
+                kindLabel: "MODELED PATH",
                 badge: bypassBadge,
                 body: renderBypassBody(false)
               };
@@ -416,6 +484,13 @@ export function DashboardView({
                 badge: marketBadge,
                 body: renderMarketBody(false)
               };
+            case "inventory":
+              return {
+                title: "US INVENTORIES",
+                kindLabel: "WEEKLY BALANCE",
+                badge: inventoryBadge,
+                body: renderInventoryBody(false)
+              };
             case "firms":
               return {
                 title: "FIRMS CONTROLS",
@@ -438,7 +513,7 @@ export function DashboardView({
         <Panel
           className={styles.slotBypass}
           badge={bypassBadge}
-          title="BYPASS SCENARIO"
+          title="SCENARIO LAB"
           onExpand={() => setExpandedTileId("bypass")}
         >
           {renderBypassBody(true)}
@@ -486,6 +561,14 @@ export function DashboardView({
           onExpand={() => setExpandedTileId("market")}
         >
           {renderMarketBody(true)}
+        </Panel>
+        <Panel
+          className={styles.slotInventory}
+          badge={inventoryBadge}
+          title="US INVENTORIES"
+          onExpand={() => setExpandedTileId("inventory")}
+        >
+          {renderInventoryBody(true)}
         </Panel>
         <Panel
           className={styles.slotFirms}

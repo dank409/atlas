@@ -1,8 +1,9 @@
 import { loadDmeOmanSnapshot } from "./dmeOman";
 
 const healthyPayload = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-14",
+  cadence: "CURATED" as const,
+  classification: "CURATED" as const,
   source: "DME test snapshot",
   series: {
     dmeOman: [
@@ -18,7 +19,7 @@ describe("loadDmeOmanSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads the DME Oman snapshot from the canonical path and forces STATIC_SNAPSHOT mode", async () => {
+  it("loads the DME Oman snapshot from the canonical path and marks it CURATED", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -31,7 +32,8 @@ describe("loadDmeOmanSnapshot", () => {
 
     const snapshot = await loadDmeOmanSnapshot();
 
-    expect(snapshot.mode).toBe("STATIC_SNAPSHOT");
+    expect(snapshot.cadence).toBe("CURATED");
+    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.series.dmeOman).toHaveLength(3);
     expect(snapshot.source).toBe("DME test snapshot");
   });

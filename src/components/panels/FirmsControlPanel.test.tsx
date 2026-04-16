@@ -4,8 +4,9 @@ import { FirmsControlPanel } from "./FirmsControlPanel";
 import type { FirmsSnapshot } from "../../types/firms";
 
 const snapshot: FirmsSnapshot = {
-  mode: "STATIC_SNAPSHOT",
   asOf: "2026-04-14T12:00:00Z",
+  cadence: "NRT_SATELLITE",
+  classification: "OBSERVED",
   windowHours: 72,
   confidenceThreshold: 80,
   detections: [],
@@ -64,11 +65,11 @@ describe("FirmsControlPanel", () => {
     expect(screen.getByText("70")).toBeInTheDocument();
   });
 
-  it("renders a STATIC_SNAPSHOT mode badge when the snapshot is static", () => {
+  it("renders a cadence/classification badge for the snapshot", () => {
     renderPanel();
-    const badge = document.querySelector('[data-mode="STATIC_SNAPSHOT"]');
+    const badge = document.querySelector('[data-mode="NRT_SATELLITE"]');
     expect(badge).not.toBeNull();
-    expect(badge?.textContent?.trim()).toBe("STATIC");
+    expect(badge?.textContent?.trim()).toBe("OBSERVED NRT SATELLITE");
   });
 
   it("flips the layer-visibility toggle and emits onToggleEnabled", () => {
