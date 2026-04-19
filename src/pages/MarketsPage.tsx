@@ -3,7 +3,11 @@ import { Panel } from "../components/common/Panel";
 import { PriceGridModule } from "../components/market/PriceGridModule";
 import { SpreadsModule } from "../components/market/SpreadsModule";
 import { TermCurveModule } from "../components/market/TermCurveModule";
+import { RigsModule } from "../components/market/RigsModule";
+import { RefineryMarginsModule } from "../components/market/RefineryMarginsModule";
 import { Sparkline } from "../components/market/Sparkline";
+import type { RigCountSnapshot } from "../types/Rigs";
+import type { RefineryMarginSnapshot } from "../types/RefineryMargins";
 import type {
   BrentTimespreadSnapshot,
   CrudeMarketSummary,
@@ -25,6 +29,10 @@ interface MarketsPageProps {
   /** Brent historical weekly series used for the correlations/seasonality panes. */
   brentHistoricalSeries: PricePoint[];
   mode: "LIVE" | "STATIC_SNAPSHOT";
+  /** Baker Hughes rig count snapshot. Null while loading. */
+  rigCount: RigCountSnapshot | null;
+  /** Refinery-margin / crack-spread snapshot. Null while loading. */
+  refineryMargins: RefineryMarginSnapshot | null;
 }
 
 /**
@@ -47,7 +55,9 @@ export function MarketsPage({
   iceSnapshot,
   timespreads,
   brentHistoricalSeries,
-  mode
+  mode,
+  rigCount,
+  refineryMargins
 }: MarketsPageProps) {
   const correlations = useMemo(
     () => computeCorrelations(brentWtiSnapshot, dmeOmanSnapshot, murbanSnapshot),
@@ -149,13 +159,8 @@ export function MarketsPage({
               yet — no fabricated rates.
             </div>
           </Panel>
-          <Panel badge="AWAITING FEED" title="REFINERY MARGINS">
-            <div className={styles.placeholder}>
-              Singapore 3-2-1, NWE Gasoil, RBOB crack — computed from EIA
-              product prices. Wired in a follow-up once the product-price
-              service lands.
-            </div>
-          </Panel>
+          <RefineryMarginsModule snapshot={refineryMargins} />
+          <RigsModule snapshot={rigCount} />
           <Panel badge="AWAITING FEED" title="FX · REGIONAL">
             <div className={styles.placeholder}>
               Pegged pairs (USD/SAR, USD/AED, USD/QAR) are technically

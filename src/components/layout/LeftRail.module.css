@@ -155,36 +155,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-.shortcutRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  background: transparent;
-  border: 0;
-  border-bottom: 1px dotted #141414;
-  color: #b8bfcc;
-  cursor: pointer;
-  font: inherit;
-  font-size: 11px;
-  padding: 5px 0;
-  text-align: left;
-}
-
-.shortcutRow:last-child {
-  border-bottom: 0;
-}
-
-.shortcutRow:hover {
-  color: #ff8c00;
-}
-
-.shortcutHint {
-  color: #4e5666;
-  font-size: 10px;
-  letter-spacing: 0.04em;
-}
-
 .emptyWatchlist {
   color: #4e5666;
   font-size: 10px;

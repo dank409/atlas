@@ -1,0 +1,39 @@
+{
+  "_metadata": {
+    "source": "Lloyd's Market Association Joint War Committee — public listed areas",
+    "listDate": "2026-02-25",
+    "classification": "CURATED",
+    "note": "JWC publishes its Hull War, Piracy, Terrorism and Related Perils Listed Areas document publicly; specific H&M rate quotes are between underwriter and broker. These listings identify zones where additional war-risk premia are applied — the premium range is indicative of market practice per IUMI / BIMCO public commentary and is not an actual underwritten rate.",
+    "disclaimer": "Indicative ranges. Actual rates are negotiated per vessel, per voyage, and per flag. This is NOT a quote service."
+  },
+  "chokepointListings": [
+    {
+      "chokepointId": "chokepoint-hormuz",
+      "listed": true,
+      "listedSince": "2019-07",
+      "indicativeHmPct": { "min": 0.05, "max": 0.10 },
+      "notes": "Persistently listed following the 2019 tanker incidents. Rates elevate when regional tensions spike."
+    },
+    {
+      "chokepointId": "chokepoint-bab-el-mandeb",
+      "listed": true,
+      "listedSince": "2023-12",
+      "indicativeHmPct": { "min": 0.30, "max": 1.00 },
+      "notes": "Materially higher premia since the 2024 Houthi campaign. Many carriers reroute via Cape instead of paying."
+    },
+    {
+      "chokepointId": "chokepoint-suez",
+      "listed": false,
+      "listedSince": null,
+      "indicativeHmPct": { "min": 0, "max": 0 },
+      "notes": "Not JWC-listed — Suez itself is transit; Bab-el-Mandeb upstream carries the risk premium for Red-Sea-bound crude."
+    },
+    {
+      "chokepointId": "chokepoint-turkish-straits",
+      "listed": false,
+      "listedSince": null,
+      "indicativeHmPct": { "min": 0, "max": 0 },
+      "notes": "Not JWC-listed; nearby Black Sea approaches and select Russian ports ARE listed and drive war-risk premia for voyages loading there."
+    }
+  ]
+}

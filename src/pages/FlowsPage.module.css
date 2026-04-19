@@ -1,0 +1,143 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.loading {
+  color: #666666;
+  font-size: 11px;
+  padding: 10px 0;
+}
+
+.sankeyHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #7a8294;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.total {
+  color: #ff8c00;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sourceLine {
+  display: flex;
+  gap: 6px;
+  color: #4e5666;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #222222;
+}
+
+.sep {
+  color: #2b3240;
+}
+
+.chokeList {
+  display: flex;
+  flex-direction: column;
+}
+
+.chokeRow {
+  display: grid;
+  grid-template-columns: 200px 90px 1fr 44px;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #111111;
+  font-size: 11px;
+}
+
+.chokeRow:last-child {
+  border-bottom: none;
+}
+
+.chokeLabel {
+  color: #e8ecf2;
+}
+
+.chokeValue {
+  color: #ff8c00;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.chokeBar {
+  height: 6px;
+  background: #14171c;
+  border: 1px solid #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+.chokeFill {
+  height: 100%;
+  background: #ffd600;
+}
+
+.chokeShare {
+  color: #7a8294;
+  font-size: 10px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.destList {
+  display: flex;
+  flex-direction: column;
+}
+
+.destRow {
+  display: grid;
+  grid-template-columns: 130px 1fr 130px;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px solid #111111;
+  font-size: 11px;
+}
+
+.destRow:last-child {
+  border-bottom: none;
+}
+
+.destLabel {
+  color: #e8ecf2;
+}
+
+.destBar {
+  height: 10px;
+  background: #14171c;
+  border: 1px solid #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+.destFill {
+  height: 100%;
+  background: #ff8c00;
+}
+
+.destValue {
+  color: #b8bfcc;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}

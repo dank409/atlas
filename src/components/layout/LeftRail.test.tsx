@@ -26,7 +26,6 @@ function renderRail(overrides: Partial<React.ComponentProps<typeof LeftRail>> = 
     activeRegion: "MENA",
     onSelectRegion: vi.fn(),
     onToggleDataset: vi.fn(),
-    onFocusShortcut: vi.fn(),
     watchlist: watchlist(),
     ...overrides
   };
@@ -42,7 +41,7 @@ describe("LeftRail", () => {
     expect(screen.getByText("GEOPOLITICAL")).toBeDefined();
   });
 
-  it("renders all five region chips and highlights the active one", () => {
+  it("renders all four region chips and highlights the active one", () => {
     renderRail({ activeRegion: "RED_SEA" });
     const activeChip = screen.getByText("RED SEA");
     // The active chip uses the chipActive class token.
@@ -58,11 +57,11 @@ describe("LeftRail", () => {
     expect(onToggleDataset).toHaveBeenCalled();
   });
 
-  it("fires onFocusShortcut when a shortcut is clicked", () => {
-    const onFocusShortcut = vi.fn();
-    renderRail({ onFocusShortcut });
-    fireEvent.click(screen.getByText("Focus Hormuz"));
-    expect(onFocusShortcut).toHaveBeenCalledWith("focus_hormuz");
+  it("fires onSelectRegion when a chip is clicked", () => {
+    const onSelectRegion = vi.fn();
+    renderRail({ onSelectRegion });
+    fireEvent.click(screen.getByText("LEVANT"));
+    expect(onSelectRegion).toHaveBeenCalledWith("LEVANT");
   });
 
   it("renders watchlist entries with status colors", () => {

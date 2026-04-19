@@ -8,6 +8,15 @@ import styles from "./ModelsPage.module.css";
 interface ModelsPageProps {
   bypassModel: UseBypassModelResult;
   outageEvents: OutageEvent[];
+  /**
+   * Optional hook into the TopNav's view router. When provided, the
+   * "VIEW ON MAP" link in the scenario status strip switches the
+   * active view so the user can see the scenario propagate onto the
+   * Mapbox overlays (refinery amber outlines, Hormuz red tint,
+   * bypass pipeline glow). When omitted, the link is hidden — the
+   * panel degrades cleanly when the prop isn't wired.
+   */
+  onNavigateToMap?: () => void;
 }
 
 interface Preset {
@@ -78,8 +87,13 @@ const BACKTESTS = [
   }
 ];
 
-export function ModelsPage({ bypassModel, outageEvents }: ModelsPageProps) {
+export function ModelsPage({
+  bypassModel,
+  outageEvents,
+  onNavigateToMap
+}: ModelsPageProps) {
   const { result, disruptionPercentage, setDisruptionPercentage } = bypassModel;
+  const isActive = disruptionPercentage > 0;
 
   const backtestResults = useMemo(
     () =>
@@ -91,7 +105,39 @@ export function ModelsPage({ bypassModel, outageEvents }: ModelsPageProps) {
   );
 
   return (
-    <div className={styles.page}>
+    <div className={styles.pageShell}>
+      {isActive ? (
+        <div aria-live="polite" className={styles.scenarioStrip} role="status">
+          <span className={styles.scenarioBadge}>SCENARIO LIVE</span>
+          <span className={styles.scenarioLine}>
+            HORMUZ {disruptionPercentage.toFixed(0)}% · BYPASS UTILISED{" "}
+            {result.totalBypassUtilisedMbpd.toFixed(2)} MBPD · NET DEFICIT{" "}
+            <span
+              className={
+                result.netDailyDeficitMbpd > 0
+                  ? styles.scenarioValueNeg
+                  : styles.scenarioValuePos
+              }
+            >
+              {result.netDailyDeficitMbpd.toFixed(2)} MBPD
+            </span>
+          </span>
+          <span className={styles.scenarioSpacer} />
+          <span className={styles.scenarioHint}>
+            MAP OVERLAYS ACTIVE — refinery outlines, Hormuz tint, bypass glow
+          </span>
+          {onNavigateToMap ? (
+            <button
+              className={styles.scenarioButton}
+              onClick={onNavigateToMap}
+              type="button"
+            >
+              VIEW ON MAP →
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+      <div className={styles.page}>
       <aside className={styles.inputsCol}>
         <Panel badge="STRESS TEST" title="SCENARIO INPUTS">
           <SliderRow
@@ -252,6 +298,7 @@ export function ModelsPage({ bypassModel, outageEvents }: ModelsPageProps) {
           </table>
         </Panel>
       </section>
+      </div>
     </div>
   );
 }

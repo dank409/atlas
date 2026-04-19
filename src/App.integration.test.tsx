@@ -243,11 +243,14 @@ describe("App shell — new view router", () => {
     expect(screen.getByText(/REGION: MIDDLE EAST/)).toBeInTheDocument();
   });
 
-  it("shows focus shortcut hints in the LeftRail", async () => {
+  it("no longer shows the legacy focus-shortcut section", async () => {
     render(<App />);
-    expect(await screen.findByText("Focus Hormuz")).toBeInTheDocument();
-    expect(screen.getByText("Focus Red Sea")).toBeInTheDocument();
-    expect(screen.getByText("Focus Eastern Prov.")).toBeInTheDocument();
+    // Shortcut affordances were removed in the polish pass — the
+    // LeftRail should no longer contain any of the legacy labels.
+    await screen.findByText("LAYERS · FILTERS");
+    expect(screen.queryByText("Focus Hormuz")).toBeNull();
+    expect(screen.queryByText("Focus Red Sea")).toBeNull();
+    expect(screen.queryByText("Focus Eastern Prov.")).toBeNull();
   });
 });
 

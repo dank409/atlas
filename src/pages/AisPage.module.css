@@ -1,0 +1,144 @@
+.page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 10px;
+  padding: 10px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.empty {
+  color: #7a8294;
+  font-size: 11px;
+  padding: 14px 0;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th {
+  color: #666666;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 6px 8px;
+  background: #050505;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  border-bottom: 1px solid #111111;
+}
+
+.table td {
+  padding: 5px 8px;
+  border-bottom: 1px solid #111111;
+  color: #b8bfcc;
+}
+
+.numericCol {
+  text-align: right;
+}
+
+.vesselCell {
+  color: #e8ecf2;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #111111;
+  font-size: 11px;
+}
+
+.statRow:last-child {
+  border-bottom: none;
+}
+
+.statLabel {
+  color: #7a8294;
+  letter-spacing: 0.04em;
+}
+
+.statValue {
+  color: #e8ecf2;
+  font-variant-numeric: tabular-nums;
+}
+
+.statValuePos {
+  color: #00c853;
+  font-variant-numeric: tabular-nums;
+}
+
+.statValueWarn {
+  color: #ffd600;
+  font-variant-numeric: tabular-nums;
+}
+
+.err {
+  color: #ff1744;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #222222;
+}
+
+.placeholder {
+  color: #7a8294;
+  font-size: 11px;
+  line-height: 1.55;
+  padding: 6px 0;
+}
+
+.method {
+  color: #b8bfcc;
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0 0 10px;
+}
+
+.method:last-child {
+  margin-bottom: 0;
+}
+
+.method code {
+  background: #111111;
+  border: 1px solid #222222;
+  padding: 0 4px;
+  color: #ff8c00;
+  font-size: 10px;
+}

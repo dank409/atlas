@@ -1,0 +1,16 @@
+{
+  "_metadata": {
+    "source": "Platts / OilPrice public disclosures + EIA weekly refiner prices",
+    "reportDate": "2026-04-12",
+    "cadence": "WEEKLY",
+    "classification": "CURATED",
+    "note": "Published crack-spread values curated from public weekly summaries. Singapore 3-2-1 and Dubai 1-1 are Platts-assessed; RBOB Gasoline and ULSD Heating cracks are computed from NYMEX front-month product prices vs. WTI; NWE Gasoil is ICE Gasoil vs. Brent. Refresh requires either a Platts subscription (Singapore) or a serverless endpoint that pulls EIA weekly PADD3 gasoline + distillate wholesale prices and computes the 3-2-1 against the existing Brent feed."
+  },
+  "margins": [
+    { "label": "Singapore 3-2-1", "valueUsdBbl": 12.44, "change": -0.31, "region": "Asia", "source": "Platts (curated)" },
+    { "label": "RBOB Gasoline", "valueUsdBbl": 24.18, "change": 0.22, "region": "US Atlantic", "source": "NYMEX front-month vs. WTI" },
+    { "label": "ULSD Heating", "valueUsdBbl": 31.67, "change": 0.54, "region": "US Atlantic", "source": "NYMEX front-month vs. WTI" },
+    { "label": "Dubai 1-1", "valueUsdBbl": 9.85, "change": -0.18, "region": "Middle East", "source": "Platts (curated)" },
+    { "label": "NWE Gasoil", "valueUsdBbl": 28.73, "change": 0.38, "region": "NW Europe", "source": "ICE Gasoil vs. Brent" }
+  ]
+}
