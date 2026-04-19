@@ -1,8 +1,8 @@
 {
-  "source": "EIA v2 petroleum/pri/spt (refreshed 2026-04-19)",
+  "source": "EIA v2 petroleum/pri/spt",
   "mode": "STATIC_SNAPSHOT",
   "asOf": "2026-04-13",
-  "note": "Refreshed nightly by scripts/update_market_data.ts. Mode stays STATIC_SNAPSHOT because the client still reads from this file — the freshness comes from daily cron overwrites, not from a live client fetch.",
+  "note": "Curated fallback for src/services/eiaPrices.ts. When VITE_EIA_API_KEY is set, the client fetches live EIA data on page load and this file is never read.",
   "series": {
     "brent": [
       {
