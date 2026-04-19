@@ -396,122 +396,27 @@ Each file should include a top-level metadata object. GeoJSON files must remain 
 
 ---
 
-## 11. Automated data refresh pipeline
+## 11. Refresh strategy
 
-Atlas ships with a "Poor Man's API" nightly refresh pipeline that
-rewrites a subset of the static JSON files against live upstream
-endpoints. This is the answer to the *"isn't this just hardcoded
-JSON?"* interview question: the JSON files ARE static, but a
-GitHub Actions cron overwrites them every night at 05:17 UTC so
-the terminal reflects yesterday's market close the moment you
-load the page.
+Atlas is a static SPA. Live data arrives via **client-side fetches
+from the browser**, not a server-side batch pipeline:
 
-### Architecture
+- **EIA** prices fetch live on page load when `VITE_EIA_API_KEY` is
+  set (see `src/services/eiaPrices.ts`), falling back to the
+  checked-in `public/data/market/crude_prices_30d.json` if the key
+  is missing or the request fails.
+- **FIRMS** thermal anomalies fetch live when `VITE_FIRMS_MAP_KEY`
+  is set, same live-or-static pattern.
+- **AISStream** opens a WebSocket from the AIS WATCH view when
+  `VITE_AISSTREAM_API_KEY` is set.
 
-```
-                    ┌──────────────────────────────┐
-                    │  GitHub Actions (free tier)  │
-                    │   cron: "17 5 * * *" UTC     │
-                    └────────────┬─────────────────┘
-                                 │ nightly
-                                 ▼
-     ┌─────────────────────────────────────────────────────┐
-     │  scripts/update_market_data.ts  (Node 20 + tsx)     │
-     │                                                     │
-     │   leg 1: eia-spot    → public/data/market/          │
-     │                         crude_prices_30d.json       │
-     │   leg 2: brent-hist  → public/data/market/          │
-     │                         brent_historical_5y.json    │
-     │   leg 3: firms       → public/data/firms/           │
-     │                         recent_detections.json      │
-     └────────┬───────────────────────────────┬────────────┘
-              │                               │
-              ▼                               ▼
-     ┌─────────────────┐             ┌─────────────────┐
-     │  EIA v2 (key)   │             │  NASA FIRMS     │
-     │   primary       │             │  (key required) │
-     └────────┬────────┘             └─────────────────┘
-              │ fallback
-              ▼
-     ┌─────────────────┐
-     │  FRED CSV       │
-     │  (keyless)      │
-     └─────────────────┘
-```
-
-### What the pipeline overwrites nightly
-
-| Target | Upstream | Fallback |
-|---|---|---|
-| `public/data/market/crude_prices_30d.json` | EIA v2 `/petroleum/pri/spt/data/` (Brent + WTI, 30d) | FRED `DCOILBRENTEU` + `DCOILWTICO` (keyless CSV) |
-| `public/data/market/brent_historical_5y.json` | EIA v2 `/petroleum/pri/spt/data/` (Brent, ~1300 daily rows → weekly resample) | FRED `DCOILBRENTEU` 5y CSV |
-| `public/data/firms/recent_detections.json` | NASA FIRMS `/api/country/csv/.../VIIRS_SNPP_NRT/{iso3}/3` per Middle East country | None — leg is skipped cleanly if `FIRMS_MAP_KEY` is unset |
-
-### What the pipeline deliberately does NOT touch
-
-These files stay human-curated because no free public endpoint
-provides a reliable JSON feed. A bad auto-refresh would put wrong
-numbers in front of a trader, which is worse than a stale file
-labelled `CURATED`.
-
-| File | Why it stays curated |
-|---|---|
-| `public/data/market/dme_oman_30d.json` | DME publishes settlements as a PDF behind an IP-whitelisted CDN. No JSON endpoint exists. |
-| `public/data/market/murban_30d.json` | IFAD Murban settlements require a licensed ICE vendor subscription. |
-| `public/data/market/ice_brent_settlements.json` | ICE forward strip (M1-M12 contract codes) requires scraping ICE's settlement page, which has anti-bot measures. |
-| `public/data/events/outages.json` | Human severity classification — the whole point is the curator's judgement. |
-| `public/data/infrastructure/*.geojson` | Global Energy Monitor quarterly drop. Built by `scripts/build_workspace_data.py`. |
-
-### Environment variables
-
-Both secrets are free to register and instant-issue. The pipeline
-runs sensibly with zero secrets (FRED fallback covers market
-data, FIRMS leg skips cleanly), but production deploys should
-set both.
-
-| Variable | Required? | Where to register | What happens if missing |
-|---|---|---|---|
-| `EIA_API_KEY` | Optional | https://www.eia.gov/opendata/register.php | EIA legs fall through to FRED CSV. No-op: you still get live Brent + WTI daily. |
-| `FIRMS_MAP_KEY` | Required for FIRMS leg | https://firms.modaps.eosdis.nasa.gov/api/map_key/ | FIRMS leg is skipped. The other two legs still run. |
-
-In GitHub Actions, set these as **Settings → Secrets and variables
-→ Actions → New repository secret**.
-
-### Running locally
-
-```bash
-# Run every leg (EIA/FRED market data + FIRMS)
-npm run refresh:data
-
-# Run individual legs
-npm run refresh:data:eia          # crude_prices_30d.json only
-npm run refresh:data:brent-hist   # brent_historical_5y.json only
-npm run refresh:data:firms        # recent_detections.json only
-
-# With explicit env vars
-EIA_API_KEY=xxx FIRMS_MAP_KEY=yyy npm run refresh:data
-```
-
-### Exit-code contract
-
-The script is engineered to NEVER leave a corrupt target file
-on disk. Each leg writes atomically (temp file + rename) and
-failed legs leave the existing file untouched. The exit code
-tells the Actions workflow whether anything succeeded:
-
-- `0` — at least one leg wrote data (or determined the upstream
-  data is already fresh). The commit step fires only if the JSON
-  actually changed.
-- `1` — every leg failed. The workflow job goes red and the repo
-  owner gets a notification.
-- `2` — unknown subcommand argument.
-
-A partial outage (say FIRMS momentarily down while EIA is fine)
-commits the EIA refresh with yesterday's FIRMS snapshot still in
-place. Graceful degradation is the entire point of this
-architecture.
-
-### Reference implementations
-
-- Script: [`scripts/update_market_data.ts`](../scripts/update_market_data.ts)
-- Workflow: [`.github/workflows/daily_data_refresh.yml`](../.github/workflows/daily_data_refresh.yml)
+Everything else (`dme_oman_30d.json`, `murban_30d.json`,
+`ice_brent_settlements.json`, `refinery_margins.json`,
+`baker_hughes.json`, `jwc_listings.json`,
+`crude_bilateral_monthly.json`, `outages.json`) is curated and
+committed directly. Refreshing those means editing the JSON and
+pushing a commit — intentionally hand-touched, no auto-pipeline.
+An earlier version of Atlas shipped a nightly GitHub Actions cron
+that overwrote a subset of the JSON files against EIA/FRED/FIRMS;
+that machinery was removed because it was brittle and the curated-
+snapshot flow is simpler and honest.

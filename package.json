@@ -8,11 +8,7 @@
     "build:data": "python3 scripts/build_workspace_data.py",
     "build": "tsc -b && vite build",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "refresh:data": "tsx scripts/update_market_data.ts",
-    "refresh:data:eia": "tsx scripts/update_market_data.ts eia-spot",
-    "refresh:data:brent-hist": "tsx scripts/update_market_data.ts brent-hist",
-    "refresh:data:firms": "tsx scripts/update_market_data.ts firms"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@tanstack/react-table": "^8.20.5",
@@ -30,7 +26,6 @@
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^6.0.1",
     "jsdom": "^25.0.1",
-    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vite": "^8.0.8",
     "vitest": "^4.1.4"

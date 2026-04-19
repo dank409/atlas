@@ -4,8 +4,8 @@ import type { PricePoint } from "../types/Market";
 // Historical Brent series for the situation-room historical chart.
 // Distinct from eiaPrices.ts (which fetches 30 days for the market
 // tape) because the chart wants years of context, not a tight window.
-// Static-only seed for now — a future scripts/refreshBrentHistory.ts
-// can pull ~5y from EIA v2 once VITE_EIA_API_KEY is provisioned.
+// Static-only — refresh the JSON by replacing
+// public/data/market/brent_historical_5y.json and committing.
 
 const STATIC_SNAPSHOT_PATH = "/data/market/brent_historical_5y.json";
 

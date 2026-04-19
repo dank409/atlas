@@ -57,30 +57,32 @@ the viewport; the math is the instrument.
 
 ---
 
-## Data sources — what's live, what's nightly, what's curated
+## Data sources — live vs. curated
 
-Atlas reads static JSON files from `public/data/` at runtime. Some
-of those files are refreshed nightly from live upstreams, some are
-curated quarterly from publicly available datasets, some are
-human-classified and intentionally static.
+Atlas reads static JSON files from `public/data/` at runtime. Live
+feeds are fetched directly from the browser on page load; everything
+else is a curated snapshot checked into the repo.
 
-| File | Refresh cadence | Upstream |
+| File | Mode | Upstream |
 |---|---|---|
-| `market/crude_prices_30d.json` | **Nightly** (05:17 UTC) | EIA v2 `/petroleum/pri/spt/` (Brent + WTI daily spot, 30 days). Falls back to FRED `DCOILBRENTEU` / `DCOILWTICO` CSV if EIA is down or the key is unset. |
-| `market/brent_historical_5y.json` | **Nightly** (05:17 UTC) | Same EIA endpoint, 1300 rows → ISO-week resampled to ~270 weekly observations. Same FRED fallback. |
-| `firms/recent_detections.json` | **Nightly** (05:17 UTC) | NASA FIRMS `/api/area/csv/` with a Middle East bounding box (33°E–60°E, 12°N–40°N), 72-hour window, VIIRS_SNPP_NRT. Typical run pulls 3000+ real thermal anomalies. |
-| `market/dme_oman_30d.json` | **Curated manually** | DME publishes as PDF behind an IP-whitelisted CDN. No free JSON endpoint. |
-| `market/murban_30d.json` | **Curated manually** | IFAD Murban settlements require a licensed ICE vendor subscription. |
-| `market/ice_brent_settlements.json` | **Curated manually** | ICE forward-strip settlement page has anti-bot measures. |
-| `events/outages.json` | **Curated manually** | Severity-classified event log. The whole point is the curator's judgement — no auto-pipeline should touch this. |
-| `infrastructure/refineries.geojson` etc. | **Quarterly** | Global Energy Monitor trackers. Built by `scripts/build_workspace_data.py` from the quarterly XLSX drops. |
+| `market/crude_prices_30d.json` | **Client-side live** when `VITE_EIA_API_KEY` is set; static snapshot fallback otherwise | EIA v2 `/petroleum/pri/spt/` (Brent + WTI daily spot, 30 days) |
+| `market/brent_historical_5y.json` | Static snapshot | Curated from EIA / FRED historical |
+| `firms/recent_detections.json` | **Client-side live** when `VITE_FIRMS_MAP_KEY` is set; static snapshot fallback otherwise | NASA FIRMS `/api/area/csv/` with a Middle East bounding box, 72-hour window, VIIRS_SNPP_NRT |
+| `market/dme_oman_30d.json` | Curated static | DME Oman settlements (no free JSON endpoint) |
+| `market/murban_30d.json` | Curated static | IFAD Murban settlements (vendor-licensed) |
+| `market/ice_brent_settlements.json` | Curated static | ICE forward-strip settlement page |
+| `market/refinery_margins.json` | Curated static | Platts / OilPrice / NYMEX / ICE public disclosures |
+| `rigs/baker_hughes.json` | Curated static | Baker Hughes weekly NA + monthly international |
+| `warrisk/jwc_listings.json` | Curated static | Lloyd's JWC public listed-areas document |
+| `flows/crude_bilateral_monthly.json` | Curated static | EIA International / OPEC MOMR |
+| `events/outages.json` | Curated static | Human-classified event log |
+| `infrastructure/*.geojson` | Curated static | Global Energy Monitor (rebuilt via `scripts/build_workspace_data.py`) |
+| AIS WATCH (runtime only) | **Live WebSocket** when `VITE_AISSTREAM_API_KEY` is set | AISStream.io free tier, MENA bounding box |
 
-The refresh pipeline is implemented in
-[`scripts/update_market_data.ts`](scripts/update_market_data.ts)
-and scheduled by
-[`.github/workflows/daily_data_refresh.yml`](.github/workflows/daily_data_refresh.yml).
-Full architecture in [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md)
-section 11.
+Curated snapshots update when the repo maintainer edits them and
+commits — there is intentionally no auto-pipeline for the market
+tape JSON. See [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md) for
+endpoint notes, normalisation rules, and the fallback chain.
 
 **Every surface in the app labels its provenance.** The status bar,
 market tape, and overlays show `SOURCE`, `AS OF`, `CADENCE`, and
@@ -103,12 +105,16 @@ npm install
 # Create .env.local with your Mapbox token (gitignored)
 echo 'VITE_MAPBOX_ACCESS_TOKEN=pk.YOUR_TOKEN_HERE' > .env.local
 
-# Optional: live upstream API keys (the app works without these
-# by reading the nightly-refreshed static JSON). Register both
-# free at https://www.eia.gov/opendata/register.php and
-# https://firms.modaps.eosdis.nasa.gov/api/map_key/
+# Optional: live upstream API keys. The app works without these by
+# reading the checked-in static JSON fallbacks; set them to upgrade
+# those surfaces to live-fetch mode.
+#
+#   VITE_EIA_API_KEY       free, https://www.eia.gov/opendata/register.php
+#   VITE_FIRMS_MAP_KEY     free, https://firms.modaps.eosdis.nasa.gov/api/map_key/
+#   VITE_AISSTREAM_API_KEY free, https://aisstream.io  (AIS WATCH live positions)
 echo 'VITE_EIA_API_KEY=your_eia_key' >> .env.local
 echo 'VITE_FIRMS_MAP_KEY=your_firms_key' >> .env.local
+echo 'VITE_AISSTREAM_API_KEY=your_aisstream_key' >> .env.local
 
 # Run the dev server
 npm run dev
@@ -118,28 +124,12 @@ npm run dev
 
 ```bash
 npx tsc -b          # full project type-check
-npx vitest run      # 325 tests across the client + pure utilities
+npx vitest run      # full test suite (431+)
 npm run build       # production Vite build
 ```
 
 All three gates should exit clean. The repo's policy is that a
 change is not complete until these three commands are green.
-
-### Run the data refresh locally (optional)
-
-```bash
-# With live keys
-EIA_API_KEY=xxx FIRMS_MAP_KEY=yyy npm run refresh:data
-
-# Without keys — uses the FRED keyless CSV fallback for market data
-# and skips the FIRMS leg with a clean warning
-npm run refresh:data
-
-# Individual legs
-npm run refresh:data:eia           # crude_prices_30d.json only
-npm run refresh:data:brent-hist    # brent_historical_5y.json only
-npm run refresh:data:firms         # recent_detections.json only
-```
 
 ---
 
@@ -174,12 +164,9 @@ src/
 └── styles/               Global tokens, fonts
 public/data/              Static JSON / GeoJSON served at /data/*
 scripts/
-  update_market_data.ts     Nightly refresh script
   build_workspace_data.py   Quarterly GEM infrastructure builder
-.github/workflows/
-  daily_data_refresh.yml    Cron at 05:17 UTC, commits back to main
 docs/
-  DATA_SOURCES.md            Upstream catalog + pipeline architecture
+  DATA_SOURCES.md            Upstream catalog
   DESIGN_SYSTEM.md           Terminal aesthetic tokens
   SPEC.md                    Feature specification
 ```
@@ -205,26 +192,22 @@ docs/
 
 All variables are optional except `VITE_MAPBOX_ACCESS_TOKEN`.
 
-| Variable | Scope | Required? | Source |
+| Variable | Required? | What it unlocks | Source |
 |---|---|---|---|
-| `VITE_MAPBOX_ACCESS_TOKEN` | Client (build-time injected) | **Yes** — map won't render without it | https://mapbox.com (free, 50K loads/month) |
-| `VITE_EIA_API_KEY` | Client | Optional — enables client-side live EIA fetches on page load | https://www.eia.gov/opendata/register.php |
-| `VITE_FIRMS_MAP_KEY` | Client | Optional — enables client-side live FIRMS fetches | https://firms.modaps.eosdis.nasa.gov/api/map_key/ |
-| `EIA_API_KEY` | Server (GitHub Actions) | Optional — pipeline falls back to FRED keyless CSV | Same EIA registration |
-| `FIRMS_MAP_KEY` | Server (GitHub Actions) | Required for the FIRMS leg of the nightly refresh | Same FIRMS registration |
+| `VITE_MAPBOX_ACCESS_TOKEN` | **Yes** — map won't render without it | Mapbox base tiles | https://mapbox.com (free, 50K loads/month) |
+| `VITE_EIA_API_KEY` | Optional | Live EIA Brent + WTI spot prices instead of static snapshot | https://www.eia.gov/opendata/register.php |
+| `VITE_FIRMS_MAP_KEY` | Optional | Live NASA FIRMS thermal anomaly detections | https://firms.modaps.eosdis.nasa.gov/api/map_key/ |
+| `VITE_AISSTREAM_API_KEY` | Optional | Live AIS vessel positions in the AIS WATCH view | https://aisstream.io (free) |
 
 The `VITE_` prefix is required for client-side injection — Vite
 only exposes variables starting with that prefix to client code.
-The server-side GitHub Actions secrets use unprefixed names because
-they're read from `process.env` in Node, not `import.meta.env` in
-the browser.
 
 ---
 
 ## Testing
 
 ```bash
-npx vitest run          # 325 tests
+npx vitest run          # full test suite (431+)
 npx vitest run --watch  # re-run on save
 ```
 
@@ -247,17 +230,15 @@ Tests cover:
 
 1. Import the repo in the Vercel dashboard (auto-detects Vite)
 2. Add `VITE_MAPBOX_ACCESS_TOKEN` to Environment Variables
-3. (optional) Add `VITE_EIA_API_KEY` and `VITE_FIRMS_MAP_KEY` if you
-   want client-side live fetches in addition to the nightly static
-   refresh
-4. Deploy — Vercel will pick up the `vercel.json` at the repo root
-   for the cache-header configuration that keeps the refresh
-   pipeline propagating quickly
+3. (optional) Add `VITE_EIA_API_KEY`, `VITE_FIRMS_MAP_KEY`, and
+   `VITE_AISSTREAM_API_KEY` to upgrade those surfaces from static
+   snapshots to live fetches
+4. Deploy — Vercel picks up the `vercel.json` at the repo root for
+   cache-header configuration
 
-The refresh pipeline runs every night regardless of where the app
-is deployed — it commits to `main`, and the deploy platform (Vercel,
-Netlify, GitHub Pages, Cloudflare Pages, whatever) picks up the
-change automatically on its next build.
+The site is a static SPA. To refresh a curated snapshot, edit the
+JSON under `public/data/`, commit, and push — Vercel rebuilds
+automatically.
 
 ---
 
@@ -282,8 +263,6 @@ All P0 features from `docs/SPEC.md` are shipped:
 - [x] Outage event log
 - [x] Asset grid with filter controls
 - [x] Layer toggle controls with per-dataset filters
-- [x] Keyboard shortcuts (`M`/`T`/`D`/`G`, `1-6`, `/`, `?`, `[`, `]`, `\`, `F`)
-- [x] Nightly data refresh pipeline (this session)
 
 P1 features in progress:
 

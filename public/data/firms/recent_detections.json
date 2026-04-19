@@ -1,7 +1,7 @@
 {
   "asOf": "2026-04-19T06:54:55.119Z",
-  "source": "NASA FIRMS VIIRS_SNPP_NRT area bbox 33,12,60,40 (refreshed 2026-04-19)",
-  "note": "Refreshed nightly by scripts/update_market_data.ts. Single area-bbox fetch covering the full Middle East region (Gulf + Levant + Egypt + Turkey). The client-side country fan-out path is dead upstream — NASA deprecated /api/country/csv/ and returns Invalid API call for every ISO3.",
+  "source": "NASA FIRMS VIIRS_SNPP_NRT area bbox 33,12,60,40 (curated)",
+  "note": "Curated fallback for src/hooks/useFirms. When VITE_FIRMS_MAP_KEY is set, the client fetches live FIRMS data on page load. Single area-bbox covering the full Middle East region (Gulf + Levant + Egypt + Turkey).",
   "detections": [
     {
       "id": "17.87753|54.48547|2026-04-17|858|VIIRS_SNPP",

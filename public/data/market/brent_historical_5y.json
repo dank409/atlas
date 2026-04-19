@@ -1,8 +1,8 @@
 {
   "mode": "STATIC_SNAPSHOT",
   "asOf": "2026-04-13",
-  "source": "EIA v2 petroleum/pri/spt Brent 5y daily (refreshed 2026-04-19)",
-  "note": "Weekly-resolution Brent series for the situation-room historical chart. Refreshed nightly from the most recent 5 years of daily observations, resampled to one observation per ISO week (last trading day in the bucket wins).",
+  "source": "EIA v2 petroleum/pri/spt Brent 5y daily (curated)",
+  "note": "Weekly-resolution Brent series for the situation-room historical chart. Curated from 5 years of daily EIA observations, resampled to one observation per ISO week (last trading day in the bucket wins).",
   "frequency": "weekly",
   "series": {
     "brent": [
