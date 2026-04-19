@@ -1,0 +1,170 @@
+.page {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.list {
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.listInner {
+  display: flex;
+  flex-direction: column;
+}
+
+.listRow,
+.listRowActive {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #111111;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.listRow:hover {
+  background: #0a0a0a;
+}
+
+.listRowActive {
+  background: rgba(255, 140, 0, 0.08);
+  border-left: 3px solid #ff8c00;
+  padding-left: 9px;
+}
+
+.listName {
+  color: #e8ecf2;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.listVolume {
+  color: #7a8294;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  color: #666666;
+  font-size: 11px;
+  padding: 10px 0;
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.statCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  border: 1px solid #1a1a1a;
+  background: #050505;
+}
+
+.statLabel {
+  color: #666666;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.statValue {
+  color: #ffffff;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.statUnit {
+  color: #555555;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.note {
+  color: #b8bfcc;
+  font-size: 11px;
+  line-height: 1.55;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #222222;
+}
+
+.rerouteList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rerouteRow {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rerouteHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 11px;
+}
+
+.rerouteName {
+  color: #e8ecf2;
+}
+
+.rerouteVolume {
+  color: #b8bfcc;
+  font-variant-numeric: tabular-nums;
+}
+
+.rerouteTrack {
+  height: 6px;
+  background: #14171c;
+  border: 1px solid #1a1a1a;
+  position: relative;
+  overflow: hidden;
+}
+
+.rerouteFill {
+  height: 100%;
+  background: #ff8c00;
+}
+
+.rerouteNote {
+  color: #666666;
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+.placeholder {
+  color: #7a8294;
+  font-size: 11px;
+  line-height: 1.55;
+  padding: 8px 0;
+}

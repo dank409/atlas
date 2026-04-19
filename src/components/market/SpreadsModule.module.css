@@ -1,0 +1,63 @@
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.section + .section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid #222222;
+}
+
+.sectionLabel {
+  color: #666666;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 70px 96px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid #111111;
+  font-size: 11px;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+.label {
+  color: #cccccc;
+  letter-spacing: 0.04em;
+}
+
+.value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.valuePos {
+  color: #00c853;
+}
+
+.valueNeg {
+  color: #ff1744;
+}
+
+.valueNeutral {
+  color: #666666;
+}
+
+.structure {
+  color: #666666;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: right;
+}

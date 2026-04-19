@@ -6,6 +6,7 @@ import type { OutageEvent } from "../../types/outageEvent";
 import type { FirmsSnapshot } from "../../types/firms";
 import type { ScenarioVisualState } from "../../utils/scenarioMapStyles";
 import type { MapDisplaySettings } from "../../types/mapDisplaySettings";
+import type { BypassModelResult } from "../../utils/bypassModel";
 import styles from "./MapWorkspaceMain.module.css";
 
 // MapView is imported statically here. App.tsx code-splits this whole
@@ -42,6 +43,12 @@ interface MapWorkspaceMainProps {
   selectedAssetId: string | null;
   visibleAssets: InfrastructureAsset[];
   mapDisplaySettings?: MapDisplaySettings;
+  regionalSnapshot?: {
+    bypassResult: BypassModelResult | null;
+    disruptionPct: number;
+    hormuzBaselineMbpd: number;
+    firmsAlertCount: number;
+  };
 }
 
 export function MapWorkspaceMain({
@@ -62,7 +69,8 @@ export function MapWorkspaceMain({
   scenarioState,
   selectedAssetId,
   visibleAssets,
-  mapDisplaySettings
+  mapDisplaySettings,
+  regionalSnapshot
 }: MapWorkspaceMainProps) {
   const workspaceClassName = [
     styles.workspace,
@@ -87,6 +95,7 @@ export function MapWorkspaceMain({
           selectedAssetId={selectedAssetId}
           visibleAssets={visibleAssets}
           mapDisplaySettings={mapDisplaySettings}
+          regionalSnapshot={regionalSnapshot}
         />
       </div>
       <Panel

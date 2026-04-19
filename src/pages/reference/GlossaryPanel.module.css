@@ -1,0 +1,70 @@
+.glossary {
+  padding: 14px 18px 24px;
+  max-width: 880px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #222222;
+  margin-bottom: 14px;
+}
+
+.title {
+  color: #ff8c00;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.count {
+  color: #4e5666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+}
+
+.entry {
+  border-bottom: 1px solid #111111;
+  padding-bottom: 10px;
+}
+
+.entry:last-child {
+  border-bottom: 0;
+}
+
+.termRow {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.term {
+  color: #e8ecf2;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.category {
+  color: #7a8294;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+}
+
+.definition {
+  color: #b8bfcc;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 4px 0 0;
+}

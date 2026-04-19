@@ -1,0 +1,115 @@
+.page {
+  padding: 10px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  height: 100%;
+  min-height: 0;
+  overflow: auto;
+}
+
+@media (max-width: 1300px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+.empty {
+  color: #666666;
+  font-size: 11px;
+  padding: 8px 0;
+}
+
+.placeholder {
+  color: #7a8294;
+  font-size: 11px;
+  line-height: 1.55;
+  padding: 4px 0;
+}
+
+.corrTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.corrTable th {
+  color: #666666;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 4px 6px;
+  text-align: center;
+  border-bottom: 1px solid #111111;
+}
+
+.corrRowHead {
+  text-align: left !important;
+  color: #b8bfcc !important;
+}
+
+.corrCell {
+  padding: 2px;
+  text-align: center;
+}
+
+.corrPill {
+  display: inline-block;
+  min-width: 38px;
+  padding: 2px 4px;
+  color: #e8ecf2;
+  font-variant-numeric: tabular-nums;
+}
+
+.seasonalityGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.seasonalityTile {
+  border: 1px solid #1a1a1a;
+  background: #050505;
+  padding: 6px;
+}
+
+.seasonalityHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: #7a8294;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.seasonalityHeader > span:first-child {
+  color: #ff8c00;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.seasonalityRange {
+  color: #555555;
+  font-variant-numeric: tabular-nums;
+}
