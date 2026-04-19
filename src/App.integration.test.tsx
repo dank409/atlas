@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
 
 const workspaceData = {
   catalog: [
@@ -15,11 +16,11 @@ const workspaceData = {
     },
     {
       id: "pipelines",
-      title: "CRUDE / GAS PIPELINES",
+      title: "PIPELINES",
       source: "Global Energy Monitor",
       frequency: "Quarterly",
       coverage: "Middle East",
-      notes: "Curated route geometries from seed infrastructure references",
+      notes: "Curated route geometries",
       status: "available",
       recordCount: 2,
       defaultActive: true
@@ -30,59 +31,13 @@ const workspaceData = {
       source: "EIA + curated reference",
       frequency: "Periodic",
       coverage: "Middle East",
-      notes: "Strategic oil transit constraints and bypass context",
+      notes: "Strategic chokepoints",
       status: "available",
       recordCount: 1,
       defaultActive: true
-    },
-    {
-      id: "fields",
-      title: "OIL & GAS FIELDS",
-      source: "Global Energy Monitor",
-      frequency: "Quarterly",
-      coverage: "Middle East",
-      notes: "GOGET field centroids with production context",
-      status: "available",
-      recordCount: 2,
-      defaultActive: false
-    },
-    {
-      id: "terminals",
-      title: "TERMINALS / LNG",
-      source: "Global Energy Monitor",
-      frequency: "Quarterly",
-      coverage: "Middle East",
-      notes: "GGIT LNG import and export sites",
-      status: "available",
-      recordCount: 1,
-      defaultActive: false
     }
   ],
   assets: [
-    {
-      assetKind: "refinery",
-      datasetId: "refineries",
-      id: "refinery-ras-tanura",
-      name: "Ras Tanura Refinery",
-      country: "SA",
-      countryName: "Saudi Arabia",
-      owner: "Saudi Arabian Oil Co",
-      operator: "Saudi Arabian Oil Co",
-      status: "operational",
-      capacity_bpd: 550000,
-      capacityUnit: "bpd",
-      lat: 26.6437,
-      lon: 50.1544,
-      linkedContext: {
-        companyId: "saudi-aramco",
-        countryCode: "SA",
-        ticker: "ARAMCO AB Equity"
-      },
-      _metadata: {
-        source: "Approved refinery seed",
-        downloadDate: "2026-04-13"
-      }
-    },
     {
       assetKind: "refinery",
       datasetId: "refineries",
@@ -92,84 +47,13 @@ const workspaceData = {
       countryName: "United Arab Emirates",
       owner: "Abu Dhabi National Oil Co",
       operator: "ADNOC Refining",
-      status: "planned_maintenance",
+      status: "operational",
       capacity_bpd: 837000,
       capacityUnit: "bpd",
       lat: 24.1108,
       lon: 54.0894,
-      linkedContext: {
-        companyId: "adnoc",
-        countryCode: "AE",
-        ticker: "ADNOCDIST EY Equity"
-      },
       _metadata: {
         source: "Approved refinery seed",
-        downloadDate: "2026-04-13"
-      }
-    },
-    {
-      assetKind: "pipeline",
-      datasetId: "pipelines",
-      id: "pipeline-east-west",
-      name: "East-West Crude Oil Pipeline",
-      country: "SA",
-      countryName: "Saudi Arabia",
-      owner: "Saudi Aramco",
-      operator: "Saudi Aramco",
-      status: "operating",
-      hydrocarbon: "crude_oil",
-      capacity_boed: 5000000,
-      diameter_inches: 56,
-      length_km: 1200,
-      startPoint: "Abqaiq",
-      endPoint: "Yanbu",
-      linkedContext: {
-        companyId: "saudi-aramco",
-        countryCode: "SA",
-        ticker: "ARAMCO AB Equity"
-      },
-      geometry: {
-        type: "LineString",
-        coordinates: [
-          [49.6778, 25.9344],
-          [38.0617, 24.0889]
-        ]
-      },
-      _metadata: {
-        source: "Approved pipeline seed",
-        downloadDate: "2026-04-13"
-      }
-    },
-    {
-      assetKind: "pipeline",
-      datasetId: "pipelines",
-      id: "pipeline-marjan",
-      name: "Marjan Oil Pipeline",
-      country: "SA",
-      countryName: "Saudi Arabia",
-      owner: "Saudi Aramco",
-      operator: "Saudi Aramco",
-      status: "construction",
-      hydrocarbon: "crude_oil",
-      capacity_boed: 300000,
-      diameter_inches: 36,
-      length_km: 100,
-      startPoint: "Marjan",
-      endPoint: "Tanajib",
-      linkedContext: {
-        companyId: "saudi-aramco",
-        countryCode: "SA",
-        ticker: "ARAMCO AB Equity"
-      },
-      geometry: {
-        type: "LineString",
-        coordinates: [
-          [49.572, 27.981],
-          [49.658, 27.921]
-        ]
-      },
-      _metadata: {
-        source: "Approved pipeline seed",
         downloadDate: "2026-04-13"
       }
     },
@@ -182,10 +66,6 @@ const workspaceData = {
       countryName: "Middle East",
       status: "strategic",
       transitVolume_mbpd: 20.5,
-      linkedContext: {
-        countryCode: "SA",
-        benchmarkRefs: ["Dated Brent", "Dubai"]
-      },
       geometry: {
         type: "LineString",
         coordinates: [
@@ -199,101 +79,9 @@ const workspaceData = {
       }
     }
   ],
-  companiesById: {
-    adnoc: {
-      id: "adnoc",
-      name: "Abu Dhabi National Oil Company",
-      summary: "Integrated producer, refiner, petrochemical operator, and exporter anchored in Abu Dhabi.",
-      domicile: "United Arab Emirates",
-      website: "www.adnoc.ae",
-      tickers: ["ADNOCDIST EY Equity"],
-      benchmarks: ["Murban", "Dubai"],
-      source: "Curated operator profile",
-      updated: "2026-04-13"
-    },
-    "saudi-aramco": {
-      id: "saudi-aramco",
-      name: "Saudi Aramco",
-      summary: "Integrated oil major spanning upstream, refining, petrochemicals, and export infrastructure.",
-      domicile: "Saudi Arabia",
-      website: "www.aramco.com",
-      tickers: ["ARAMCO AB Equity"],
-      benchmarks: ["Arab Light", "Dubai", "Dated Brent"],
-      source: "Curated operator profile",
-      updated: "2026-04-13"
-    }
-  },
-  countriesByCode: {
-    AE: {
-      code: "AE",
-      name: "United Arab Emirates",
-      summary: "ADNOC-dominant exporter with Fujairah bypass relevance for Hormuz risk analysis.",
-      keyGrades: ["Murban"],
-      chokepointDependency: "Has bypass via Fujairah but remains Gulf-system critical.",
-      source: "Curated country profile",
-      updated: "2026-04-13"
-    },
-    SA: {
-      code: "SA",
-      name: "Saudi Arabia",
-      summary: "Largest OPEC producer with major refining and pipeline bypass infrastructure.",
-      keyGrades: ["Arab Light", "Arab Heavy"],
-      chokepointDependency: "Partial Hormuz hedge via East-West pipeline to Yanbu.",
-      source: "Curated country profile",
-      updated: "2026-04-13"
-    }
-  },
-  exposureByTargetId: {
-    AE: {
-      targetId: "AE",
-      targetKind: "country",
-      primaryChokepointId: "chokepoint-hormuz",
-      primaryChokepointLabel: "Strait of Hormuz",
-      seaborneExportsMbpd: 3.2,
-      affectedVolumeMbpd: 1.1,
-      bypassCapacityMbpd: 1.5,
-      affectedSharePercent: 34,
-      exportRoute: "Abu Dhabi / Fujairah",
-      source: "Curated country exposure registry",
-      asOf: "2026-04-13"
-    },
-    SA: {
-      targetId: "SA",
-      targetKind: "country",
-      primaryChokepointId: "chokepoint-hormuz",
-      primaryChokepointLabel: "Strait of Hormuz",
-      seaborneExportsMbpd: 6.3,
-      affectedVolumeMbpd: 2.4,
-      bypassCapacityMbpd: 5,
-      affectedSharePercent: 38,
-      exportRoute: "East-West / Yanbu",
-      source: "Curated country exposure registry",
-      asOf: "2026-04-13"
-    },
-    "refinery-ruwais": {
-      targetId: "refinery-ruwais",
-      targetKind: "asset",
-      primaryChokepointId: "chokepoint-hormuz",
-      primaryChokepointLabel: "Strait of Hormuz",
-      affectedVolumeMbpd: 0.4,
-      affectedSharePercent: 48,
-      dependencyScore: 0.48,
-      exportRoute: "Abu Dhabi / Fujairah",
-      source: "Curated asset exposure registry",
-      asOf: "2026-04-13"
-    },
-    "pipeline-east-west": {
-      targetId: "pipeline-east-west",
-      targetKind: "asset",
-      primaryChokepointId: "chokepoint-hormuz",
-      primaryChokepointLabel: "Strait of Hormuz",
-      affectedVolumeMbpd: 5,
-      affectedSharePercent: 24,
-      exportRoute: "East-West / Yanbu",
-      source: "Curated asset exposure registry",
-      asOf: "2026-04-13"
-    }
-  }
+  companiesById: {},
+  countriesByCode: {},
+  exposureByTargetId: {}
 };
 
 vi.mock("./components/map/MapView", () => ({
@@ -310,201 +98,160 @@ vi.mock("./components/map/MapView", () => ({
       <div>MAP VIEW ACTIVE: {activeDatasetIds.length} DATASETS / {visibleAssets.length} ASSETS</div>
       <div>MAP SELECTED: {selectedAssetId ?? "NONE"}</div>
     </div>
-  )
+  ),
+  BASEMAP_MODE_LABELS: { dark: "DARK", satellite: "SAT", firms: "FIRMS" }
 }));
 
 vi.mock("./hooks/useMapWorkspaceData", () => ({
   useMapWorkspaceData: () => ({
     ...workspaceData,
     error: null,
-    isLoading: false
+    isLoading: false,
+    firmsBaselineByAssetId: {}
   })
+}));
+
+vi.mock("./hooks/useCrudePrices", () => ({
+  useCrudePrices: () => ({
+    error: null,
+    isLoading: false,
+    snapshot: null,
+    dmeOmanSnapshot: null,
+    murbanSnapshot: null,
+    spreadHistory: null,
+    summary: null
+  })
+}));
+
+vi.mock("./hooks/useIceSettlements", () => ({
+  useIceSettlements: () => ({
+    error: null,
+    isLoading: false,
+    snapshot: null,
+    timespreads: null
+  })
+}));
+
+vi.mock("./hooks/useOutageEvents", () => ({
+  useOutageEvents: () => ({ error: null, isLoading: false, snapshot: null })
+}));
+
+vi.mock("./hooks/useBrentHistorical", () => ({
+  useBrentHistorical: () => ({ error: null, isLoading: false, snapshot: null })
+}));
+
+vi.mock("./hooks/useFirms", () => ({
+  useFirms: () => ({ error: null, isLoading: false, snapshot: null })
 }));
 
 import { App } from "./App";
 
-describe("App MAP workspace", () => {
-  it("renders a Bloomberg-style map workspace with catalog, rail, and mixed-asset grid", async () => {
+describe("App shell — new view router", () => {
+  it("renders the top-nav tab strip with all 12 views", async () => {
     render(<App />);
-    const catalogPanel = screen.getByText("DATASET CATALOG").closest("section")!;
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    expect(await screen.findByText("MAP VIEW ACTIVE: 3 DATASETS / 5 ASSETS")).toBeInTheDocument();
-    expect(screen.getByText("DATASET CATALOG")).toBeInTheDocument();
-    expect(screen.getByText("MAP CONTENT")).toBeInTheDocument();
-    expect(screen.getByText("ASSET GRID")).toBeInTheDocument();
-    expect(within(catalogPanel).getByRole("button", { name: /REFINERIES/ })).toBeInTheDocument();
-    expect(within(catalogPanel).getByRole("button", { name: /CRUDE \/ GAS PIPELINES/ })).toBeInTheDocument();
-    expect(within(catalogPanel).getByRole("button", { name: /CHOKEPOINTS/ })).toBeInTheDocument();
-    expect(within(catalogPanel).getByText("OIL & GAS FIELDS")).toBeInTheDocument();
-    expect(within(catalogPanel).queryByText("CURATING")).not.toBeInTheDocument();
-    expect(within(gridPanel).getByText("Ras Tanura Refinery")).toBeInTheDocument();
-    expect(within(gridPanel).getByText("Ruwais Refinery")).toBeInTheDocument();
-    expect(within(gridPanel).queryByText("East-West Crude Oil Pipeline")).not.toBeInTheDocument();
+    for (const label of [
+      "MAP",
+      "MARKETS",
+      "FLOWS",
+      "CHOKES",
+      "EVENTS",
+      "MODELS",
+      "AIS",
+      "ALERTS",
+      "NOTES",
+      "REFERENCE",
+      "ABOUT",
+      "DATA"
+    ]) {
+      expect(await screen.findByText(label)).toBeInTheDocument();
+    }
   });
 
-  it("focuses the bottom grid on the selected dataset and shows dataset-aware pipeline columns", async () => {
+  it("mounts the map workspace on initial load", async () => {
     render(<App />);
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    fireEvent.click(screen.getByRole("button", { name: /CRUDE \/ GAS PIPELINES/ }));
-
-    // Columns were pared to NAME / COUNTRY / CAPACITY / STATUS —
-    // drill-down fields (HYDROCARBON, OWNER, LENGTH, REFERENCE)
-    // live in the inspect overlay that opens on row click.
-    expect(await screen.findByRole("button", { name: "SORT BY CAPACITY" })).toBeInTheDocument();
-    expect(within(gridPanel).getByText("Marjan Oil Pipeline")).toBeInTheDocument();
-    expect(within(gridPanel).getByText("East-West Crude Oil Pipeline")).toBeInTheDocument();
-    expect(within(gridPanel).queryByText("Ras Tanura Refinery")).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.getByText(/MAP VIEW ACTIVE/)).toBeInTheDocument()
+    );
   });
 
-  it("treats chokepoints as a first-class focused grid dataset instead of dropping into an empty state", async () => {
+  it("routes to MARKETS when the MARKETS tab is clicked", async () => {
     render(<App />);
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    fireEvent.click(screen.getByRole("button", { name: /CHOKEPOINTS/ }));
-
-    expect(await screen.findByRole("button", { name: "SORT BY TRANSIT" })).toBeInTheDocument();
-    expect(within(gridPanel).getByText("Strait of Hormuz")).toBeInTheDocument();
-    expect(within(gridPanel).queryByText(/NO VISIBLE ASSETS/i)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText("MARKETS"));
+    // Markets view renders the CRUDE · SPOT module (or its empty-state text).
+    await waitFor(() =>
+      expect(screen.getByText("CRUDE · SPOT")).toBeInTheDocument()
+    );
   });
 
-  it("executes command-bar view and asset commands from the header", async () => {
+  it("routes to EVENTS view and offers a feed/swimlane toggle", async () => {
     render(<App />);
-
-    fireEvent.change(screen.getByLabelText("COMMAND"), {
-      target: { value: "dash" }
-    });
-    fireEvent.submit(screen.getByLabelText("COMMAND").closest("form")!);
-
-    expect(await screen.findByText("SITUATION ROOM")).toBeInTheDocument();
-
-    fireEvent.change(screen.getByLabelText("COMMAND"), {
-      target: { value: "ref ruwais" }
-    });
-    fireEvent.submit(screen.getByLabelText("COMMAND").closest("form")!);
-
-    expect(await screen.findByText("MAP SELECTED: refinery-ruwais")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("EVENTS"));
+    expect(await screen.findByText("FEED")).toBeInTheDocument();
+    expect(screen.getByText("SWIMLANE")).toBeInTheDocument();
   });
 
-  it("surfaces the selected asset in the persistent context rail via the inspect overlay", async () => {
+  it("routes to MODELS view and shows the scenario stress-test panel", async () => {
     render(<App />);
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    // Row click now opens the inspect overlay (Bloomberg selector
-    // pattern). Committing to a map fly-to + context-rail selection
-    // requires the explicit VIEW ON MAP action in the overlay footer.
-    fireEvent.click((await within(gridPanel).findByText("Ruwais Refinery")).closest("tr")!);
-    fireEvent.click(await screen.findByRole("button", { name: /VIEW ON MAP/i }));
-
-    const detailPanel = (await screen.findByText("STRUCTURAL PROFILE")).closest("section")!;
-    expect(within(detailPanel).getByText("Ruwais Refinery")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("MODELS"));
+    expect(await screen.findByText("SCENARIO INPUTS")).toBeInTheDocument();
+    expect(screen.getByText("HORMUZ DISRUPTION")).toBeInTheDocument();
   });
 
-  it("searches across mixed assets and selects a pipeline into the map detail workflow", async () => {
+  it("routes to DATA and lists source feeds", async () => {
     render(<App />);
-
-    fireEvent.change(screen.getByLabelText("COMMAND"), {
-      target: { value: "east-west" }
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: /East-West Crude Oil Pipeline/i }));
-    const dependencyPanel = screen.getByText("CURATED DEPENDENCY").closest("section")!;
-
-    expect(await screen.findByText("MAP SELECTED: pipeline-east-west")).toBeInTheDocument();
-    expect(within(dependencyPanel).getByText("East-West / Yanbu")).toBeInTheDocument();
-    expect(within(dependencyPanel).getByText("Strait of Hormuz")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("DATA"));
+    expect(await screen.findByText("DATA · SOURCES")).toBeInTheDocument();
   });
 
-  it("focuses search with slash, clears selection with escape, and opens a shortcuts overlay with question mark", async () => {
+  it("routes to ABOUT and shows the project thesis", async () => {
     render(<App />);
-    const searchInput = screen.getByLabelText("COMMAND");
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    fireEvent.keyDown(window, { key: "/" });
-    expect(searchInput).toHaveFocus();
-
-    // Two-step selection: row click opens the inspect overlay, then
-    // VIEW ON MAP commits the selection and closes the overlay.
-    fireEvent.click((await within(gridPanel).findByText("Ruwais Refinery")).closest("tr")!);
-    fireEvent.click(await screen.findByRole("button", { name: /VIEW ON MAP/i }));
-    expect(await screen.findByText("MAP SELECTED: refinery-ruwais")).toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: "?" });
-    expect(screen.getByText("SHORTCUTS")).toBeInTheDocument();
-    expect(screen.getByText("TOGGLE RIGHT RAIL")).toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: "Escape" });
-    expect(screen.queryByText("SHORTCUTS")).not.toBeInTheDocument();
-    expect(screen.getByText("MAP SELECTED: NONE")).toBeInTheDocument();
+    fireEvent.click(screen.getByText("ABOUT"));
+    expect(await screen.findByText("ATLAS / ABOUT")).toBeInTheDocument();
   });
 
-  it("toggles active datasets from the keyboard with numeric shortcuts", async () => {
+  it("renders the LeftRail with grouped layer sections and region chips", async () => {
     render(<App />);
-
-    expect(await screen.findByText("MAP VIEW ACTIVE: 3 DATASETS / 5 ASSETS")).toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: "1" });
-    expect(await screen.findByText("MAP VIEW ACTIVE: 2 DATASETS / 3 ASSETS")).toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: "2" });
-    expect(await screen.findByText("MAP VIEW ACTIVE: 1 DATASETS / 1 ASSETS")).toBeInTheDocument();
+    expect(await screen.findByText("LAYERS · FILTERS")).toBeInTheDocument();
+    expect(screen.getByText("PIPELINES")).toBeInTheDocument();
+    expect(screen.getByText("UPSTREAM")).toBeInTheDocument();
+    expect(screen.getByText("DOWNSTREAM")).toBeInTheDocument();
+    expect(screen.getByText("GEOPOLITICAL")).toBeInTheDocument();
+    expect(screen.getByText("MENA")).toBeInTheDocument();
+    expect(screen.getByText("RED SEA")).toBeInTheDocument();
   });
 
-  it("collapses the right rail with the bracket shortcut and reopens it when an asset is selected", async () => {
+  it("resolves a command-bar view command and switches the active view", async () => {
     render(<App />);
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    // No asset selected yet: right rail shows MAP CONTENT (legend/filters),
-    // not ASSET DETAIL. ASSET DETAIL only appears once an asset is selected.
-    expect(screen.getByText("MAP CONTENT")).toBeInTheDocument();
-    expect(screen.queryByText("ASSET DETAIL")).not.toBeInTheDocument();
-
-    fireEvent.keyDown(window, { key: "]" });
-    expect(screen.queryByText("MAP CONTENT")).not.toBeInTheDocument();
-
-    // Row click → inspect overlay → VIEW ON MAP commits selection
-    // and auto-reopens the right rail so the thesis context panels are visible.
-    fireEvent.click((await within(gridPanel).findByText("Ruwais Refinery")).closest("tr")!);
-    fireEvent.click(await screen.findByRole("button", { name: /VIEW ON MAP/i }));
-    const detailPanel = await screen.findByText("STRUCTURAL PROFILE");
-    expect(detailPanel).toBeInTheDocument();
-    expect(within(detailPanel.closest("section")!).getByText("Ruwais Refinery")).toBeInTheDocument();
+    const input = screen.getByLabelText("Command or search");
+    fireEvent.change(input, { target: { value: "chokes" } });
+    fireEvent.submit(input.closest("form")!);
+    await waitFor(() =>
+      expect(
+        screen.getAllByText("CHOKEPOINTS", { exact: false }).length
+      ).toBeGreaterThan(0)
+    );
   });
 
-  it("pushes a country overlay when the COUNTRY cell is clicked inside the asset overlay, then pops back", async () => {
-    // End-to-end proof the overlay navigation stack works:
-    //   grid click → asset overlay (fresh stack, no back button)
-    //   click COUNTRY cell → country overlay pushed, back button appears
-    //   click BACK → country pops, asset overlay restored
+  it("renders the timeline scrubber + status bar in the footer", async () => {
     render(<App />);
-    const gridPanel = (await screen.findByText("ASSET GRID")).closest("section")!;
-
-    fireEvent.click((await within(gridPanel).findByText("Ruwais Refinery")).closest("tr")!);
-
-    // Asset overlay is the freshly opened (only) entry on the stack,
-    // so there is no BACK button yet.
-    const assetHeadline = await screen.findByText("RUWAIS REFINERY");
-    expect(assetHeadline).toBeInTheDocument();
+    // When the Brent historical snapshot is null in the mock, the
+    // scrubber renders its loading empty state. Either form proves it's
+    // mounted in the footer.
     expect(
-      screen.queryByRole("button", { name: /Back to previous/i })
-    ).not.toBeInTheDocument();
+      await screen.findByText(/BRENT HISTORICAL · LOADING|TIMELINE/)
+    ).toBeInTheDocument();
+    expect(screen.getByText(/REGION: MIDDLE EAST/)).toBeInTheDocument();
+  });
 
-    // Click the COUNTRY cell — it resolves to the curated UAE profile
-    // and pushes a country overlay onto the stack.
-    fireEvent.click(screen.getByTitle("Expand United Arab Emirates"));
-    expect(await screen.findByText("UNITED ARAB EMIRATES")).toBeInTheDocument();
-    // The country overlay is now on top with an asset entry beneath,
-    // so BACK is visible.
-    const backButton = screen.getByRole("button", { name: /Back to previous/i });
-    expect(backButton).toBeInTheDocument();
-
-    // Click BACK — country pops, asset overlay is back on screen.
-    fireEvent.click(backButton);
-    expect(await screen.findByText("RUWAIS REFINERY")).toBeInTheDocument();
-    // And the back button is gone again (stack is back to 1 entry).
-    expect(
-      screen.queryByRole("button", { name: /Back to previous/i })
-    ).not.toBeInTheDocument();
+  it("shows focus shortcut hints in the LeftRail", async () => {
+    render(<App />);
+    expect(await screen.findByText("Focus Hormuz")).toBeInTheDocument();
+    expect(screen.getByText("Focus Red Sea")).toBeInTheDocument();
+    expect(screen.getByText("Focus Eastern Prov.")).toBeInTheDocument();
   });
 });
+
+// Silence unused-import warning for within() when this file is pared
+// down further in future — it stays imported because follow-up tests
+// will scope queries into specific panels.
+void within;

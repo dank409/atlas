@@ -19,11 +19,23 @@ export type TerminalCommandResolution =
     };
 
 const VIEW_COMMANDS: Record<string, ViewMode> = {
-  dash: "dash",
-  dashboard: "dash",
-  grades: "grades",
   map: "map",
-  table: "table"
+  markets: "markets",
+  mkt: "markets",
+  flows: "flows",
+  chokes: "chokes",
+  chokepoints: "chokes",
+  events: "events",
+  models: "models",
+  scenario: "models",
+  ais: "ais",
+  alerts: "alerts",
+  notes: "notes",
+  ref: "reference",
+  reference: "reference",
+  grades: "reference",
+  about: "about",
+  data: "data"
 };
 
 const DATASET_COMMANDS: Array<{
@@ -50,7 +62,7 @@ export function resolveTerminalCommand(
 
   if (normalized in VIEW_COMMANDS) {
     const view = VIEW_COMMANDS[normalized];
-    const activityLabel = view === "dash" ? "OPEN DASHBOARD" : `OPEN ${view.toUpperCase()}`;
+    const activityLabel = `OPEN ${view.toUpperCase()}`;
 
     return {
       activityLabel,

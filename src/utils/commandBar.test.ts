@@ -49,15 +49,20 @@ const assets: InfrastructureAsset[] = [
 
 describe("resolveTerminalCommand", () => {
   it("resolves direct view commands", () => {
-    expect(resolveTerminalCommand("dash", assets)).toEqual({
-      activityLabel: "OPEN DASHBOARD",
+    expect(resolveTerminalCommand("markets", assets)).toEqual({
+      activityLabel: "OPEN MARKETS",
       kind: "view",
-      view: "dash"
+      view: "markets"
     });
     expect(resolveTerminalCommand("map", assets)).toEqual({
       activityLabel: "OPEN MAP",
       kind: "view",
       view: "map"
+    });
+    expect(resolveTerminalCommand("chokes", assets)).toEqual({
+      activityLabel: "OPEN CHOKES",
+      kind: "view",
+      view: "chokes"
     });
   });
 

@@ -241,22 +241,25 @@ function buildColumns(datasetMode: GridDatasetMode): Array<ColumnDef<AssetGridRo
   ];
 }
 
-const STATUS_PILL_COLORS: Record<string, string> = {
-  operational: "#00C853",
-  operating: "#00C853",
-  construction: "#FF8C00",
-  in_development: "#FF8C00",
-  proposed: "#FF8C00",
-  planned_startup: "#FF8C00",
-  planned_maintenance: "#FFD600",
-  unplanned_incident: "#FF1744",
-  mothballed: "#FF1744",
-  idle: "#FF1744",
-  idled: "#FF1744",
-  decommissioning: "#FF1744",
-  retired: "#FF1744",
-  cancelled: "#FF1744",
-  shelved: "#FF1744"
+// Status → semantic color bucket. Keys are raw underscored asset enum
+// values. Values map to CSS modifier classes defined alongside
+// `.statusPill` in AssetGridTable.module.css.
+const STATUS_PILL_BUCKETS: Record<string, "green" | "orange" | "yellow" | "red"> = {
+  operational: "green",
+  operating: "green",
+  construction: "orange",
+  in_development: "orange",
+  proposed: "orange",
+  planned_startup: "orange",
+  planned_maintenance: "yellow",
+  unplanned_incident: "red",
+  mothballed: "red",
+  idle: "red",
+  idled: "red",
+  decommissioning: "red",
+  retired: "red",
+  cancelled: "red",
+  shelved: "red"
 };
 
 function statusColumn(
@@ -268,15 +271,19 @@ function statusColumn(
   return {
     accessorFn: accessor,
     cell: ({ row }) => {
-      const raw = row.original.status;
-      const display = formatStatusLabel(raw).toUpperCase();
-      const color = STATUS_PILL_COLORS[raw] ?? "#666666";
+      // `row.original.status` is the display-formatted, despaced form
+      // ("planned maintenance"). Color buckets are keyed by the raw
+      // underscored asset enum ("planned_maintenance") — read it from
+      // the underlying asset so multi-word statuses hit the right
+      // semantic color.
+      const rawStatus = row.original.asset.status;
+      const display = formatStatusLabel(rawStatus).toUpperCase();
+      const bucket = STATUS_PILL_BUCKETS[rawStatus];
+      const pillClass = bucket
+        ? `${styles.statusPill} ${styles[`statusPill_${bucket}`]}`
+        : styles.statusPill;
       return (
-        <span
-          className={styles.statusPill}
-          style={{ borderColor: color, color }}
-          title={display}
-        >
+        <span className={pillClass} title={display}>
           {display}
         </span>
       );

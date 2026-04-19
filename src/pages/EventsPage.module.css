@@ -1,0 +1,148 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.modeSwitcher {
+  display: flex;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.modeButton,
+.modeButtonActive {
+  background: transparent;
+  border: 1px solid #2b3240;
+  color: #7a8294;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  padding: 4px 12px;
+  text-transform: uppercase;
+}
+
+.modeButton:hover {
+  color: #ff8c00;
+  border-color: #ff8c00;
+}
+
+.modeButtonActive {
+  background: rgba(255, 140, 0, 0.14);
+  border-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.swimlane {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 0;
+}
+
+.axisRow {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #1a1a1a;
+  margin-bottom: 8px;
+}
+
+.axisTrack {
+  position: relative;
+  height: 18px;
+}
+
+.axisTick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  pointer-events: none;
+}
+
+.axisTickLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: #1a1a1a;
+}
+
+.axisTickLabel {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  color: #4e5666;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.lane {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid #111111;
+}
+
+.lane:last-child {
+  border-bottom: 0;
+}
+
+.laneHeader {
+  color: #b8bfcc;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-align: right;
+  padding-right: 4px;
+}
+
+.laneTrack {
+  position: relative;
+  height: 12px;
+  background: #050505;
+  border: 1px solid #111111;
+}
+
+.laneDot {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.dotCritical {
+  background: #ff1744;
+  box-shadow: 0 0 0 1px #000000;
+}
+
+.dotHigh {
+  background: #ff1744;
+}
+
+.dotMed {
+  background: #ffd600;
+}
+
+.dotLow {
+  background: #666666;
+}

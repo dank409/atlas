@@ -1,45 +1,40 @@
-import { Suspense, lazy, useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import { HeaderBar } from "./components/layout/HeaderBar";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { TopNav } from "./components/layout/TopNav";
+import { LeftRail, type RegionCode, type FocusShortcut, type WatchlistItem } from "./components/layout/LeftRail";
 import { StatusBar } from "./components/layout/StatusBar";
-import { DashboardView } from "./components/layout/DashboardView";
-import { Panel } from "./components/common/Panel";
-import { SidebarTabs, type SidebarTabOption } from "./components/common/SidebarTabs";
-import { DatasetCatalogPanel } from "./components/panels/DatasetCatalogPanel";
+import { TimelineScrubber } from "./components/layout/TimelineScrubber";
 import { MapContentPanel } from "./components/panels/MapContentPanel";
 import { MapDisplayControls } from "./components/panels/MapDisplayControls";
+import { MarketModulesStack } from "./components/market/MarketModulesStack";
 import { ContextPanelStack } from "./components/panels/ContextPanelStack";
 import { ClearSelectionBar } from "./components/panels/ClearSelectionBar";
-import { AssetGridTable } from "./components/tables/AssetGridTable";
 import { AssetDetailOverlay } from "./components/tables/AssetDetailOverlay";
-import { CrudeGradeTable } from "./components/tables/CrudeGradeTable";
 import { GradeDetailOverlay } from "./components/tables/GradeDetailOverlay";
 import { CompanyDetailOverlay } from "./components/panels/CompanyDetailOverlay";
 import { CountryDetailOverlay } from "./components/panels/CountryDetailOverlay";
+import { MapPage } from "./pages/MapPage";
+import { MarketsPage } from "./pages/MarketsPage";
+import { EventsPage } from "./pages/EventsPage";
+import { ModelsPage } from "./pages/ModelsPage";
+import { ChokesPage } from "./pages/ChokesPage";
+import { FlowsPage } from "./pages/FlowsPage";
+import { AlertsPage } from "./pages/AlertsPage";
+import { AisPage } from "./pages/AisPage";
+import { NotesPage } from "./pages/NotesPage";
+import { AboutPage } from "./pages/AboutPage";
+import { DataPage } from "./pages/DataPage";
+import { ReferencePage } from "./pages/ReferencePage";
 import type { CrudeGrade } from "./types/CrudeGrade";
 import { useMapWorkspaceData } from "./hooks/useMapWorkspaceData";
-import { ViewMode } from "./types/View";
+import type { ViewMode } from "./types/View";
 import { AppShellLayout } from "./components/layout/AppShellLayout";
-import { MapLoadingFallback } from "./components/layout/MapLoadingFallback";
-import { BASEMAP_MODE_LABELS, type BasemapMode } from "./components/map/MapView";
+import { type BasemapMode } from "./components/map/MapView";
 import { ShortcutOverlay } from "./components/layout/ShortcutOverlay";
-
-// MapWorkspaceMain (and everything it transitively imports, including
-// mapbox-gl via MapView) is code-split into its own async chunk. Users
-// who open the terminal in TABLE / DASH / GRADES view never download
-// the map engine bundle at all — the lazy import only fires when
-// activeView === "map" is first evaluated.
-const MapWorkspaceMain = lazy(() =>
-  import("./components/layout/MapWorkspaceMain").then((module) => ({
-    default: module.MapWorkspaceMain
-  }))
-);
 import { MarketTape } from "./components/market/MarketTape";
-import { BypassControlPanel } from "./components/model/BypassControlPanel";
 import { useCrudePrices } from "./hooks/useCrudePrices";
-import { useCrudeGrades } from "./hooks/useCrudeGrades";
-import { useEiaInventory } from "./hooks/useEiaInventory";
 import { useIceSettlements } from "./hooks/useIceSettlements";
 import { useBypassModel } from "./hooks/useBypassModel";
+import { DEFAULT_BYPASS_CONSTANTS } from "./utils/bypassModel";
 import { useOutageEvents } from "./hooks/useOutageEvents";
 import { useBrentHistorical } from "./hooks/useBrentHistorical";
 import { useFirms } from "./hooks/useFirms";
@@ -64,12 +59,10 @@ import {
 import { resolveTerminalCommand } from "./utils/commandBar";
 import styles from "./App.module.css";
 
-type LeftSidebarTab = "catalog" | "scenarios";
-
-const LEFT_SIDEBAR_TABS: SidebarTabOption<LeftSidebarTab>[] = [
-  { value: "catalog", label: "CATALOG" },
-  { value: "scenarios", label: "SCENARIOS" }
-];
+// `LeftSidebarTab`/`LEFT_SIDEBAR_TABS` removed in the shell rewrite —
+// the left rail is now a single unified grouped-layers + region + watchlist
+// surface (see `LeftRail`). The bypass model controls migrated into the
+// MODELS view page (`ModelsPage`).
 
 interface WorkspaceAction {
   activeDatasetIds?: DatasetId[];
@@ -117,8 +110,6 @@ export function App() {
     error
   } = useMapWorkspaceData();
   const crudePrices = useCrudePrices();
-  const crudeGrades = useCrudeGrades();
-  const eiaInventory = useEiaInventory();
   const iceSettlements = useIceSettlements();
   const bypassModel = useBypassModel();
   const outageEvents = useOutageEvents();
@@ -146,12 +137,25 @@ export function App() {
   const currentOverlay: OverlayEntry | null =
     overlayStack.length > 0 ? overlayStack[overlayStack.length - 1] : null;
   const canGoBackOverlay = overlayStack.length > 1;
-  const [leftSidebarTab, setLeftSidebarTab] = useState<LeftSidebarTab>("catalog");
   const [activityLog, setActivityLog] = useState<TerminalActivityEntry[]>([]);
+  // Region-chip selection in the left rail. Persisted only in React
+  // state for now — the reducer already owns per-dataset filters.
+  const [activeRegion, setActiveRegion] = useState<RegionCode>("MENA");
+  // Clocks are hoisted here so every view gets the same time. Updated
+  // once per second — see the ticking effect below.
+  const [nowStamp, setNowStamp] = useState<Date>(() => new Date());
+  // Timeline playhead [0, 1]. 1 = NOW, < 1 = rewound. When rewound,
+  // the EVENTS feed filters to events before the playhead and the MAP
+  // view overlays a subtle TIME MACHINE banner. Map geometry itself
+  // does not rewind (no historical asset-state dataset yet) — the
+  // banner is explicit about what time-travel does and doesn't affect.
+  const [timeT, setTimeT] = useState<number>(1);
   // FIRMS runtime controls. Defaults match CLAUDE.md FIRMS notes: 72h
-  // window, confidence >= 80, layer enabled on mount.
-  const [firmsWindowHours, setFirmsWindowHours] = useState<FirmsWindowHours>(72);
-  const [firmsConfidenceThreshold, setFirmsConfidenceThreshold] = useState<number>(80);
+  // window, confidence >= 80, layer enabled on mount. The window/
+  // confidence setters migrated out of App.tsx with the dashboard;
+  // they'll return if a dedicated FIRMS settings panel lands.
+  const [firmsWindowHours] = useState<FirmsWindowHours>(72);
+  const [firmsConfidenceThreshold] = useState<number>(80);
   const [isFirmsLayerEnabled, setIsFirmsLayerEnabled] = useState<boolean>(true);
   const [mapDisplaySettings, setMapDisplaySettings] = useState<MapDisplaySettings>(DEFAULT_MAP_DISPLAY_SETTINGS);
   const firms = useFirms({
@@ -345,14 +349,6 @@ export function App() {
     [appendActivity]
   );
 
-  const handleInspectGrade = useCallback(
-    (grade: CrudeGrade) => {
-      setOverlayStack([{ kind: "grade", grade }]);
-      appendActivity(`INSPECT GRADE ${grade.name.toUpperCase()}`);
-    },
-    [appendActivity]
-  );
-
   const handleInspectCompany = useCallback(
     (company: CompanyProfile) => {
       setOverlayStack([{ kind: "company", company }]);
@@ -409,17 +405,6 @@ export function App() {
     [appendActivity, availableDatasetIds]
   );
 
-  const handleFocusDataset = useCallback(
-    (datasetId: DatasetId, activityLabel = `FOCUS DATASET ${datasetId.toUpperCase()}`) => {
-      dispatch({
-        type: "focusDataset",
-        focusedDatasetId: datasetId
-      });
-      appendActivity(activityLabel);
-    },
-    [appendActivity]
-  );
-
   const handleActivateDataset = useCallback(
     (datasetId: DatasetId, activityLabel = `FOCUS DATASET ${datasetId.toUpperCase()}`) => {
       dispatch({
@@ -441,15 +426,28 @@ export function App() {
     [appendActivity, availableDatasetIds, workspaceState.activeDatasetIds]
   );
 
-  const handleLeftSidebarTabChange = useCallback(
-    (next: LeftSidebarTab) => {
-      if (next === leftSidebarTab) {
-        return;
-      }
-      setLeftSidebarTab(next);
-      appendActivity(`SIDEBAR ${next.toUpperCase()}`);
+  const handleRegionChange = useCallback(
+    (next: RegionCode) => {
+      if (next === activeRegion) return;
+      setActiveRegion(next);
+      appendActivity(`REGION ${next.replace("_", " ")}`);
     },
-    [appendActivity, leftSidebarTab]
+    [activeRegion, appendActivity]
+  );
+
+  const handleFocusShortcut = useCallback(
+    (shortcut: FocusShortcut) => {
+      const label =
+        shortcut === "focus_hormuz"
+          ? "FOCUS HORMUZ"
+          : shortcut === "focus_red_sea"
+            ? "FOCUS RED SEA"
+            : shortcut === "focus_eastern_province"
+              ? "FOCUS EASTERN PROVINCE"
+              : "RESET VIEW";
+      appendActivity(label);
+    },
+    [appendActivity]
   );
 
   const handleClearSelection = useCallback(() => {
@@ -463,40 +461,9 @@ export function App() {
     appendActivity("CLEAR SELECTION");
   }, [appendActivity, workspaceState.selectedAssetId]);
 
-  const handleBypassDisruptionChange = useCallback(
-    (value: number) => {
-      const wasActive = bypassModel.disruptionPercentage > 0;
-      bypassModel.setDisruptionPercentage(value);
-
-      // Activity log gets one entry on activation and one on deactivation —
-      // logging every drag tick would flood the trace. The slider's live
-      // numeric readout already covers intermediate values.
-      if (!wasActive && value > 0) {
-        appendActivity(`SCENARIO ENGAGED · HORMUZ ${value.toFixed(0)}%`);
-      } else if (wasActive && value === 0) {
-        appendActivity("SCENARIO RELEASED · HORMUZ 0%");
-      }
-    },
-    [appendActivity, bypassModel]
-  );
-
-  const handleFirmsWindowChange = useCallback(
-    (value: FirmsWindowHours) => {
-      setFirmsWindowHours(value);
-      appendActivity(`FIRMS WINDOW ${value === 24 ? "24H" : value === 72 ? "72H" : "7D"}`);
-    },
-    [appendActivity]
-  );
-
-  const handleFirmsConfidenceChange = useCallback(
-    (value: number) => {
-      setFirmsConfidenceThreshold(value);
-      // Logged only on the release events; the slider fires many per
-      // drag but the panel surfaces the live value already.
-    },
-    []
-  );
-
+  // FIRMS layer toggle — retained because it's driven by the dataset
+  // keyboard shortcut (`f` previously, now `^F`). The firms filter
+  // sliders moved into a future AIS/FIRMS settings surface.
   const handleFirmsLayerToggle = useCallback(() => {
     setIsFirmsLayerEnabled((current) => {
       const next = !current;
@@ -504,11 +471,6 @@ export function App() {
       return next;
     });
   }, [appendActivity]);
-
-  const handleBypassReset = useCallback(() => {
-    bypassModel.resetScenario();
-    appendActivity("SCENARIO RESET");
-  }, [appendActivity, bypassModel]);
 
   const handleFilterChange = useCallback(
     (datasetId: DatasetId, field: string, value: string) => {
@@ -660,7 +622,7 @@ export function App() {
       }
 
       event.preventDefault();
-      handleChangeView(nextView, nextView === "dash" ? "OPEN DASHBOARD" : `OPEN ${nextView.toUpperCase()}`);
+      handleChangeView(nextView, `OPEN ${nextView.toUpperCase()}`);
     }
 
     window.addEventListener("keydown", handleKeyboardShortcuts);
@@ -670,98 +632,198 @@ export function App() {
     };
   }, [appendActivity, availableDatasetIds, handleChangeView, handleFirmsLayerToggle, workspaceState.selectedAssetId]);
 
-  const mainContent =
-    activeView === "dash" ? (
-      <DashboardView
-        brentHistorical={brentHistorical.snapshot}
-        bypassResult={bypassModel.result}
-        firmsSnapshot={firms.snapshot}
-        firmsIsLoading={firms.isLoading}
-        firmsError={firms.error}
-        inventorySnapshot={eiaInventory.snapshot}
-        inventoryIsLoading={eiaInventory.isLoading}
-        inventoryError={eiaInventory.error}
-        firmsWindowHours={firmsWindowHours}
-        firmsConfidenceThreshold={firmsConfidenceThreshold}
-        isFirmsLayerEnabled={isFirmsLayerEnabled}
-        onFirmsWindowChange={handleFirmsWindowChange}
-        onFirmsConfidenceChange={handleFirmsConfidenceChange}
-        onFirmsLayerToggle={handleFirmsLayerToggle}
-        iceSettlements={iceSettlements.snapshot}
-        isScenarioActive={bypassModel.isScenarioActive}
-        lastUpdate={lastUpdate}
-        marketSummary={crudePrices.summary}
-        outageEvents={outageEvents.snapshot}
-        timespreads={iceSettlements.timespreads}
-        onInspectAsset={handleInspectAsset}
-        visibleAssets={visibleAssets}
-      />
-    ) : activeView === "grades" ? (
-      <div className={styles.fullHeightPanel}>
-        <Panel title="CRUDE GRADE REFERENCE" badge={`${crudeGrades.snapshot?.grades.length ?? 0} GRADES`}>
-          <CrudeGradeTable
-            error={crudeGrades.error}
-            isLoading={crudeGrades.isLoading}
-            onInspectGrade={handleInspectGrade}
-            snapshot={crudeGrades.snapshot}
-          />
-        </Panel>
-      </div>
-    ) : activeView === "table" ? (
-      <div className={styles.fullHeightPanel}>
-        <ContextlessGridView
+  // Tick the header clocks once per second.
+  useEffect(() => {
+    const id = window.setInterval(() => setNowStamp(new Date()), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const regionalSnapshotInputs = useMemo(
+    () => ({
+      bypassResult: bypassModel.isScenarioActive ? bypassModel.result : null,
+      disruptionPct: bypassModel.disruptionPercentage,
+      hormuzBaselineMbpd: DEFAULT_BYPASS_CONSTANTS.hormuzCrudeFlowMbpd,
+      firmsAlertCount:
+        firms.snapshot?.anomalies.filter((a) => a.severity !== "NORMAL").length ?? 0
+    }),
+    [bypassModel.isScenarioActive, bypassModel.result, bypassModel.disruptionPercentage, firms.snapshot]
+  );
+
+  const refineryAssets = useMemo(
+    () => assets.filter((a) => a.assetKind === "refinery"),
+    [assets]
+  );
+  const chokepointAssets = useMemo(
+    () => assets.filter((a) => a.assetKind === "chokepoint"),
+    [assets]
+  );
+  const firmsAnomalies = firms.snapshot?.anomalies ?? [];
+  const marketMode: "LIVE" | "STATIC_SNAPSHOT" =
+    crudePrices.summary?.classification === "OBSERVED" ? "LIVE" : "STATIC_SNAPSHOT";
+
+  let mainContent: React.ReactNode;
+  switch (activeView) {
+    case "map":
+      mainContent = (
+        <MapPage
           activeDatasetIds={workspaceState.activeDatasetIds}
-          gridDatasetId={gridDatasetId}
-          gridRows={gridRows}
-          latestUpdate={lastUpdate}
-          onInspectAsset={handleInspectAsset}
-          onSelectAsset={handleSelectAsset}
-          selectedAssetId={workspaceState.selectedAssetId}
-        />
-      </div>
-    ) : (
-      <Suspense fallback={<MapLoadingFallback />}>
-        <MapWorkspaceMain
-          activeDatasetIds={workspaceState.activeDatasetIds}
+          appendActivity={appendActivity}
+          basemapMode={basemapMode}
+          firmsSnapshot={firms.snapshot}
           gridDatasetId={gridDatasetId}
           gridRows={gridRows}
           hasError={Boolean(error)}
-          basemapMode={basemapMode}
           isAssetGridOpen={isAssetGridOpen}
-          onToggleAssetGrid={() => setIsAssetGridOpen((current) => !current)}
           latestUpdate={lastUpdate}
-          onClearSelection={() =>
-            dispatch({
-              type: "selectAsset",
-              selectedAssetId: null
-            })
-          }
+          mapDisplaySettings={mapDisplaySettings}
+          onClearSelection={() => dispatch({ type: "selectAsset", selectedAssetId: null })}
           onInspectAsset={handleInspectAsset}
           onSelectAsset={handleSelectAsset}
-          onSelectBasemap={(mode) => {
-            setBasemapMode((current) => {
-              if (current === mode) return current;
-              appendActivity(`BASEMAP ${BASEMAP_MODE_LABELS[mode]}`);
-              return mode;
-            });
-          }}
+          onSelectBasemap={setBasemapMode}
+          onToggleAssetGrid={() => setIsAssetGridOpen((current) => !current)}
           outageEvents={outageEvents.snapshot?.events ?? null}
-          firmsSnapshot={firms.snapshot}
+          regionalSnapshot={regionalSnapshotInputs}
           scenarioState={scenarioVisualState}
           selectedAssetId={workspaceState.selectedAssetId}
           visibleAssets={visibleAssets}
-          mapDisplaySettings={mapDisplaySettings}
         />
-      </Suspense>
-    );
+      );
+      break;
+    case "markets":
+      mainContent = (
+        <MarketsPage
+          brentHistoricalSeries={brentHistorical.snapshot?.series.brent ?? []}
+          brentWtiSnapshot={crudePrices.snapshot}
+          dmeOmanSnapshot={crudePrices.dmeOmanSnapshot}
+          iceSnapshot={iceSettlements.snapshot}
+          mode={marketMode}
+          murbanSnapshot={crudePrices.murbanSnapshot}
+          summary={crudePrices.summary}
+          timespreads={iceSettlements.timespreads}
+        />
+      );
+      break;
+    case "events":
+      mainContent = (
+        <EventsPage
+          firmsAnomalies={firmsAnomalies}
+          outageEvents={outageEvents.snapshot?.events ?? []}
+          timeT={timeT}
+        />
+      );
+      break;
+    case "models":
+      mainContent = (
+        <ModelsPage
+          bypassModel={bypassModel}
+          outageEvents={outageEvents.snapshot?.events ?? []}
+        />
+      );
+      break;
+    case "chokes":
+      mainContent = (
+        <ChokesPage
+          chokepoints={chokepointAssets as never}
+          onSelectChokepoint={(cp) => appendActivity(`INSPECT CHOKEPOINT ${cp.name.toUpperCase()}`)}
+        />
+      );
+      break;
+    case "flows":
+      mainContent = <FlowsPage />;
+      break;
+    case "ais":
+      mainContent = <AisPage />;
+      break;
+    case "alerts":
+      mainContent = (
+        <AlertsPage
+          onAlertCreated={(rule) => appendActivity(`ALERT ARMED · ${rule.name.toUpperCase()}`)}
+        />
+      );
+      break;
+    case "notes":
+      mainContent = (
+        <NotesPage onNoteSaved={(bytes) => {
+          if (bytes > 0 && bytes % 512 === 0) appendActivity(`NOTES SAVED · ${bytes} CHARS`);
+        }} />
+      );
+      break;
+    case "about":
+      mainContent = <AboutPage />;
+      break;
+    case "data":
+      mainContent = <DataPage />;
+      break;
+    case "reference":
+      mainContent = (
+        <ReferencePage
+          onInspectRefinery={handleInspectAsset}
+          refineries={refineryAssets as never}
+        />
+      );
+      break;
+    default:
+      mainContent = null;
+  }
+
+  // Dataset counts for the LeftRail — reflects the full workspace
+  // dataset rather than the currently-filtered visible subset so the
+  // counts stay stable as filters change.
+  const datasetCounts: Record<DatasetId, number> = useMemo(() => {
+    const counts: Record<DatasetId, number> = {
+      refineries: 0,
+      pipelines: 0,
+      fields: 0,
+      terminals: 0,
+      chokepoints: 0
+    };
+    for (const asset of assets) {
+      counts[asset.datasetId] += 1;
+    }
+    return counts;
+  }, [assets]);
+
+  // Watchlist for the LeftRail — curated from the top outage events +
+  // FIRMS anomalies so it reflects live state rather than a static list.
+  const watchlistItems: WatchlistItem[] = useMemo(() => {
+    const fromOutages: WatchlistItem[] = (outageEvents.snapshot?.events ?? [])
+      .slice(0, 3)
+      .map((event) => ({
+        id: `outage-${event.id}`,
+        label: event.name.length > 24 ? `${event.name.slice(0, 22)}…` : event.name,
+        status:
+          event.severity === "CRITICAL" || event.severity === "HIGH"
+            ? "alert"
+            : event.severity === "MEDIUM"
+              ? "elevated"
+              : "nominal",
+        note: event.country
+      }));
+    const fromFirms: WatchlistItem[] = (firms.snapshot?.anomalies ?? [])
+      .filter((a) => a.severity !== "NORMAL")
+      .slice(0, 2)
+      .map((a) => ({
+        id: `firms-${a.asset.id}`,
+        label: a.asset.name.length > 24 ? `${a.asset.name.slice(0, 22)}…` : a.asset.name,
+        status: a.severity === "ALERT" ? "alert" : "elevated",
+        note: `${a.ratioToBaseline.toFixed(1)}×`
+      }));
+    return [...fromOutages, ...fromFirms].slice(0, 5);
+  }, [firms.snapshot, outageEvents.snapshot]);
+
+  const localTime = nowStamp.toLocaleTimeString("en-GB", { hour12: false });
+  const utcTime = nowStamp.toISOString().slice(11, 19);
+  const sessionDate = nowStamp
+    .toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })
+    .toUpperCase();
 
   return (
     <AppShellLayout
       header={
-        <HeaderBar
+        <TopNav
           activeView={activeView}
           isScenarioActive={bypassModel.isScenarioActive}
-          scenarioDisruptionPct={bypassModel.disruptionPercentage}
+          localTime={localTime}
           onChangeView={handleChangeView}
           onCommandSubmit={handleCommandSubmit}
           onSearchQueryChange={(query) =>
@@ -771,9 +833,12 @@ export function App() {
             })
           }
           onSelectSearchResult={handleSelectSearchResult}
+          scenarioDisruptionPct={bypassModel.disruptionPercentage}
           searchInputRef={searchInputRef}
           searchQuery={workspaceState.searchQuery}
           searchResults={searchResults}
+          sessionDate={sessionDate}
+          utcTime={utcTime}
         />
       }
       isLeftSidebarOpen={isLeftSidebarOpen}
@@ -789,43 +854,15 @@ export function App() {
         />
       }
       leftSidebar={
-        <div className={styles.sidebarStack}>
-          <SidebarTabs
-            active={leftSidebarTab}
-            ariaLabel="Left sidebar mode"
-            onChange={handleLeftSidebarTabChange}
-            options={
-              bypassModel.isScenarioActive
-                ? [
-                    { value: "catalog", label: "CATALOG" },
-                    { value: "scenarios", label: "SCENARIOS", badge: "ACTIVE" }
-                  ]
-                : LEFT_SIDEBAR_TABS
-            }
-          />
-          {leftSidebarTab === "catalog" ? (
-            <DatasetCatalogPanel
-              activeDatasetIds={workspaceState.activeDatasetIds}
-              catalog={catalog}
-              focusedDatasetId={workspaceState.focusedDatasetId}
-              onFocusDataset={handleFocusDataset}
-              onToggleDataset={handleToggleDataset}
-            />
-          ) : (
-            <BypassControlPanel
-              disruptionPercentage={bypassModel.disruptionPercentage}
-              ieaReleaseRate={bypassModel.ieaReleaseRate}
-              onDisruptionChange={handleBypassDisruptionChange}
-              onIeaChange={bypassModel.setIeaReleaseRate}
-              onReset={handleBypassReset}
-              onSaudiChange={bypassModel.setSaudiUtilization}
-              onUaeChange={bypassModel.setUaeUtilization}
-              result={bypassModel.result}
-              saudiUtilization={bypassModel.saudiUtilization}
-              uaeUtilization={bypassModel.uaeUtilization}
-            />
-          )}
-        </div>
+        <LeftRail
+          activeDatasetIds={workspaceState.activeDatasetIds}
+          activeRegion={activeRegion}
+          datasetCounts={datasetCounts}
+          onFocusShortcut={handleFocusShortcut}
+          onSelectRegion={handleRegionChange}
+          onToggleDataset={handleToggleDataset}
+          watchlist={watchlistItems}
+        />
       }
       mainContent={mainContent}
       rightSidebar={
@@ -847,8 +884,21 @@ export function App() {
                 selectedAsset={selectedAsset}
               />
             </>
-          ) : (
+          ) : activeView === "map" ? (
+            /* MAP view keeps the market modules + filters on the right
+               rail so the map workspace is information-dense at rest. */
             <>
+              <MarketModulesStack
+                brentWtiSnapshot={crudePrices.snapshot}
+                dmeOmanSnapshot={crudePrices.dmeOmanSnapshot}
+                firmsAnomalies={firms.snapshot?.anomalies ?? []}
+                iceSnapshot={iceSettlements.snapshot}
+                mode={marketMode}
+                murbanSnapshot={crudePrices.murbanSnapshot}
+                outageEvents={outageEvents.snapshot?.events ?? []}
+                summary={crudePrices.summary}
+                timespreads={iceSettlements.timespreads}
+              />
               <MapContentPanel
                 activeDatasetIds={workspaceState.activeDatasetIds}
                 assets={assets}
@@ -858,23 +908,43 @@ export function App() {
                 onToggleDataset={handleToggleDataset}
               />
               <MapDisplayControls
-                settings={mapDisplaySettings}
                 onChange={setMapDisplaySettings}
+                settings={mapDisplaySettings}
               />
             </>
-          )}
+          ) : null}
         </div>
       }
       statusBar={
-        <StatusBar
-          activeAssetCount={visibleAssets.length}
-          activeDatasetCount={workspaceState.activeDatasetIds.length}
-          firmsSnapshot={firms.snapshot}
-          hasError={Boolean(error)}
-          lastUpdate={lastUpdate}
-          latestActivity={activityLog[0] ?? null}
-          marketSummary={crudePrices.summary}
-        />
+        <>
+          {/* Timeline scrubber renders ABOVE the status strip — the
+              Bloomberg-style bottom bar stacks timeline (row 1) over
+              session status (row 2). Read-only surface for now: plots
+              Brent history with outage-event overlay, no playhead. */}
+          <TimelineScrubber
+            brentSeries={brentHistorical.snapshot?.series.brent ?? []}
+            onScrub={(t) => {
+              const wasAtNow = timeT >= 0.999;
+              const nowAtNow = t >= 0.999;
+              setTimeT(t);
+              // Log only on transitions between NOW ↔ REWOUND so drag
+              // ticks don't flood the activity log.
+              if (wasAtNow && !nowAtNow) appendActivity("TIME MACHINE ENGAGED");
+              else if (!wasAtNow && nowAtNow) appendActivity("TIME MACHINE RESET");
+            }}
+            outageEvents={outageEvents.snapshot?.events ?? []}
+            timeT={timeT}
+          />
+          <StatusBar
+            activeAssetCount={visibleAssets.length}
+            activeDatasetCount={workspaceState.activeDatasetIds.length}
+            firmsSnapshot={firms.snapshot}
+            hasError={Boolean(error)}
+            lastUpdate={lastUpdate}
+            latestActivity={activityLog[0] ?? null}
+            marketSummary={crudePrices.summary}
+          />
+        </>
       }
     >
       {isShortcutHelpOpen ? <ShortcutOverlay /> : null}
@@ -923,40 +993,8 @@ export function App() {
   );
 }
 
-function ContextlessGridView({
-  activeDatasetIds,
-  gridRows,
-  latestUpdate,
-  onInspectAsset,
-  onSelectAsset,
-  gridDatasetId,
-  selectedAssetId
-}: {
-  activeDatasetIds: DatasetId[];
-  gridDatasetId: DatasetId | null;
-  gridRows: ReturnType<typeof buildAssetGridRows>;
-  latestUpdate: string;
-  onInspectAsset?: (asset: InfrastructureAsset) => void;
-  onSelectAsset: (asset: InfrastructureAsset) => void;
-  selectedAssetId: string | null;
-}) {
-  return (
-    <Panel
-      title="ASSET GRID"
-      badge={`${gridRows.length} VISIBLE`}
-    >
-      <AssetGridTable
-        activeDatasetCount={activeDatasetIds.length}
-        gridDatasetId={gridDatasetId}
-        latestUpdate={latestUpdate}
-        onInspectAsset={onInspectAsset}
-        onSelectAsset={onSelectAsset}
-        rows={gridRows}
-        selectedAssetId={selectedAssetId}
-      />
-    </Panel>
-  );
-}
+// `ContextlessGridView` removed — the old standalone TABLE view is
+// gone; the asset grid lives only inside MapPage's MapWorkspaceMain.
 
 function workspaceReducer(state: MapWorkspaceState, action: WorkspaceAction): MapWorkspaceState {
   if (action.type === "hydrateCatalog") {
@@ -1037,11 +1075,22 @@ function workspaceReducer(state: MapWorkspaceState, action: WorkspaceAction): Ma
   return state;
 }
 
+// Keyboard shortcut map — single-letter hotkey to target ViewMode.
+// Letters are chosen to match the first letter of the view when
+// unambiguous; collisions use the next-best letter.
 const KEYBOARD_SHORTCUT_VIEW: Record<string, ViewMode> = {
-  d: "dash",
-  g: "grades",
   m: "map",
-  t: "table"
+  k: "markets",
+  f: "flows",
+  c: "chokes",
+  e: "events",
+  s: "models",
+  v: "ais",
+  a: "alerts",
+  n: "notes",
+  r: "reference",
+  b: "about",
+  y: "data"
 };
 
 const KEYBOARD_SHORTCUT_DATASET: Partial<Record<string, DatasetId>> = {

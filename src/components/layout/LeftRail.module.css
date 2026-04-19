@@ -1,0 +1,239 @@
+.rail {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  background: #000000;
+  color: #cccccc;
+  font-size: 11px;
+  overflow-y: auto;
+}
+
+.railHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #222222;
+  background: #050505;
+  flex: 0 0 auto;
+}
+
+.railHeaderLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #cccccc;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.railHeaderDot {
+  width: 5px;
+  height: 5px;
+  background: #ff8c00;
+}
+
+.railHeaderTag {
+  color: #4e5666;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.section {
+  padding: 10px 12px;
+  border-bottom: 1px solid #111111;
+}
+
+.sectionLabel {
+  color: #4e5666;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.chip,
+.chipActive {
+  background: transparent;
+  border: 1px solid #2b3240;
+  color: #b8bfcc;
+  cursor: pointer;
+  font: inherit;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 3px 6px;
+  text-transform: uppercase;
+}
+
+.chip:hover {
+  border-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.chipActive {
+  background: rgba(255, 140, 0, 0.12);
+  border-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.layerRow {
+  display: grid;
+  grid-template-columns: 14px 14px 1fr auto;
+  gap: 8px;
+  align-items: center;
+  padding: 5px 0;
+  border-bottom: 1px dotted #141414;
+  cursor: pointer;
+}
+
+.layerRow:last-child {
+  border-bottom: 0;
+}
+
+.checkbox,
+.checkboxActive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #3a4354;
+  font-size: 9px;
+  line-height: 1;
+}
+
+.checkboxActive {
+  background: #ff8c00;
+  border-color: #ff8c00;
+  color: #000000;
+  font-weight: 700;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.glyph {
+  display: inline-block;
+  width: 12px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.lineSwatch {
+  display: inline-block;
+  width: 14px;
+  height: 2px;
+}
+
+.labelActive,
+.labelInactive {
+  font-size: 11px;
+}
+
+.labelActive {
+  color: #e8ecf2;
+}
+
+.labelInactive {
+  color: #7a8294;
+}
+
+.count {
+  color: #4e5666;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.shortcutRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px dotted #141414;
+  color: #b8bfcc;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  padding: 5px 0;
+  text-align: left;
+}
+
+.shortcutRow:last-child {
+  border-bottom: 0;
+}
+
+.shortcutRow:hover {
+  color: #ff8c00;
+}
+
+.shortcutHint {
+  color: #4e5666;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.emptyWatchlist {
+  color: #4e5666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 4px 0;
+}
+
+.watchlistRow {
+  display: grid;
+  grid-template-columns: 8px 1fr auto;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px dotted #141414;
+  font-size: 11px;
+}
+
+.watchlistRow:last-child {
+  border-bottom: 0;
+}
+
+.watchDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.watchNominal {
+  background: #00c853;
+}
+
+.watchElevated {
+  background: #ffd600;
+}
+
+.watchAlert {
+  background: #ff1744;
+}
+
+.watchOffline {
+  background: #4e5666;
+}
+
+.watchLabel {
+  color: #e8ecf2;
+}
+
+.watchNote {
+  color: #4e5666;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}

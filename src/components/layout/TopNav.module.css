@@ -1,0 +1,209 @@
+.topNav {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 12px;
+  background: #000000;
+  border-bottom: 1px solid #222222;
+  color: #e0e0e0;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border: 1px solid #ff8c00;
+  color: #ff8c00;
+}
+
+.brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.domainTag {
+  color: #666666;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tab,
+.tabActive {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #888888;
+  cursor: pointer;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 6px 10px;
+  text-transform: uppercase;
+}
+
+.tab:hover {
+  color: #ff8c00;
+}
+
+.tabActive {
+  color: #ff8c00;
+  border-bottom-color: #ff8c00;
+}
+
+.searchRegion {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #050505;
+  border: 1px solid #2b3240;
+  padding: 4px 8px;
+  min-width: 280px;
+  position: relative;
+}
+
+.searchPrompt {
+  color: #ff8c00;
+  font-weight: 700;
+}
+
+.searchInput {
+  flex: 1;
+  background: transparent;
+  border: 0;
+  color: #e8ecf2;
+  font: inherit;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  outline: none;
+  text-transform: uppercase;
+  min-width: 0;
+}
+
+.searchInput::placeholder {
+  color: #4e5666;
+  letter-spacing: 0.08em;
+}
+
+.searchHint {
+  color: #4e5666;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  padding: 0 2px;
+  border: 1px solid #2b3240;
+}
+
+.searchResults {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 2px);
+  background: #000000;
+  border: 1px solid #2b3240;
+  max-height: 320px;
+  overflow-y: auto;
+  z-index: 40;
+}
+
+.searchResult {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #111111;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.searchResult:hover {
+  background: #0a0a0a;
+}
+
+.resultName {
+  color: #ffffff;
+  font-size: 11px;
+}
+
+.resultMeta {
+  color: #666666;
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+
+.emptySearchState {
+  color: #666666;
+  font-size: 11px;
+  padding: 8px 10px;
+}
+
+.clockBlock {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #7a8294;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.clockItem {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.clockLabel {
+  color: #4e5666;
+  letter-spacing: 0.08em;
+}
+
+.clockValue {
+  color: #e8ecf2;
+}
+
+.sessionOpen {
+  color: #00c853;
+  letter-spacing: 0.04em;
+}
+
+.sessionDate {
+  color: #4e5666;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.scenarioBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border: 1px solid #ff8c00;
+  color: #ff8c00;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.scenarioDot {
+  width: 5px;
+  height: 5px;
+  background: #ff8c00;
+}

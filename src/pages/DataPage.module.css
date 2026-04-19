@@ -1,0 +1,72 @@
+.page {
+  padding: 12px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.table th,
+.table td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #111111;
+  vertical-align: top;
+}
+
+.table th {
+  color: #666666;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #050505;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.nameCell {
+  color: #e8ecf2;
+  white-space: nowrap;
+}
+
+.typeCell {
+  color: #b8bfcc;
+}
+
+.cadenceCell {
+  color: #7a8294;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.notesCell {
+  color: #7a8294;
+  line-height: 1.5;
+}
+
+.statusPill {
+  display: inline-block;
+  border: 1px solid currentColor;
+  padding: 1px 6px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.statusLive {
+  color: #00c853;
+}
+
+.statusStatic {
+  color: #ff8c00;
+}
+
+.statusAwaiting {
+  color: #ffd600;
+}

@@ -118,6 +118,23 @@
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
+  color: #666666;
+}
+
+.statusPill_green {
+  color: #00c853;
+}
+
+.statusPill_orange {
+  color: #ff8c00;
+}
+
+.statusPill_yellow {
+  color: #ffd600;
+}
+
+.statusPill_red {
+  color: #ff1744;
 }
 
 .emptyState {
