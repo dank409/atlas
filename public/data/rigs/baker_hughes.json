@@ -1,0 +1,23 @@
+{
+  "_metadata": {
+    "source": "Baker Hughes Rig Count (rigcount.bakerhughes.com)",
+    "reportDate": "2026-04-10",
+    "cadence": "WEEKLY (North America) + MONTHLY (International)",
+    "classification": "CURATED",
+    "note": "Curated snapshot from the Baker Hughes weekly North America release + monthly international release. US + Canada figures refresh weekly (Fridays); Middle East figures refresh monthly. Each row shows week-over-week delta for US rows and month-over-month delta for international rows. No live fetch — the Baker Hughes website is CORS-locked for browsers; a refresh script or serverless proxy would be required for live data."
+  },
+  "regions": [
+    { "country": "United States", "code": "US", "cadence": "WEEKLY", "asOf": "2026-04-10", "value": 596, "change": -3, "note": "total rig count" },
+    { "country": "US · Permian", "code": "US_PERMIAN", "cadence": "WEEKLY", "asOf": "2026-04-10", "value": 308, "change": -1, "note": "Permian basin" },
+    { "country": "US · Eagle Ford", "code": "US_EAGLEFORD", "cadence": "WEEKLY", "asOf": "2026-04-10", "value": 55, "change": 0 },
+    { "country": "US · Bakken", "code": "US_BAKKEN", "cadence": "WEEKLY", "asOf": "2026-04-10", "value": 39, "change": -1 },
+    { "country": "Canada", "code": "CA", "cadence": "WEEKLY", "asOf": "2026-04-10", "value": 135, "change": -4 },
+    { "country": "Saudi Arabia", "code": "SA", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 75, "change": 0 },
+    { "country": "United Arab Emirates", "code": "AE", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 52, "change": 1 },
+    { "country": "Kuwait", "code": "KW", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 53, "change": 0 },
+    { "country": "Iraq", "code": "IQ", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 81, "change": 2 },
+    { "country": "Oman", "code": "OM", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 55, "change": -1 },
+    { "country": "Qatar", "code": "QA", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 8, "change": 0 },
+    { "country": "Egypt", "code": "EG", "cadence": "MONTHLY", "asOf": "2026-03-31", "value": 12, "change": -1 }
+  ]
+}

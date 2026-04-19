@@ -32,6 +32,10 @@ import { type BasemapMode } from "./components/map/MapView";
 import { MarketTape } from "./components/market/MarketTape";
 import { useCrudePrices } from "./hooks/useCrudePrices";
 import { useIceSettlements } from "./hooks/useIceSettlements";
+import { useRigCount } from "./hooks/useRigCount";
+import { useRefineryMargins } from "./hooks/useRefineryMargins";
+import { useWarRisk } from "./hooks/useWarRisk";
+import { useCrudeFlows } from "./hooks/useCrudeFlows";
 import { useBypassModel } from "./hooks/useBypassModel";
 import { DEFAULT_BYPASS_CONSTANTS } from "./utils/bypassModel";
 import { useOutageEvents } from "./hooks/useOutageEvents";
@@ -113,6 +117,10 @@ export function App() {
   } = useMapWorkspaceData();
   const crudePrices = useCrudePrices();
   const iceSettlements = useIceSettlements();
+  const rigCount = useRigCount();
+  const refineryMargins = useRefineryMargins();
+  const warRisk = useWarRisk();
+  const crudeFlows = useCrudeFlows();
   const bypassModel = useBypassModel();
   const outageEvents = useOutageEvents();
   const brentHistorical = useBrentHistorical();
@@ -588,6 +596,8 @@ export function App() {
           iceSnapshot={iceSettlements.snapshot}
           mode={marketMode}
           murbanSnapshot={crudePrices.murbanSnapshot}
+          refineryMargins={refineryMargins.snapshot}
+          rigCount={rigCount.snapshot}
           summary={crudePrices.summary}
           timespreads={iceSettlements.timespreads}
         />
@@ -616,11 +626,12 @@ export function App() {
         <ChokesPage
           chokepoints={chokepointAssets}
           onSelectChokepoint={(cp) => appendActivity(`INSPECT CHOKEPOINT ${cp.name.toUpperCase()}`)}
+          warRisk={warRisk.snapshot}
         />
       );
       break;
     case "flows":
-      mainContent = <FlowsPage />;
+      mainContent = <FlowsPage snapshot={crudeFlows.snapshot} />;
       break;
     case "ais":
       mainContent = <AisPage />;

@@ -2,6 +2,25 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { ChokesPage } from "./ChokesPage";
 import type { ChokepointAsset } from "../types/Infrastructure";
+import type { WarRiskSnapshot } from "../types/WarRisk";
+
+function makeWarRisk(): WarRiskSnapshot {
+  return {
+    asOf: "2026-02-25",
+    cadence: "CURATED",
+    classification: "CURATED",
+    source: "Lloyd's JWC",
+    chokepointListings: [
+      {
+        chokepointId: "chokepoint-hormuz",
+        listed: true,
+        listedSince: "2019-07",
+        indicativeHmPct: { min: 0.05, max: 0.10 },
+        notes: "Listed since 2019."
+      }
+    ]
+  };
+}
 
 function choke(id: string, name: string, mbpd: number): ChokepointAsset {
   return {
@@ -66,5 +85,17 @@ describe("ChokesPage", () => {
     render(<ChokesPage chokepoints={chokepoints} />);
     fireEvent.click(screen.getByText("SUEZ CANAL"));
     expect(screen.getByText(/NO PUBLISHED BYPASS ROUTES/)).toBeDefined();
+  });
+
+  it("renders the JWC war-risk row when warRisk is provided and Hormuz is selected", () => {
+    render(<ChokesPage chokepoints={chokepoints} warRisk={makeWarRisk()} />);
+    expect(screen.getByText("JWC LISTED")).toBeDefined();
+    expect(screen.getByText(/INDICATIVE H&M 0\.05–0\.10%/)).toBeDefined();
+  });
+
+  it("shows a no-listing fallback for chokepoints absent from the JWC set", () => {
+    render(<ChokesPage chokepoints={chokepoints} warRisk={makeWarRisk()} />);
+    fireEvent.click(screen.getByText("SUEZ CANAL"));
+    expect(screen.getByText(/No JWC listing on file/)).toBeDefined();
   });
 });

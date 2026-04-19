@@ -1,0 +1,73 @@
+{
+  "_metadata": {
+    "source": "EIA International Petroleum / OPEC MOMR / Kpler public summaries",
+    "reportDate": "2026-03-31",
+    "monthLabel": "Q1 2026 monthly average",
+    "cadence": "MONTHLY",
+    "classification": "CURATED",
+    "note": "Monthly crude export volumes by origin → chokepoint → destination. Values in mbpd (million barrels per day). The origin → chokepoint attribution reflects the physically-dominant routing per EIA's MENA transit analyses — e.g., Saudi barrels loaded at Ras Tanura → Hormuz, barrels loaded at Yanbu → Suez+SUMED. Minor residual flows (<0.05 mbpd) are omitted rather than guessed."
+  },
+  "origins": [
+    { "id": "SA", "label": "Saudi Arabia", "totalMbpd": 9.2 },
+    { "id": "IQ", "label": "Iraq", "totalMbpd": 4.3 },
+    { "id": "IR", "label": "Iran", "totalMbpd": 3.3 },
+    { "id": "AE", "label": "UAE", "totalMbpd": 3.2 },
+    { "id": "KW", "label": "Kuwait", "totalMbpd": 2.5 },
+    { "id": "QA", "label": "Qatar", "totalMbpd": 0.7 },
+    { "id": "OM", "label": "Oman", "totalMbpd": 0.8 }
+  ],
+  "chokepoints": [
+    { "id": "chokepoint-hormuz", "label": "Strait of Hormuz" },
+    { "id": "chokepoint-suez", "label": "Suez + SUMED" },
+    { "id": "chokepoint-bab-el-mandeb", "label": "Bab el-Mandeb" }
+  ],
+  "destinations": [
+    { "id": "CN", "label": "China" },
+    { "id": "IN", "label": "India" },
+    { "id": "JP_KR", "label": "Japan / Korea" },
+    { "id": "EU", "label": "EU + UK" },
+    { "id": "US", "label": "US" },
+    { "id": "OTHER_ASIA", "label": "Other Asia" },
+    { "id": "OTHER", "label": "Other" }
+  ],
+  "legs": [
+    { "origin": "SA", "chokepoint": "chokepoint-hormuz", "destination": "CN", "mbpd": 1.9 },
+    { "origin": "SA", "chokepoint": "chokepoint-hormuz", "destination": "JP_KR", "mbpd": 1.6 },
+    { "origin": "SA", "chokepoint": "chokepoint-hormuz", "destination": "IN", "mbpd": 0.8 },
+    { "origin": "SA", "chokepoint": "chokepoint-hormuz", "destination": "OTHER_ASIA", "mbpd": 0.9 },
+    { "origin": "SA", "chokepoint": "chokepoint-hormuz", "destination": "US", "mbpd": 0.3 },
+    { "origin": "SA", "chokepoint": "chokepoint-suez", "destination": "EU", "mbpd": 1.4 },
+    { "origin": "SA", "chokepoint": "chokepoint-suez", "destination": "US", "mbpd": 0.4 },
+    { "origin": "SA", "chokepoint": "chokepoint-suez", "destination": "OTHER", "mbpd": 0.4 },
+    { "origin": "SA", "chokepoint": "chokepoint-bab-el-mandeb", "destination": "EU", "mbpd": 0.6 },
+    { "origin": "SA", "chokepoint": "chokepoint-bab-el-mandeb", "destination": "OTHER", "mbpd": 0.9 },
+
+    { "origin": "IQ", "chokepoint": "chokepoint-hormuz", "destination": "CN", "mbpd": 1.3 },
+    { "origin": "IQ", "chokepoint": "chokepoint-hormuz", "destination": "IN", "mbpd": 1.2 },
+    { "origin": "IQ", "chokepoint": "chokepoint-hormuz", "destination": "JP_KR", "mbpd": 0.6 },
+    { "origin": "IQ", "chokepoint": "chokepoint-hormuz", "destination": "OTHER_ASIA", "mbpd": 0.5 },
+    { "origin": "IQ", "chokepoint": "chokepoint-hormuz", "destination": "EU", "mbpd": 0.7 },
+
+    { "origin": "IR", "chokepoint": "chokepoint-hormuz", "destination": "CN", "mbpd": 2.6 },
+    { "origin": "IR", "chokepoint": "chokepoint-hormuz", "destination": "OTHER_ASIA", "mbpd": 0.4 },
+    { "origin": "IR", "chokepoint": "chokepoint-hormuz", "destination": "OTHER", "mbpd": 0.3 },
+
+    { "origin": "AE", "chokepoint": "chokepoint-hormuz", "destination": "JP_KR", "mbpd": 1.1 },
+    { "origin": "AE", "chokepoint": "chokepoint-hormuz", "destination": "IN", "mbpd": 0.9 },
+    { "origin": "AE", "chokepoint": "chokepoint-hormuz", "destination": "CN", "mbpd": 0.9 },
+    { "origin": "AE", "chokepoint": "chokepoint-hormuz", "destination": "OTHER_ASIA", "mbpd": 0.3 },
+
+    { "origin": "KW", "chokepoint": "chokepoint-hormuz", "destination": "CN", "mbpd": 0.7 },
+    { "origin": "KW", "chokepoint": "chokepoint-hormuz", "destination": "JP_KR", "mbpd": 0.9 },
+    { "origin": "KW", "chokepoint": "chokepoint-hormuz", "destination": "IN", "mbpd": 0.5 },
+    { "origin": "KW", "chokepoint": "chokepoint-hormuz", "destination": "OTHER_ASIA", "mbpd": 0.4 },
+
+    { "origin": "QA", "chokepoint": "chokepoint-hormuz", "destination": "JP_KR", "mbpd": 0.3 },
+    { "origin": "QA", "chokepoint": "chokepoint-hormuz", "destination": "IN", "mbpd": 0.2 },
+    { "origin": "QA", "chokepoint": "chokepoint-hormuz", "destination": "OTHER_ASIA", "mbpd": 0.2 },
+
+    { "origin": "OM", "chokepoint": "chokepoint-hormuz", "destination": "CN", "mbpd": 0.5 },
+    { "origin": "OM", "chokepoint": "chokepoint-hormuz", "destination": "IN", "mbpd": 0.2 },
+    { "origin": "OM", "chokepoint": "chokepoint-hormuz", "destination": "JP_KR", "mbpd": 0.1 }
+  ]
+}

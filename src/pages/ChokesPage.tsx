@@ -1,11 +1,14 @@
 import { useMemo, useState } from "react";
 import { Panel } from "../components/common/Panel";
 import type { ChokepointAsset } from "../types/Infrastructure";
+import type { WarRiskSnapshot, WarRiskListing } from "../types/WarRisk";
 import { DEFAULT_BYPASS_CONSTANTS } from "../utils/bypassModel";
 import styles from "./ChokesPage.module.css";
 
 interface ChokesPageProps {
   chokepoints: ChokepointAsset[];
+  /** Lloyd's JWC curated war-risk listings. Null while loading. */
+  warRisk?: WarRiskSnapshot | null;
   /** Optional callback — parent can log activity when the user picks a chokepoint. */
   onSelectChokepoint?: (chokepoint: ChokepointAsset) => void;
 }
@@ -42,7 +45,11 @@ const INCIDENT_NOTES: Record<string, string> = {
     "Bosphorus + Dardanelles. Throughput influenced by weather-driven queueing and Black Sea war-risk posture."
 };
 
-export function ChokesPage({ chokepoints, onSelectChokepoint }: ChokesPageProps) {
+export function ChokesPage({
+  chokepoints,
+  warRisk,
+  onSelectChokepoint
+}: ChokesPageProps) {
   const sorted = useMemo(
     () => [...chokepoints].sort((a, b) => b.transitVolume_mbpd - a.transitVolume_mbpd),
     [chokepoints]
@@ -81,7 +88,7 @@ export function ChokesPage({ chokepoints, onSelectChokepoint }: ChokesPageProps)
 
       <section className={styles.main}>
         {active ? (
-          <ActiveChokepointDetail chokepoint={active} />
+          <ActiveChokepointDetail chokepoint={active} warRisk={warRisk ?? null} />
         ) : (
           <Panel title="CHOKEPOINT DETAIL">
             <div className={styles.empty}>SELECT A CHOKEPOINT FROM THE LIST</div>
@@ -92,9 +99,18 @@ export function ChokesPage({ chokepoints, onSelectChokepoint }: ChokesPageProps)
   );
 }
 
-function ActiveChokepointDetail({ chokepoint }: { chokepoint: ChokepointAsset }) {
+function ActiveChokepointDetail({
+  chokepoint,
+  warRisk
+}: {
+  chokepoint: ChokepointAsset;
+  warRisk: WarRiskSnapshot | null;
+}) {
   const lookupKey = chokepoint.id.toLowerCase();
   const rerouteRows = REROUTE_CAPACITY[lookupKey] ?? [];
+  const warRiskRow: WarRiskListing | undefined = warRisk?.chokepointListings.find(
+    (l) => l.chokepointId === chokepoint.id
+  );
   const note = INCIDENT_NOTES[lookupKey];
 
   return (
@@ -150,11 +166,44 @@ function ActiveChokepointDetail({ chokepoint }: { chokepoint: ChokepointAsset })
         </div>
       </Panel>
 
-      <Panel badge="AWAITING FEED" title="WAR-RISK PREMIA · JWC">
-        <div className={styles.placeholder}>
-          Lloyd's Joint War Committee publishes listed-areas + indicative
-          H&amp;M rates publicly. Not yet scraped — no fabricated numbers.
-        </div>
+      <Panel
+        badge={warRisk ? `LLOYD'S JWC · AS OF ${warRisk.asOf}` : "CURATED"}
+        title="WAR-RISK PREMIA · JWC"
+      >
+        {warRiskRow ? (
+          <div className={styles.warRisk}>
+            <div className={styles.warRiskStatusRow}>
+              <span
+                className={
+                  warRiskRow.listed ? styles.warRiskListed : styles.warRiskUnlisted
+                }
+              >
+                {warRiskRow.listed ? "JWC LISTED" : "NOT JWC LISTED"}
+              </span>
+              {warRiskRow.listedSince ? (
+                <span className={styles.warRiskSince}>
+                  SINCE {warRiskRow.listedSince}
+                </span>
+              ) : null}
+              {warRiskRow.listed ? (
+                <span className={styles.warRiskRate}>
+                  INDICATIVE H&amp;M {warRiskRow.indicativeHmPct.min.toFixed(2)}–
+                  {warRiskRow.indicativeHmPct.max.toFixed(2)}%
+                </span>
+              ) : null}
+            </div>
+            <div className={styles.warRiskNote}>{warRiskRow.notes}</div>
+            {warRisk?.disclaimer ? (
+              <div className={styles.warRiskDisclaimer}>
+                {warRisk.disclaimer}
+              </div>
+            ) : null}
+          </div>
+        ) : (
+          <div className={styles.placeholder}>
+            No JWC listing on file for this chokepoint.
+          </div>
+        )}
       </Panel>
     </>
   );

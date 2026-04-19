@@ -89,22 +89,36 @@ const DATA_SOURCES: DataSourceRow[] = [
     name: "AISStream.io AIS feed",
     type: "Vessels · NRT",
     cadence: "LIVE · WS",
-    status: "AWAITING_FEED",
-    notes: "Free tier. Integration deferred. AIS view renders AWAITING FEED until wired."
+    status: "LIVE",
+    notes: "Free WebSocket tier. Scoped to a MENA bounding box. Powers the AIS WATCH live positions table."
   },
   {
     name: "EIA bilateral crude flows",
     type: "Trade · monthly",
     cadence: "MONTHLY",
-    status: "AWAITING_FEED",
-    notes: "Curated JSON ships with the FLOWS Sankey view — not yet cut."
+    status: "STATIC_SNAPSHOT",
+    notes: "Curated JSON from EIA International + OPEC MOMR. Drives the FLOWS Sankey, chokepoint board, and destination mix."
   },
   {
     name: "Lloyd's JWC war-risk listings",
     type: "Insurance · ad-hoc",
     cadence: "AD-HOC",
-    status: "AWAITING_FEED",
-    notes: "Public listings; CHOKES view renders AWAITING FEED for the war-risk column until scraped."
+    status: "STATIC_SNAPSHOT",
+    notes: "Curated from public JWC listed-areas document. Indicative H&M rate ranges are market-practice proxies, not underwritten quotes."
+  },
+  {
+    name: "Baker Hughes rig count",
+    type: "Rigs · weekly + monthly",
+    cadence: "WEEKLY",
+    status: "STATIC_SNAPSHOT",
+    notes: "Curated from BH public weekly NA release + monthly international release. MARKETS page rigs module. Live fetch blocked by CORS."
+  },
+  {
+    name: "Refinery margins / crack spreads",
+    type: "Margins · weekly",
+    cadence: "WEEKLY",
+    status: "STATIC_SNAPSHOT",
+    notes: "Singapore 3-2-1 + Dubai 1-1 (Platts, curated), RBOB/ULSD (NYMEX front-month proxy), NWE Gasoil (ICE). Live wire needs a serverless proxy."
   }
 ];
 
