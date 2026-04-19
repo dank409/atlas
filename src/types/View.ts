@@ -18,7 +18,6 @@ export type ViewMode =
   | "events"
   | "models"
   | "ais"
-  | "alerts"
   | "notes"
   | "reference"
   | "about"
@@ -46,7 +45,6 @@ export const VIEW_REGISTRY: ViewDescriptor[] = [
   { id: "events", label: "EVENTS" },
   { id: "models", label: "MODELS" },
   { id: "ais", label: "AIS" },
-  { id: "alerts", label: "ALERTS" },
   { id: "notes", label: "NOTES" },
   { id: "reference", label: "REFERENCE" },
   { id: "about", label: "ABOUT" },

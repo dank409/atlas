@@ -147,7 +147,7 @@ vi.mock("./hooks/useFirms", () => ({
 import { App } from "./App";
 
 describe("App shell — new view router", () => {
-  it("renders the top-nav tab strip with all 12 views", async () => {
+  it("renders the top-nav tab strip with all 11 views", async () => {
     render(<App />);
     for (const label of [
       "MAP",
@@ -157,7 +157,6 @@ describe("App shell — new view router", () => {
       "EVENTS",
       "MODELS",
       "AIS",
-      "ALERTS",
       "NOTES",
       "REFERENCE",
       "ABOUT",
