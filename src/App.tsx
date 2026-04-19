@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { TopNav } from "./components/layout/TopNav";
-import { LeftRail, type RegionCode, type FocusShortcut, type WatchlistItem } from "./components/layout/LeftRail";
+import { LeftRail, type RegionCode, type WatchlistItem } from "./components/layout/LeftRail";
 import { StatusBar } from "./components/layout/StatusBar";
 import { TimelineScrubber } from "./components/layout/TimelineScrubber";
 import { MapContentPanel } from "./components/panels/MapContentPanel";
@@ -29,7 +29,6 @@ import { useMapWorkspaceData } from "./hooks/useMapWorkspaceData";
 import type { ViewMode } from "./types/View";
 import { AppShellLayout } from "./components/layout/AppShellLayout";
 import { type BasemapMode } from "./components/map/MapView";
-import { ShortcutOverlay } from "./components/layout/ShortcutOverlay";
 import { MarketTape } from "./components/market/MarketTape";
 import { useCrudePrices } from "./hooks/useCrudePrices";
 import { useIceSettlements } from "./hooks/useIceSettlements";
@@ -42,12 +41,14 @@ import type { TerminalActivityEntry } from "./types/Activity";
 import type { FirmsWindowHours } from "./types/firms";
 import { DEFAULT_MAP_DISPLAY_SETTINGS, type MapDisplaySettings } from "./types/mapDisplaySettings";
 import type {
+  ChokepointAsset,
   CompanyProfile,
   CountryProfile,
   DatasetFiltersById,
   DatasetId,
   InfrastructureAsset,
-  MapWorkspaceState
+  MapWorkspaceState,
+  RefineryAsset
 } from "./types/Infrastructure";
 import {
   DEFAULT_DATASET_FILTERS,
@@ -57,6 +58,7 @@ import {
   getAssetTypeLabel
 } from "./utils/infrastructure";
 import { resolveTerminalCommand } from "./utils/commandBar";
+import { filterAssetsByRegion, formatRegionLabel } from "./utils/regionFilter";
 import styles from "./App.module.css";
 
 // `LeftSidebarTab`/`LEFT_SIDEBAR_TABS` removed in the shell rewrite —
@@ -119,7 +121,6 @@ export function App() {
   const [isLeftSidebarOpen, setIsLeftSidebarOpen] = useState(true);
   const [isRightSidebarOpen, setIsRightSidebarOpen] = useState(true);
   const [isAssetGridOpen, setIsAssetGridOpen] = useState(true);
-  const [isShortcutHelpOpen, setIsShortcutHelpOpen] = useState(false);
   // Detail-overlay navigation stack. Each entry is the overlay that
   // is (or was) on screen — the tail is the one currently shown,
   // earlier entries are the back-navigation history.
@@ -156,7 +157,7 @@ export function App() {
   // they'll return if a dedicated FIRMS settings panel lands.
   const [firmsWindowHours] = useState<FirmsWindowHours>(72);
   const [firmsConfidenceThreshold] = useState<number>(80);
-  const [isFirmsLayerEnabled, setIsFirmsLayerEnabled] = useState<boolean>(true);
+  const [isFirmsLayerEnabled] = useState<boolean>(true);
   const [mapDisplaySettings, setMapDisplaySettings] = useState<MapDisplaySettings>(DEFAULT_MAP_DISPLAY_SETTINGS);
   const firms = useFirms({
     assets,
@@ -179,9 +180,17 @@ export function App() {
     () => catalog.find((entry) => entry.id === workspaceState.focusedDatasetId) ?? null,
     [catalog, workspaceState.focusedDatasetId]
   );
-  const visibleAssets = useMemo(
+  // Dataset-level filter first (catalog + per-dataset filters), then
+  // the LeftRail region chip narrows by country code. Keeping the
+  // two steps separate means dataset toggles don't have to know
+  // about region state and vice versa.
+  const visibleAssetsBeforeRegion = useMemo(
     () => filterAssets(assets, workspaceState.activeDatasetIds, workspaceState.filtersByDataset),
     [assets, workspaceState.activeDatasetIds, workspaceState.filtersByDataset]
+  );
+  const visibleAssets = useMemo(
+    () => filterAssetsByRegion(visibleAssetsBeforeRegion, activeRegion),
+    [visibleAssetsBeforeRegion, activeRegion]
   );
   const gridDatasetId = useMemo(() => {
     if (workspaceState.activeDatasetIds.includes(workspaceState.focusedDatasetId)) {
@@ -430,24 +439,9 @@ export function App() {
     (next: RegionCode) => {
       if (next === activeRegion) return;
       setActiveRegion(next);
-      appendActivity(`REGION ${next.replace("_", " ")}`);
+      appendActivity(`REGION ${formatRegionLabel(next)}`);
     },
     [activeRegion, appendActivity]
-  );
-
-  const handleFocusShortcut = useCallback(
-    (shortcut: FocusShortcut) => {
-      const label =
-        shortcut === "focus_hormuz"
-          ? "FOCUS HORMUZ"
-          : shortcut === "focus_red_sea"
-            ? "FOCUS RED SEA"
-            : shortcut === "focus_eastern_province"
-              ? "FOCUS EASTERN PROVINCE"
-              : "RESET VIEW";
-      appendActivity(label);
-    },
-    [appendActivity]
   );
 
   const handleClearSelection = useCallback(() => {
@@ -460,17 +454,6 @@ export function App() {
     });
     appendActivity("CLEAR SELECTION");
   }, [appendActivity, workspaceState.selectedAssetId]);
-
-  // FIRMS layer toggle — retained because it's driven by the dataset
-  // keyboard shortcut (`f` previously, now `^F`). The firms filter
-  // sliders moved into a future AIS/FIRMS settings surface.
-  const handleFirmsLayerToggle = useCallback(() => {
-    setIsFirmsLayerEnabled((current) => {
-      const next = !current;
-      appendActivity(next ? "TOGGLE FIRMS ON" : "TOGGLE FIRMS OFF");
-      return next;
-    });
-  }, [appendActivity]);
 
   const handleFilterChange = useCallback(
     (datasetId: DatasetId, field: string, value: string) => {
@@ -531,106 +514,10 @@ export function App() {
     ]
   );
 
-  useEffect(() => {
-    function handleKeyboardShortcuts(event: KeyboardEvent) {
-      if (event.metaKey || event.ctrlKey || event.altKey) {
-        return;
-      }
-
-      const target = event.target;
-      const normalizedKey = event.key.toLowerCase();
-      const isTypingTarget =
-        target instanceof HTMLElement &&
-        (target.isContentEditable ||
-          target instanceof HTMLInputElement ||
-          target instanceof HTMLTextAreaElement ||
-          target instanceof HTMLSelectElement);
-
-      if (normalizedKey === "escape") {
-        event.preventDefault();
-        setIsShortcutHelpOpen(false);
-
-        if (workspaceState.selectedAssetId) {
-          dispatch({
-            type: "selectAsset",
-            selectedAssetId: null
-          });
-        }
-
-        return;
-      }
-
-      if (isTypingTarget) {
-        return;
-      }
-
-      if (normalizedKey === "/") {
-        event.preventDefault();
-        searchInputRef.current?.focus();
-        searchInputRef.current?.select();
-        return;
-      }
-
-      if (normalizedKey === "?") {
-        event.preventDefault();
-        setIsShortcutHelpOpen((current) => !current);
-        return;
-      }
-
-      if (normalizedKey === "]") {
-        event.preventDefault();
-        setIsRightSidebarOpen((current) => !current);
-        return;
-      }
-
-      if (normalizedKey === "[") {
-        event.preventDefault();
-        setIsLeftSidebarOpen((current) => !current);
-        return;
-      }
-
-      if (normalizedKey === "\\") {
-        event.preventDefault();
-        setIsAssetGridOpen((current) => !current);
-        return;
-      }
-
-      if (normalizedKey === "f") {
-        event.preventDefault();
-        handleFirmsLayerToggle();
-        return;
-      }
-
-      const shortcutDatasetId = KEYBOARD_SHORTCUT_DATASET[normalizedKey];
-
-      if (shortcutDatasetId && availableDatasetIds.includes(shortcutDatasetId)) {
-        event.preventDefault();
-        dispatch({
-          type: "toggleDataset",
-          datasetId: shortcutDatasetId,
-          fallbackFocusedDatasetId: availableDatasetIds[0] ?? shortcutDatasetId,
-          validDatasetIds: availableDatasetIds
-        });
-        appendActivity(`TOGGLE DATASET ${shortcutDatasetId.toUpperCase()}`);
-        return;
-      }
-
-      const nextView = KEYBOARD_SHORTCUT_VIEW[normalizedKey];
-
-      if (!nextView) {
-        return;
-      }
-
-      event.preventDefault();
-      handleChangeView(nextView, `OPEN ${nextView.toUpperCase()}`);
-    }
-
-    window.addEventListener("keydown", handleKeyboardShortcuts);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyboardShortcuts);
-    };
-  }, [appendActivity, availableDatasetIds, handleChangeView, handleFirmsLayerToggle, workspaceState.selectedAssetId]);
+  // Keyboard shortcuts removed in the shell-polish pass — the
+  // in-UI affordances (TopNav tabs, command bar, LeftRail toggles)
+  // are the single source of navigation. Re-add selectively if a
+  // specific shortcut earns its discoverability cost.
 
   // Tick the header clocks once per second.
   useEffect(() => {
@@ -649,12 +536,15 @@ export function App() {
     [bypassModel.isScenarioActive, bypassModel.result, bypassModel.disruptionPercentage, firms.snapshot]
   );
 
+  // Proper type predicates so downstream page props stay narrowed
+  // (RefineryAsset / ChokepointAsset) without needing `as never`
+  // escape hatches. See the code-review finding in PR #3.
   const refineryAssets = useMemo(
-    () => assets.filter((a) => a.assetKind === "refinery"),
+    () => assets.filter((a): a is RefineryAsset => a.assetKind === "refinery"),
     [assets]
   );
   const chokepointAssets = useMemo(
-    () => assets.filter((a) => a.assetKind === "chokepoint"),
+    () => assets.filter((a): a is ChokepointAsset => a.assetKind === "chokepoint"),
     [assets]
   );
   const firmsAnomalies = firms.snapshot?.anomalies ?? [];
@@ -716,6 +606,7 @@ export function App() {
       mainContent = (
         <ModelsPage
           bypassModel={bypassModel}
+          onNavigateToMap={() => handleChangeView("map", "OPEN MAP")}
           outageEvents={outageEvents.snapshot?.events ?? []}
         />
       );
@@ -723,7 +614,7 @@ export function App() {
     case "chokes":
       mainContent = (
         <ChokesPage
-          chokepoints={chokepointAssets as never}
+          chokepoints={chokepointAssets}
           onSelectChokepoint={(cp) => appendActivity(`INSPECT CHOKEPOINT ${cp.name.toUpperCase()}`)}
         />
       );
@@ -758,7 +649,7 @@ export function App() {
       mainContent = (
         <ReferencePage
           onInspectRefinery={handleInspectAsset}
-          refineries={refineryAssets as never}
+          refineries={refineryAssets}
         />
       );
       break;
@@ -858,7 +749,6 @@ export function App() {
           activeDatasetIds={workspaceState.activeDatasetIds}
           activeRegion={activeRegion}
           datasetCounts={datasetCounts}
-          onFocusShortcut={handleFocusShortcut}
           onSelectRegion={handleRegionChange}
           onToggleDataset={handleToggleDataset}
           watchlist={watchlistItems}
@@ -947,7 +837,6 @@ export function App() {
         </>
       }
     >
-      {isShortcutHelpOpen ? <ShortcutOverlay /> : null}
       {currentOverlay?.kind === "asset" ? (
         <AssetDetailOverlay
           asset={currentOverlay.asset}
@@ -1075,28 +964,5 @@ function workspaceReducer(state: MapWorkspaceState, action: WorkspaceAction): Ma
   return state;
 }
 
-// Keyboard shortcut map — single-letter hotkey to target ViewMode.
-// Letters are chosen to match the first letter of the view when
-// unambiguous; collisions use the next-best letter.
-const KEYBOARD_SHORTCUT_VIEW: Record<string, ViewMode> = {
-  m: "map",
-  k: "markets",
-  f: "flows",
-  c: "chokes",
-  e: "events",
-  s: "models",
-  v: "ais",
-  a: "alerts",
-  n: "notes",
-  r: "reference",
-  b: "about",
-  y: "data"
-};
-
-const KEYBOARD_SHORTCUT_DATASET: Partial<Record<string, DatasetId>> = {
-  "1": "refineries",
-  "2": "pipelines",
-  "3": "fields",
-  "4": "terminals",
-  "5": "chokepoints"
-};
+// Keyboard shortcut maps removed — the command bar handles view
+// navigation via typed commands (see `src/utils/commandBar.ts`).

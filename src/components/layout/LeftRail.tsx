@@ -7,16 +7,10 @@ interface LeftRailProps {
   activeRegion: RegionCode;
   onSelectRegion: (region: RegionCode) => void;
   onToggleDataset: (datasetId: DatasetId) => void;
-  onFocusShortcut: (shortcut: FocusShortcut) => void;
   watchlist: WatchlistItem[];
 }
 
-export type RegionCode = "MENA" | "AG" | "RED_SEA" | "LEVANT" | "CASPIAN";
-export type FocusShortcut =
-  | "focus_hormuz"
-  | "focus_red_sea"
-  | "focus_eastern_province"
-  | "reset_view";
+export type RegionCode = "MENA" | "AG" | "RED_SEA" | "LEVANT";
 
 export interface WatchlistItem {
   id: string;
@@ -74,15 +68,7 @@ const REGION_CHIPS: { id: RegionCode; label: string }[] = [
   { id: "MENA", label: "MENA" },
   { id: "AG", label: "AG" },
   { id: "RED_SEA", label: "RED SEA" },
-  { id: "LEVANT", label: "LEVANT" },
-  { id: "CASPIAN", label: "CASPIAN" }
-];
-
-const SHORTCUTS: { id: FocusShortcut; label: string; hint: string }[] = [
-  { id: "focus_hormuz", label: "Focus Hormuz", hint: "⌘1" },
-  { id: "focus_red_sea", label: "Focus Red Sea", hint: "⌘2" },
-  { id: "focus_eastern_province", label: "Focus Eastern Prov.", hint: "⌘3" },
-  { id: "reset_view", label: "Reset view", hint: "⌘0" }
+  { id: "LEVANT", label: "LEVANT" }
 ];
 
 /**
@@ -106,7 +92,6 @@ export function LeftRail({
   activeRegion,
   onSelectRegion,
   onToggleDataset,
-  onFocusShortcut,
   watchlist
 }: LeftRailProps) {
   return (
@@ -174,21 +159,6 @@ export function LeftRail({
           })}
         </section>
       ))}
-
-      <section className={styles.section}>
-        <div className={styles.sectionLabel}>SHORTCUT</div>
-        {SHORTCUTS.map((shortcut) => (
-          <button
-            className={styles.shortcutRow}
-            key={shortcut.id}
-            onClick={() => onFocusShortcut(shortcut.id)}
-            type="button"
-          >
-            <span>{shortcut.label}</span>
-            <span className={styles.shortcutHint}>{shortcut.hint}</span>
-          </button>
-        ))}
-      </section>
 
       <section className={styles.section}>
         <div className={styles.sectionLabel}>WATCHLIST</div>
