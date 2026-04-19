@@ -18,7 +18,6 @@ import { EventsPage } from "./pages/EventsPage";
 import { ModelsPage } from "./pages/ModelsPage";
 import { ChokesPage } from "./pages/ChokesPage";
 import { FlowsPage } from "./pages/FlowsPage";
-import { AlertsPage } from "./pages/AlertsPage";
 import { AisPage } from "./pages/AisPage";
 import { NotesPage } from "./pages/NotesPage";
 import { AboutPage } from "./pages/AboutPage";
@@ -635,13 +634,6 @@ export function App() {
       break;
     case "ais":
       mainContent = <AisPage />;
-      break;
-    case "alerts":
-      mainContent = (
-        <AlertsPage
-          onAlertCreated={(rule) => appendActivity(`ALERT ARMED · ${rule.name.toUpperCase()}`)}
-        />
-      );
       break;
     case "notes":
       mainContent = (
