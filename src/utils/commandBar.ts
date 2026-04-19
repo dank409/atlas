@@ -29,7 +29,6 @@ const VIEW_COMMANDS: Record<string, ViewMode> = {
   models: "models",
   scenario: "models",
   ais: "ais",
-  alerts: "alerts",
   notes: "notes",
   ref: "reference",
   reference: "reference",

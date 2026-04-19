@@ -80,11 +80,8 @@ const REGION_CHIPS: { id: RegionCode; label: string }[] = [
  *   UPSTREAM
  *   DOWNSTREAM
  *   GEOPOLITICAL
- *   SHORTCUT           keyboard-hinted focus actions
- *   WATCHLIST          user-curated asset/region alert list
- *
- * The WATCHLIST is read-only in this first pass — editing lives
- * through the ALERTS tab once that view ships its rule engine.
+ *   WATCHLIST          live-populated from outage events + FIRMS
+ *                      anomalies; read-only, surfaces what's hot.
  */
 export function LeftRail({
   activeDatasetIds,

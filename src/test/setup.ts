@@ -5,8 +5,8 @@ import { afterEach, beforeEach } from "vitest";
 // jsdom in vitest v4 ships a locked `window.localStorage` whose
 // prototype methods (removeItem, clear) are not reliably installed
 // in our environment. Replace it with an in-memory Storage-compatible
-// object so components that persist state (NotesPage, AlertsPage,
-// TimelineScrubber reset, etc.) can read and write freely in tests.
+// object so components that persist state (NotesPage, TimelineScrubber
+// reset, etc.) can read and write freely in tests.
 class MemoryStorage implements Storage {
   private store = new Map<string, string>();
   get length(): number {
