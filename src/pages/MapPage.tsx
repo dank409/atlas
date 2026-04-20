@@ -6,7 +6,6 @@ import type { OutageEvent } from "../types/outageEvent";
 import type { FirmsSnapshot } from "../types/firms";
 import type { ScenarioVisualState } from "../utils/scenarioMapStyles";
 import type { MapDisplaySettings } from "../types/mapDisplaySettings";
-import type { BypassModelResult } from "../utils/bypassModel";
 
 // MapWorkspaceMain is lazy-imported here so that non-MAP views (and
 // the MAP view on first mount) don't pay the mapbox-gl bundle cost
@@ -38,20 +37,13 @@ interface MapPageProps {
   selectedAssetId: string | null;
   visibleAssets: InfrastructureAsset[];
   mapDisplaySettings: MapDisplaySettings;
-  regionalSnapshot: {
-    bypassResult: BypassModelResult | null;
-    disruptionPct: number;
-    hormuzBaselineMbpd: number;
-    firmsAlertCount: number;
-  };
 }
 
 /**
  * MAP view page. Thin wrapper around the existing MapWorkspaceMain —
  * all the real heavy lifting (Mapbox rendering, hover card, asset
- * grid, regional snapshot overlay) is already in that component.
- * This page exists so App.tsx's view router can dispatch on ViewMode
- * without caring about map internals.
+ * grid) lives in that component. This page exists so App.tsx's view
+ * router can dispatch on ViewMode without caring about map internals.
  */
 export function MapPage({
   activeDatasetIds,
@@ -72,8 +64,7 @@ export function MapPage({
   scenarioState,
   selectedAssetId,
   visibleAssets,
-  mapDisplaySettings,
-  regionalSnapshot
+  mapDisplaySettings
 }: MapPageProps) {
   return (
     <Suspense fallback={<MapLoadingFallback />}>
@@ -96,7 +87,6 @@ export function MapPage({
         }}
         onToggleAssetGrid={onToggleAssetGrid}
         outageEvents={outageEvents}
-        regionalSnapshot={regionalSnapshot}
         scenarioState={scenarioState}
         selectedAssetId={selectedAssetId}
         visibleAssets={visibleAssets}

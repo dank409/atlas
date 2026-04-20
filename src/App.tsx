@@ -36,7 +36,6 @@ import { useRefineryMargins } from "./hooks/useRefineryMargins";
 import { useWarRisk } from "./hooks/useWarRisk";
 import { useCrudeFlows } from "./hooks/useCrudeFlows";
 import { useBypassModel } from "./hooks/useBypassModel";
-import { DEFAULT_BYPASS_CONSTANTS } from "./utils/bypassModel";
 import { useOutageEvents } from "./hooks/useOutageEvents";
 import { useBrentHistorical } from "./hooks/useBrentHistorical";
 import { useFirms } from "./hooks/useFirms";
@@ -532,17 +531,6 @@ export function App() {
     return () => window.clearInterval(id);
   }, []);
 
-  const regionalSnapshotInputs = useMemo(
-    () => ({
-      bypassResult: bypassModel.isScenarioActive ? bypassModel.result : null,
-      disruptionPct: bypassModel.disruptionPercentage,
-      hormuzBaselineMbpd: DEFAULT_BYPASS_CONSTANTS.hormuzCrudeFlowMbpd,
-      firmsAlertCount:
-        firms.snapshot?.anomalies.filter((a) => a.severity !== "NORMAL").length ?? 0
-    }),
-    [bypassModel.isScenarioActive, bypassModel.result, bypassModel.disruptionPercentage, firms.snapshot]
-  );
-
   // Proper type predicates so downstream page props stay narrowed
   // (RefineryAsset / ChokepointAsset) without needing `as never`
   // escape hatches. See the code-review finding in PR #3.
@@ -579,7 +567,6 @@ export function App() {
           onSelectBasemap={setBasemapMode}
           onToggleAssetGrid={() => setIsAssetGridOpen((current) => !current)}
           outageEvents={outageEvents.snapshot?.events ?? null}
-          regionalSnapshot={regionalSnapshotInputs}
           scenarioState={scenarioVisualState}
           selectedAssetId={workspaceState.selectedAssetId}
           visibleAssets={visibleAssets}

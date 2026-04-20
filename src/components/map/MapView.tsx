@@ -14,8 +14,6 @@ import type {
   MapDisplaySettings,
   SizeByOption
 } from "../../types/mapDisplaySettings";
-import type { BypassModelResult } from "../../utils/bypassModel";
-import { RegionalSnapshotOverlay } from "./RegionalSnapshotOverlay";
 import { getAssetTypeLabel } from "../../utils/infrastructure";
 import {
   FEEDSTOCK_RISK_DEPENDENCY_THRESHOLD,
@@ -69,18 +67,6 @@ interface MapViewProps {
   selectedAssetId: string | null;
   visibleAssets: InfrastructureAsset[];
   mapDisplaySettings?: MapDisplaySettings;
-  /**
-   * Regional-snapshot overlay tile rendered in the map's top-right
-   * gutter. When supplied, shows Hormuz flow, scenario disruption,
-   * net deficit, days-to-OECD-min, refinery count, and FIRMS alerts.
-   * Omit to hide the tile entirely.
-   */
-  regionalSnapshot?: {
-    bypassResult: BypassModelResult | null;
-    disruptionPct: number;
-    hormuzBaselineMbpd: number;
-    firmsAlertCount: number;
-  };
 }
 
 const ASSET_INTERACTIVE_LAYER_IDS = [
@@ -118,8 +104,7 @@ export function MapView({
   scenarioState = IDLE_SCENARIO_VISUAL_STATE,
   selectedAssetId,
   visibleAssets,
-  mapDisplaySettings,
-  regionalSnapshot
+  mapDisplaySettings
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -577,15 +562,6 @@ export function MapView({
         className={styles.mapViewport}
         ref={containerRef}
       />
-      {regionalSnapshot ? (
-        <RegionalSnapshotOverlay
-          bypassResult={regionalSnapshot.bypassResult}
-          disruptionPct={regionalSnapshot.disruptionPct}
-          firmsAlertCount={regionalSnapshot.firmsAlertCount}
-          hormuzBaselineMbpd={regionalSnapshot.hormuzBaselineMbpd}
-          refineryCount={assetCounts.refineries}
-        />
-      ) : null}
       {hoverCard ? (
         <div
           className={styles.hoverCard}

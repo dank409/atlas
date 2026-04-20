@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { MapPage } from "./MapPage";
 import { DEFAULT_MAP_DISPLAY_SETTINGS } from "../types/mapDisplaySettings";
-import { DEFAULT_BYPASS_CONSTANTS, runBypassScenario } from "../utils/bypassModel";
 import { IDLE_SCENARIO_VISUAL_STATE } from "../utils/scenarioMapStyles";
 
 // Mock the MapView so we don't pull mapbox-gl into the test bundle.
@@ -43,12 +42,6 @@ describe("MapPage", () => {
         onSelectBasemap={vi.fn()}
         onToggleAssetGrid={vi.fn()}
         outageEvents={null}
-        regionalSnapshot={{
-          bypassResult: runBypassScenario({ disruptionPct: 0 }),
-          disruptionPct: 0,
-          firmsAlertCount: 0,
-          hormuzBaselineMbpd: DEFAULT_BYPASS_CONSTANTS.hormuzCrudeFlowMbpd
-        }}
         scenarioState={IDLE_SCENARIO_VISUAL_STATE}
         selectedAssetId={null}
         visibleAssets={[]}
