@@ -41,3 +41,7 @@ raw/
 # Test / coverage output
 coverage/
 .vitest/
+
+# Python bytecode from the data scripts
+__pycache__/
+*.pyc

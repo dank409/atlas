@@ -1,163 +1,166 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { loadMapWorkspaceData } from "./workspaceData";
 
-// Minimal GeoJSON fixtures — just enough for the loader to build an
-// asset array. The test is specifically about feedstock enrichment; it
-// is NOT trying to exercise the full refinery type contract.
-
-const refineryCollection = {
-  type: "FeatureCollection",
-  _metadata: {
-    source: "test",
-    downloadDate: "2026-04-15",
-    recordCount: 2
-  },
-  features: [
-    {
-      type: "Feature",
-      id: "refinery-ir-abadan-refinery",
-      geometry: { type: "Point", coordinates: [48.3, 30.35] },
-      properties: {
-        id: "refinery-ir-abadan-refinery",
-        name: "Abadan Refinery",
-        country: "IR",
-        countryName: "Iran",
-        owner: "NIOC",
-        operator: "NIOC",
-        status: "operational",
-        capacity_bpd: 400000,
-        capacityUnit: "bpd",
-        lat: 30.35,
-        lon: 48.3
-      }
+function collection(source: string, features: unknown[]) {
+  return {
+    _metadata: {
+      downloadDate: "2025-03-28",
+      license: "CC BY 4.0",
+      recordCount: features.length,
+      source,
+      sourceUrl: "https://example.org/data"
     },
+    features,
+    type: "FeatureCollection"
+  };
+}
+
+// Refinery features carry no status; pass undefined for those.
+function pointFeature(id: string, status?: string) {
+  return {
+    geometry: { coordinates: [48.3, 30.35], type: "Point" },
+    id,
+    properties: { country: "IR", countryName: "Iran", id, lat: 30.35, lon: 48.3, name: id, ...(status ? { status } : {}) },
+    type: "Feature"
+  };
+}
+
+function lineFeature(id: string, status: string, coordinates: number[][]) {
+  return {
+    geometry: { coordinates, type: "LineString" },
+    id,
+    properties: { country: "SA", countryName: "Saudi Arabia", hydrocarbon: "crude_oil", id, name: id, owner: "x", status },
+    type: "Feature"
+  };
+}
+
+const PAYLOADS: Record<string, unknown> = {
+  "/data/infrastructure/fields.geojson": collection("GEM fields", [
+    pointFeature("field-a", "operating"),
+    pointFeature("field-b", "cancelled")
+  ]),
+  "/data/infrastructure/pipelines.geojson": collection("GEM pipelines", [
+    lineFeature("pipeline-surveyed", "operating", [
+      [49.6, 25.9],
+      [44.0, 24.5],
+      [38.1, 24.1]
+    ]),
+    lineFeature("pipeline-schematic", "proposed", [
+      [49.6, 25.9],
+      [38.1, 24.1]
+    ]),
+    lineFeature("pipeline-short", "retired", [
+      [49.6, 25.9],
+      [49.9, 26.0]
+    ]),
+    lineFeature("pipeline-shelved", "shelved", [
+      [49.6, 25.9],
+      [49.9, 26.0]
+    ])
+  ]),
+  "/data/infrastructure/refineries.geojson": collection("OGIM", [
+    pointFeature("refinery-a"),
+    // Not from the layer's dataset: carries its own source.
     {
-      type: "Feature",
-      id: "refinery-nonexistent",
-      geometry: { type: "Point", coordinates: [0, 0] },
-      properties: {
-        id: "refinery-nonexistent",
-        name: "Uncurated Refinery",
-        country: "XX",
-        countryName: "Nowhere",
-        owner: "Unknown",
-        operator: "Unknown",
-        status: "operational",
-        capacity_bpd: 100000,
-        capacityUnit: "bpd",
-        lat: 0,
-        lon: 0
-      }
+      ...pointFeature("refinery-b"),
+      properties: { ...pointFeature("refinery-b").properties, source: "EIA brief", sourceDate: "2023-07" }
     }
-  ]
+  ]),
+  "/data/infrastructure/terminals.geojson": collection("GEM terminals", [
+    pointFeature("terminal-a", "operating"),
+    pointFeature("terminal-b", "cancelled"),
+    pointFeature("terminal-c", "mothballed")
+  ]),
+  "/data/reference/companies.json": { companies: [{ id: "adnoc", name: "ADNOC" }] },
+  "/data/reference/countries.json": { countries: [{ code: "IR", name: "Iran" }] },
+  "/data/reference/operator_aliases.json": {
+    aliases: [{ canonicalSlug: "adnoc", curatedCompanyId: "adnoc", displayName: "ADNOC", variants: ["ADNOC"] }]
+  }
 };
 
-const emptyGeoJson = (source: string) => ({
-  type: "FeatureCollection",
-  _metadata: { source, downloadDate: "2026-04-15", recordCount: 0 },
-  features: []
-});
+function stubFetch(overrides: Record<string, unknown> = {}) {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (path: string) => {
+      const payload = { ...PAYLOADS, ...overrides }[path];
 
-const emptyCompanies = {
-  _metadata: { source: "test", downloadDate: "2026-04-15", recordCount: 0 },
-  companies: []
-};
+      return payload === undefined ? { ok: false, status: 404 } : { json: async () => payload, ok: true };
+    })
+  );
+}
 
-const emptyCountries = {
-  _metadata: { source: "test", downloadDate: "2026-04-15", recordCount: 0 },
-  countries: []
-};
-
-const feedstockPayload = {
-  asOf: "2026-04-15",
-  cadence: "CURATED" as const,
-  classification: "CURATED" as const,
-  source: "test",
-  methodology: "test",
-  entries: [
-    {
-      refineryId: "refinery-ir-abadan-refinery",
-      hormuzDependency: 1.0,
-      dominantGrades: ["Iranian Heavy"],
-      bypassAccessible: false,
-      note: "Fully Hormuz-locked."
-    }
-  ]
-};
-
-describe("loadMapWorkspaceData — refinery feedstock enrichment", () => {
+describe("loadMapWorkspaceData", () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
 
-  it("joins feedstock entries onto refinery assets and defaults missing IDs to undefined", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async (input: string) => {
-        switch (input) {
-          case "/data/infrastructure/refineries.geojson":
-            return { ok: true, json: async () => refineryCollection };
-          case "/data/infrastructure/pipelines.geojson":
-            return { ok: true, json: async () => emptyGeoJson("pipelines") };
-          case "/data/infrastructure/fields.geojson":
-            return { ok: true, json: async () => emptyGeoJson("fields") };
-          case "/data/infrastructure/terminals.geojson":
-            return { ok: true, json: async () => emptyGeoJson("terminals") };
-          case "/data/reference/chokepoints.geojson":
-            return { ok: true, json: async () => emptyGeoJson("chokepoints") };
-          case "/data/reference/companies.json":
-            return { ok: true, json: async () => emptyCompanies };
-          case "/data/reference/countries.json":
-            return { ok: true, json: async () => emptyCountries };
-          case "/data/reference/exposure_registry.json":
-            return {
-              ok: true,
-              json: async () => ({
-                asOf: "2026-04-16",
-                source: "test",
-                methodology: "test",
-                entries: [
-                  {
-                    targetId: "refinery-ir-abadan-refinery",
-                    targetKind: "asset",
-                    displayName: "Abadan Refinery"
-                  }
-                ]
-              })
-            };
-          case "/data/reference/refinery_feedstock.json":
-            return { ok: true, json: async () => feedstockPayload };
-          default:
-            throw new Error(`Unexpected fetch call: ${input}`);
-        }
-      })
-    );
+  it("tags every asset with its layer and source metadata", async () => {
+    stubFetch();
+    const { assets } = await loadMapWorkspaceData();
+    const refinery = assets.find((asset) => asset.id === "refinery-a");
 
-    const data = await loadMapWorkspaceData();
+    expect(refinery).toMatchObject({
+      _metadata: { downloadDate: "2025-03-28", source: "OGIM" },
+      assetKind: "refinery",
+      datasetId: "refineries"
+    });
+    expect(refinery).not.toHaveProperty("status");
+  });
 
-    // feedstockById is exposed on the workspace data payload
-    expect(data.feedstockById["refinery-ir-abadan-refinery"]).toBeDefined();
-    expect(
-      data.feedstockById["refinery-ir-abadan-refinery"].hormuzDependency
-    ).toBe(1.0);
+  it("credits a record to its own source when it names one", async () => {
+    stubFetch();
+    const { assets } = await loadMapWorkspaceData();
+    const refinery = assets.find((asset) => asset.id === "refinery-b");
 
-    // Refinery assets carry hormuzDependency inline for Mapbox paint
-    const abadan = data.assets.find(
-      (asset) => asset.assetKind === "refinery" && asset.id === "refinery-ir-abadan-refinery"
-    );
-    expect(abadan).toBeDefined();
-    if (abadan && abadan.assetKind === "refinery") {
-      expect(abadan.hormuzDependency).toBe(1.0);
-    }
+    expect(refinery?._metadata).toEqual({ downloadDate: "2023-07", source: "EIA brief" });
+    expect(refinery).not.toHaveProperty("source");
+    expect(refinery).not.toHaveProperty("sourceDate");
+  });
 
-    // Uncurated refinery — no matching feedstock entry — falls through as
-    // undefined. The downstream `buildPointCollection` defaults it to 0
-    // before handing to Mapbox; that's tested in scenarioMapStyles.test.ts.
-    const uncurated = data.assets.find(
-      (asset) => asset.assetKind === "refinery" && asset.id === "refinery-nonexistent"
-    );
-    expect(uncurated).toBeDefined();
-    if (uncurated && uncurated.assetKind === "refinery") {
-      expect(uncurated.hormuzDependency).toBeUndefined();
-    }
+  it("drops never-built projects from every layer but keeps retired and mothballed assets", async () => {
+    stubFetch();
+    const { assets } = await loadMapWorkspaceData();
+    const ids = assets.map((asset) => asset.id);
+
+    expect(ids).not.toContain("field-b");
+    expect(ids).not.toContain("terminal-b");
+    expect(ids).not.toContain("pipeline-shelved");
+    expect(ids).toContain("pipeline-short");
+    expect(ids).toContain("terminal-c");
+  });
+
+  it("builds the catalog from file metadata and counts only loaded assets", async () => {
+    stubFetch();
+    const { catalog } = await loadMapWorkspaceData();
+
+    expect(catalog.map((entry) => [entry.id, entry.recordCount])).toEqual([
+      ["refineries", 2],
+      ["pipelines", 3],
+      ["fields", 1],
+      ["terminals", 2]
+    ]);
+    expect(catalog[0]).toMatchObject({
+      downloadDate: "2025-03-28",
+      license: "CC BY 4.0",
+      source: "OGIM",
+      sourceUrl: "https://example.org/data"
+    });
+  });
+
+  it("passes through the hand-written profiles and the operator name map", async () => {
+    stubFetch();
+    const { companies, countryProfiles, operatorAliases } = await loadMapWorkspaceData();
+
+    expect(companies.map((company) => company.id)).toEqual(["adnoc"]);
+    expect(countryProfiles.map((country) => country.code)).toEqual(["IR"]);
+    expect(operatorAliases[0].variants).toEqual(["ADNOC"]);
+  });
+
+  it("rejects when a data file is missing or is not a metadata-tagged FeatureCollection", async () => {
+    stubFetch({ "/data/infrastructure/fields.geojson": undefined });
+    await expect(loadMapWorkspaceData()).rejects.toThrow("Failed to load /data/infrastructure/fields.geojson: 404");
+
+    stubFetch({ "/data/infrastructure/fields.geojson": { features: [], type: "FeatureCollection" } });
+    await expect(loadMapWorkspaceData()).rejects.toThrow("Invalid GeoJSON payload");
   });
 });

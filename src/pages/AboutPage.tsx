@@ -1,87 +1,73 @@
-import { Panel } from "../components/common/Panel";
+import type { DatasetCatalogEntry } from "../types/Infrastructure";
 import styles from "./AboutPage.module.css";
 
-/**
- * Static ABOUT page — project thesis, scope, and non-goals. Rendered
- * as plain prose inside a terminal-aesthetic panel. Content is
- * curated and lives in this file rather than a JSON doc because it
- * changes only on product-direction shifts, not on data refresh.
- */
-export function AboutPage() {
+interface AboutPageProps {
+  /** Loaded layers; their source, licence and download date come from the data files. */
+  catalog: DatasetCatalogEntry[];
+}
+
+export function AboutPage({ catalog }: AboutPageProps) {
   return (
     <div className={styles.page}>
-      <Panel title="ATLAS / ABOUT">
-        <div className={styles.lede}>
-          <span className={styles.ledeTitle}>
-            A MIDDLE EAST ENERGY INFRASTRUCTURE INTELLIGENCE TERMINAL
-          </span>
-          <span className={styles.ledeSubtitle}>
-            Bloomberg MAP + FIRMS + JODI + oil analytics — free, open-source, focused on one region with real depth.
-          </span>
-        </div>
+      <div className={styles.lede}>
+        <h1 className={styles.ledeTitle}>ATLAS / ABOUT</h1>
+        <p className={styles.ledeSubtitle}>
+          A map of Middle East oil and gas infrastructure, built from open datasets as a student project.
+        </p>
+      </div>
 
+      <div className={styles.columns}>
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>THESIS</h2>
-          <p className={styles.body}>
-            Given a disruption at chokepoint or asset X, what breaks in the
-            physical supply chain, for how long, which refineries lose
-            feedstock, and does the forward curve already know? Atlas answers
-            that question in many forms — the map, the bypass scenario, the
-            outage log, the market tape, the risk feed.
-          </p>
-        </section>
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>SCOPE</h2>
+          <h2 className={styles.sectionTitle}>HOW TO READ THE MAP</h2>
           <ul className={styles.list}>
-            <li>
-              <span className={styles.listGlyph}>●</span>
-              Geography: Middle East + adjacent transit corridors (Red Sea,
-              Turkish Straits, Eastern Mediterranean).
-            </li>
-            <li>
-              <span className={styles.listGlyph}>●</span>
-              Assets: refineries, pipelines, oil &amp; gas fields, export
-              terminals, chokepoints.
-            </li>
-            <li>
-              <span className={styles.listGlyph}>●</span>
-              Surfaces: a 3-column map workspace, a market tape, a
-              quantitative bypass model, a risk/event feed, a FIRMS
-              thermal-anomaly layer with a detection-count baseline.
-            </li>
+            <li>Shape is the kind of asset: diamond refinery, triangle LNG terminal, dot field, line pipeline.</li>
+            <li>Colour is the energy it handles: crude oil, natural gas, NGL, or mixed oil and gas.</li>
+            <li>Refineries and LNG terminals are sized by capacity.</li>
+            <li>Faded assets are proposed, under construction, idle or retired.</li>
+            <li>A dashed pipeline stretch is a straight line between two places. The source gives where the pipeline
+              starts and ends, not its route.</li>
           </ul>
         </section>
 
         <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>NON-GOALS</h2>
-          <ul className={styles.list}>
-            <li>
-              <span className={styles.listGlyph}>○</span>
-              Global coverage. Other terminals do that better — depth over breadth.
-            </li>
-            <li>
-              <span className={styles.listGlyph}>○</span>
-              A trading system. No order routing, no PnL, no portfolio accounting.
-            </li>
-            <li>
-              <span className={styles.listGlyph}>○</span>
-              A news aggregator. Event timelines are curated where they earn their place in the model.
-            </li>
-          </ul>
-        </section>
-
-        <section className={styles.section}>
-          <h2 className={styles.sectionTitle}>DATA INTEGRITY</h2>
+          <h2 className={styles.sectionTitle}>DATA SOURCES</h2>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>LAYER</th>
+                  <th>SOURCE</th>
+                  <th>LICENCE</th>
+                  <th>DOWNLOADED</th>
+                  <th className={styles.numericCell}>RECORDS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {catalog.map((dataset) => (
+                  <tr key={dataset.id}>
+                    <td className={styles.layerCell}>{dataset.title}</td>
+                    <td>
+                      {dataset.sourceUrl ? (
+                        <a className={styles.link} href={dataset.sourceUrl} rel="noreferrer" target="_blank">
+                          {dataset.source}
+                        </a>
+                      ) : (
+                        dataset.source
+                      )}
+                    </td>
+                    <td>{dataset.license ?? "--"}</td>
+                    <td>{dataset.downloadDate}</td>
+                    <td className={styles.numericCell}>{dataset.recordCount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
           <p className={styles.body}>
-            Every surface shows its source and last update timestamp. Live
-            feeds fall back to static snapshots when API keys are missing,
-            clearly labelled. Model outputs cite their constants. No
-            fabrication — an unknown value renders as{" "}
-            <code className={styles.code}>--</code>, never as a plausible-looking number.
+            Basemaps: dark map © CARTO and © OpenStreetMap contributors; satellite imagery © Mapbox.
           </p>
         </section>
-      </Panel>
+      </div>
     </div>
   );
 }

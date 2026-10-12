@@ -1,42 +1,36 @@
 {
   "_metadata": {
-    "source": "Curated operator context for MAP workspace",
-    "downloadDate": "2026-04-13",
+    "source": "Operator background notes",
+    "downloadDate": "2026-10-10",
     "recordCount": 3
   },
   "companies": [
     {
       "id": "saudi-aramco",
       "name": "Saudi Aramco",
-      "summary": "Integrated oil major spanning upstream, refining, petrochemicals, and export infrastructure across the Gulf and Red Sea.",
+      "summary": "National oil company of Saudi Arabia. It produces the country's oil and gas, and it owns its refineries outright or with foreign partners.",
       "domicile": "Saudi Arabia",
       "website": "www.aramco.com",
-      "tickers": ["ARAMCO AB Equity"],
-      "benchmarks": ["Arab Light", "Dubai", "Dated Brent"],
-      "source": "Curated operator profile",
-      "updated": "2026-04-13"
+      "source": "EIA Country Analysis Brief: Saudi Arabia (2024)",
+      "updated": "2026-10-10"
     },
     {
       "id": "adnoc",
       "name": "Abu Dhabi National Oil Company",
-      "summary": "Integrated producer, refiner, petrochemical operator, and exporter anchored in Abu Dhabi with major Fujairah bypass relevance.",
+      "summary": "State oil company of Abu Dhabi. It runs most of the UAE's oil and gas industry, including the Ruwais refinery and the Das Island LNG plant.",
       "domicile": "United Arab Emirates",
       "website": "www.adnoc.ae",
-      "tickers": ["ADNOCDIST EY Equity"],
-      "benchmarks": ["Murban", "Dubai"],
-      "source": "Curated operator profile",
-      "updated": "2026-04-13"
+      "source": "EIA Country Analysis Brief: United Arab Emirates (2026)",
+      "updated": "2026-10-10"
     },
     {
       "id": "kuwait-petroleum",
       "name": "Kuwait Petroleum Corporation",
-      "summary": "State-backed integrated oil system spanning upstream, refining, and export infrastructure led through KNPC and related entities.",
+      "summary": "State oil company of Kuwait. Its subsidiaries include Kuwait Oil Company (the fields), Kuwait National Petroleum Company (the Mina Al-Ahmadi and Mina Abdulla refineries) and Kuwait Integrated Petroleum Industries Company (the Al Zour refinery).",
       "domicile": "Kuwait",
       "website": "www.kpc.com.kw",
-      "tickers": ["KNPCCRU Index"],
-      "benchmarks": ["Kuwait Export Blend", "Dubai"],
-      "source": "Curated operator profile",
-      "updated": "2026-04-13"
+      "source": "EIA Country Analysis Brief: Kuwait (2023)",
+      "updated": "2026-10-10"
     }
   ]
 }

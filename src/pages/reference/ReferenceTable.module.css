@@ -1,0 +1,103 @@
+.tableWrap {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: auto;
+  border: 1px solid #222222;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.table th,
+.table td {
+  padding: 4px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #0a0a0a;
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.table td {
+  color: #cccccc;
+}
+
+.table td.numericCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The name column takes the slack and wraps; number columns stay tight. */
+.table td:first-child {
+  width: 100%;
+  white-space: normal;
+}
+
+.sortButton,
+.sortButtonNumeric {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 2px 0;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: inherit;
+}
+
+.sortButtonNumeric {
+  justify-content: flex-end;
+}
+
+.sortButton:hover,
+.sortButtonNumeric:hover {
+  color: #ff8c00;
+}
+
+.sortIndicator {
+  font-size: 9px;
+}
+
+.table tbody tr {
+  cursor: pointer;
+}
+
+.table tbody tr:hover {
+  background: #111111;
+}
+
+.table tbody tr.selectedRow {
+  background: #1a1a1a;
+}
+
+.nameButton {
+  padding: 0;
+  background: transparent;
+  border: 0;
+  color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+}
+
+.selectedRow .nameButton {
+  color: #ff8c00;
+}
+
+.nameButton:focus-visible {
+  outline: 1px solid #ffa500;
+  outline-offset: 2px;
+}

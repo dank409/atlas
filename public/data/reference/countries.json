@@ -1,126 +1,171 @@
 {
   "_metadata": {
-    "source": "Curated country context for MAP workspace",
-    "downloadDate": "2026-04-15",
-    "recordCount": 9
+    "source": "Country background notes",
+    "downloadDate": "2026-10-10",
+    "recordCount": 13
   },
   "countries": [
     {
-      "code": "SA",
-      "name": "Saudi Arabia",
-      "summary": "Largest OPEC producer (~10 mbpd) with ~3 mbpd of domestic refining, ~2.9 mbpd of effective Petroline bypass capacity, and systemically important Gulf export nodes at Ras Tanura and Ju'aymah.",
-      "keyGrades": ["Arab Super Light", "Arab Extra Light", "Arab Light", "Arab Medium", "Arab Heavy"],
-      "chokepointDependency": "Partial Hormuz hedge via East-West (Petroline) pipeline to Yanbu; still core to Gulf-system export risk.",
-      "chokepointScores": { "hormuz": 0.7, "babElMandeb": 0.05, "suez": 0.05 },
-      "bypassCapacityMbpd": 2.9,
-      "keyRefineriesBpd": 3100000,
-      "keyExportTerminals": ["Ras Tanura", "Ju'aymah", "Yanbu (Red Sea)", "Rabigh"],
-      "source": "EIA Country Analysis Brief — Saudi Arabia, plus Aramco annual report",
-      "updated": "2026-04-15"
-    },
-    {
-      "code": "AE",
-      "name": "United Arab Emirates",
-      "summary": "ADNOC-dominant exporter (~4 mbpd production) built around Murban as the primary light-sour grade. ADCOP (Habshan–Fujairah) delivers ~1.5 mbpd nameplate bypass capacity to the Gulf of Oman, insulating part of the export stream from Hormuz closure.",
-      "keyGrades": ["Murban", "Upper Zakum", "Das Blend", "Umm Lulu"],
-      "chokepointDependency": "Has bypass via Habshan–Fujairah (ADCOP) but remains tightly coupled to Gulf logistics and pricing context.",
-      "chokepointScores": { "hormuz": 0.6, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 1.5,
-      "keyRefineriesBpd": 922000,
-      "keyExportTerminals": ["Jebel Dhanna", "Das Island", "Fujairah (bypass)", "Ruwais"],
-      "source": "EIA Country Analysis Brief — UAE, October 2024; ADNOC fact sheet",
-      "updated": "2026-04-15"
-    },
-    {
-      "code": "KW",
-      "name": "Kuwait",
-      "summary": "Major Gulf exporter (~2.7 mbpd production) centered on KNPC refining assets (Al Zour + legacy Mina Al-Ahmadi / Mina Abdulla / Shuaiba). Has no physical bypass and is entirely Hormuz-dependent for seaborne exports.",
-      "keyGrades": ["Kuwait Export", "Kuwait Super Light"],
-      "chokepointDependency": "Primarily Hormuz-dependent for seaborne exports; no bypass route exists.",
-      "chokepointScores": { "hormuz": 1.0, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 0,
-      "keyRefineriesBpd": 1446000,
-      "keyExportTerminals": ["Mina Al-Ahmadi", "Mina Abdulla", "Al Zour"],
-      "source": "EIA Country Analysis Brief — Kuwait; KPC annual report",
-      "updated": "2026-04-15"
-    },
-    {
       "code": "BH",
       "name": "Bahrain",
-      "summary": "Small producer (~0.2 mbpd) with Bapco's Sitra refinery as the dominant downstream asset. Directly pipeline-connected to Saudi Arabia's A-B pipeline from Khurais for feedstock, with all exports exiting the Gulf.",
-      "keyGrades": ["Dukhan", "Bahrain Blend"],
-      "chokepointDependency": "Connected into the Gulf system and sensitive to regional export route disruptions; no bypass.",
-      "chokepointScores": { "hormuz": 0.95, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 0,
-      "keyRefineriesBpd": 267000,
-      "keyExportTerminals": ["Sitra"],
-      "source": "EIA Country Analysis Brief — Bahrain; Bapco operator disclosures",
-      "updated": "2026-04-15"
+      "summary": "The smallest oil producer in the Gulf. It has one onshore oil field, and it shares revenue from the offshore Abu Safah field, which Saudi Aramco operates. Bapco's refinery at Sitra runs mostly on Saudi crude, delivered by pipeline from Abqaiq.",
+      "exportRoutes": "Bahrain's exports are mainly refined products from the Sitra refinery. Sitra is inside the Gulf, so they pass through the Strait of Hormuz.",
+      "keyExportTerminals": [
+        "Sitra"
+      ],
+      "source": "MEED (2018); Reuters (2019)",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "EG",
+      "name": "Egypt",
+      "summary": "Not a Gulf producer, but a large gas producer and consumer and the region's main transit country. Most of its gas comes from offshore fields in the Mediterranean. Egypt has LNG export plants at Idku and Damietta, and has also imported LNG through floating terminals when domestic gas ran short.",
+      "exportRoutes": "The Suez Canal and the Sumed pipeline carry Gulf oil towards Europe. Sumed runs from Ain Sukhna on the Red Sea to Sidi Kerir on the Mediterranean.",
+      "keyExportTerminals": [
+        "Ain Sukhna",
+        "Sidi Kerir",
+        "Idku",
+        "Damietta"
+      ],
+      "source": "EIA Country Analysis Brief: Egypt (2024)",
+      "updated": "2026-10-10"
     },
     {
       "code": "IR",
       "name": "Iran",
-      "summary": "OPEC founding member producing ~3.4 mbpd under sustained US secondary sanctions. Crude exits via Kharg Island (~90% of flow) and Bandar Abbas — both inside the Strait of Hormuz. No physical bypass exists; the long-mooted Goreh–Jask line has never reached meaningful throughput.",
-      "keyGrades": ["Iranian Heavy", "Iranian Light", "Forozan Blend", "Soroosh", "South Pars Condensate"],
-      "chokepointDependency": "Entirely Hormuz-locked; no bypass route. Kharg Island and Bandar Abbas terminals both sit inside the strait.",
-      "chokepointScores": { "hormuz": 1.0, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 0,
-      "keyRefineriesBpd": 2287000,
-      "keyExportTerminals": ["Kharg Island", "Bandar Abbas", "Assaluyeh (condensate)"],
-      "source": "EIA Country Analysis Brief — Iran; NIOC disclosures (figures approximated given sanctions opacity)",
-      "updated": "2026-04-15"
+      "summary": "A founding member of OPEC, with the world's third-largest oil reserves and second-largest gas reserves. It produced about 2.9 million barrels of crude a day in 2023, under long-running US sanctions. Its largest onshore oil fields, including Ahvaz, Marun and Gachsaran, are in the southwest. Its largest gas field is South Pars, the Iranian side of the offshore field it shares with Qatar.",
+      "exportRoutes": "Most crude exports load at Kharg Island in the northern Gulf. A pipeline from Goureh to Jask on the Gulf of Oman, outside the Strait of Hormuz, started up in 2021 but has loaded few cargoes.",
+      "keyExportTerminals": [
+        "Kharg Island",
+        "Jask"
+      ],
+      "source": "EIA Country Analysis Brief: Iran (2024)",
+      "updated": "2026-10-10"
     },
     {
       "code": "IQ",
       "name": "Iraq",
-      "summary": "Second-largest OPEC producer (~4.3 mbpd) with southern production dominating: Basra Oil Terminal + Khor al-Amaya carry ~3.3 mbpd of Hormuz-facing exports. The Kirkuk–Ceyhan pipeline to Turkey's Mediterranean coast is a partial northern hedge at ~0.3 mbpd when political friction permits flow.",
-      "keyGrades": ["Basrah Light", "Basrah Medium", "Basrah Heavy", "Kirkuk"],
-      "chokepointDependency": "Southern exports via Basra Oil Terminal are Hormuz-locked; the Kirkuk–Ceyhan line is a partial Mediterranean hedge for northern barrels but capacity is constrained by political friction.",
-      "chokepointScores": { "hormuz": 0.85, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 0.3,
-      "keyRefineriesBpd": 486000,
-      "keyExportTerminals": ["Basra Oil Terminal (BOT)", "Khor al-Amaya", "Ceyhan (Turkey, via Kirkuk pipeline)"],
-      "source": "EIA Country Analysis Brief — Iraq, plus SOMO and trade-press estimates",
-      "updated": "2026-04-15"
+      "summary": "OPEC's second-largest crude producer, at about 4.4 million barrels a day in 2024. Most output comes from giant fields in the south around Basra, such as Rumaila, West Qurna, Zubair and Majnoon. The north produces from the Kirkuk area.",
+      "exportRoutes": "Southern crude loads at offshore terminals near Basra, in the Gulf. The older Khor al-Amaya terminal there has been out of operation since 2017. Northern crude moves through the Kirkuk-Ceyhan pipeline to Turkey's Mediterranean coast. That line was shut from March 2023 until late September 2025.",
+      "keyExportTerminals": [
+        "Basra Oil Terminal",
+        "Ceyhan (Turkey)"
+      ],
+      "source": "EIA Country Analysis Brief: Iraq (2025); Reuters (2025)",
+      "updated": "2026-10-10"
     },
     {
-      "code": "QA",
-      "name": "Qatar",
-      "summary": "Global LNG leader (~110 mtpa) with ~0.6 mbpd of crude and condensate production. All Qatari hydrocarbon exports transit the Strait of Hormuz via Ras Laffan (LNG), Halul Island (offshore crude), and Mesaieed (onshore crude + products). No bypass exists.",
-      "keyGrades": ["Qatar Marine", "Qatar Land"],
-      "chokepointDependency": "All Qatari hydrocarbon exports transit Hormuz; no bypass exists. LNG and crude both exit via Ras Laffan and Halul Island terminals inside the strait.",
-      "chokepointScores": { "hormuz": 1.0, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 0,
-      "keyRefineriesBpd": 200000,
-      "keyExportTerminals": ["Ras Laffan", "Halul Island", "Mesaieed"],
-      "source": "EIA Country Analysis Brief — Qatar; QatarEnergy annual report",
-      "updated": "2026-04-15"
+      "code": "JO",
+      "name": "Jordan",
+      "summary": "Imports more than 90% of its energy. Its refinery is at Zarqa. Gas arrives by pipeline from Egypt, through the Arab Gas Pipeline, and from Israel, and as LNG at Aqaba.",
+      "exportRoutes": "Jordan is an importer. Supplies arrive through the port of Aqaba on the Red Sea and by pipeline.",
+      "keyExportTerminals": [
+        "Aqaba"
+      ],
+      "source": "Wikipedia: Energy in Jordan",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "KW",
+      "name": "Kuwait",
+      "summary": "A large Gulf producer. Kuwait Oil Company runs the oil fields, and the Burgan field accounts for most production. Kuwait National Petroleum Company owns the Mina Al-Ahmadi and Mina Abdulla refineries. The newer Al Zour refinery belongs to a separate state company, Kuwait Integrated Petroleum Industries Company.",
+      "exportRoutes": "Crude and products are shipped from ports on Kuwait's Gulf coast, the largest being Mina Al-Ahmadi, and pass through the Strait of Hormuz. Kuwait has no export pipeline to another coast.",
+      "keyExportTerminals": [
+        "Mina Al-Ahmadi",
+        "Mina Abdulla",
+        "Shuaiba",
+        "Mina Saud"
+      ],
+      "source": "EIA Country Analysis Brief: Kuwait (2023)",
+      "updated": "2026-10-10"
     },
     {
       "code": "OM",
       "name": "Oman",
-      "summary": "Non-OPEC producer (~1 mbpd) sitting physically east of the Strait of Hormuz. Mina al Fahal — the delivery point for the DME Oman futures contract and the global Asian-sour benchmark — is on the Gulf of Oman coast, so Omani crude never transits the chokepoint. In a Hormuz closure Oman becomes a natural hedge, not a casualty.",
-      "keyGrades": ["Oman Export"],
-      "chokepointDependency": "Oman is east of the Strait of Hormuz. Mina al Fahal export terminal sits directly on the Gulf of Oman, giving Oman a natural hedge — Omani crude never transits the chokepoint.",
-      "chokepointScores": { "hormuz": 0.15, "babElMandeb": 0, "suez": 0 },
-      "bypassCapacityMbpd": 1.0,
-      "keyRefineriesBpd": 306000,
-      "keyExportTerminals": ["Mina al Fahal", "Sohar", "Duqm"],
-      "source": "EIA Country Analysis Brief — Oman; PDO + OQ disclosures; DME contract specification",
-      "updated": "2026-04-15"
+      "summary": "The largest oil producer in the Middle East outside OPEC, at close to 1 million barrels a day in 2017. Petroleum Development Oman, which is majority state-owned, produces most of it. Oman also exports LNG from Qalhat.",
+      "exportRoutes": "Crude is exported from Mina al Fahal near Muscat, on the Gulf of Oman. Oman's export terminals lie outside the Strait of Hormuz, so its exports do not pass through it.",
+      "keyExportTerminals": [
+        "Mina al Fahal",
+        "Qalhat"
+      ],
+      "source": "EIA Country Analysis Brief: Oman (2019)",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "QA",
+      "name": "Qatar",
+      "summary": "One of the world's three largest LNG exporters. The gas comes from the offshore North Field, the Qatari side of the field that Iran calls South Pars. Crude production is modest by comparison, about 0.6 million barrels a day in 2024. Al Shaheen is its largest oil field. QatarEnergy is the state company.",
+      "exportRoutes": "LNG is shipped from Ras Laffan. Offshore crude is piped to Halul Island for storage and export, and onshore Dukhan crude is exported from Mesaieed. All of it passes through the Strait of Hormuz.",
+      "keyExportTerminals": [
+        "Ras Laffan",
+        "Halul Island",
+        "Mesaieed"
+      ],
+      "source": "EIA Country Analysis Brief: Qatar (2025); QatarEnergy",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "summary": "OPEC's largest crude producer, at 9.5 million barrels a day in 2023. Saudi Aramco, the national oil company, runs the industry. Its reserves include Ghawar and Safaniya, the world's largest onshore and offshore oil fields.",
+      "exportRoutes": "Most crude is loaded at Ras Tanura and Ju'aymah on the Gulf. The East-West pipeline carries crude across the country to Yanbu, the main export terminal on the Red Sea, so part of the export stream does not pass through the Strait of Hormuz.",
+      "keyExportTerminals": [
+        "Ras Tanura",
+        "Ju'aymah",
+        "Yanbu"
+      ],
+      "source": "EIA Country Analysis Brief: Saudi Arabia (2024)",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "SY",
+      "name": "Syria",
+      "summary": "A small producer. Output was about 400,000 barrels a day before 2011 and had fallen by roughly 90% by 2015, during the civil war. The oil fields are mostly in the east near the Iraqi border, with others in the centre of the country east of Homs. Its two refineries are at Homs and Banias.",
+      "exportRoutes": "Before the war, crude was exported from Banias and Tartous on the Mediterranean.",
+      "keyExportTerminals": [
+        "Banias",
+        "Tartous"
+      ],
+      "source": "EIA Country Analysis Brief: Syria (2015)",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "TR",
+      "name": "Turkey",
+      "summary": "Produces little oil or gas of its own: domestic output covers less than a tenth of its petroleum demand. It is a transit country instead. Gas arrives from Russia under the Black Sea through Blue Stream and TurkStream, and from Iran through the Tabriz-Ankara pipeline.",
+      "exportRoutes": "The Kirkuk-Ceyhan pipeline from Iraq and the Baku-Tbilisi-Ceyhan pipeline from Azerbaijan both end at the Ceyhan terminal on the Mediterranean.",
+      "keyExportTerminals": [
+        "Ceyhan"
+      ],
+      "source": "EIA Country Analysis Brief: Türkiye (2023)",
+      "updated": "2026-10-10"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "summary": "The fourth-largest producer of liquid fuels in OPEC in 2025. ADNOC, the Abu Dhabi state company, runs most of the industry, including the Ruwais refinery and the LNG plant on Das Island. Murban is its main onshore crude grade.",
+      "exportRoutes": "Murban loads at Jebel Dhanna inside the Gulf. It is also piped to Fujairah on the Gulf of Oman through the Bab-Habshan-Fujairah pipeline. That line and Saudi Arabia's East-West pipeline are the only two that bypass the Strait of Hormuz. Offshore grades load at island terminals inside the Gulf, such as Das Island and Zirku Island.",
+      "keyExportTerminals": [
+        "Jebel Dhanna",
+        "Fujairah",
+        "Das Island",
+        "Zirku Island"
+      ],
+      "source": "EIA Country Analysis Brief: United Arab Emirates (2026)",
+      "updated": "2026-10-10"
     },
     {
       "code": "YE",
       "name": "Yemen",
-      "summary": "Civil conflict has collapsed Yemeni production from a ~0.44 mbpd peak in the mid-2000s to effectively near-zero today, with Little Aden refinery running below capacity. Historically exported Marib Light via Ras Isa (Red Sea) and Masila via Ash-Shihr (Gulf of Aden) — neither transits Hormuz but both carry Bab el-Mandeb exposure.",
-      "keyGrades": ["Marib Light", "Masila"],
-      "chokepointDependency": "Yemeni exports historically exit via Ras Isa (Red Sea → Bab el-Mandeb) and Ash-Shihr (Gulf of Aden, outside Hormuz). Zero Hormuz dependency but meaningful Bab el-Mandeb exposure.",
-      "chokepointScores": { "hormuz": 0, "babElMandeb": 1.0, "suez": 0.4 },
-      "bypassCapacityMbpd": 0,
-      "keyRefineriesBpd": 150000,
-      "keyExportTerminals": ["Ras Isa (Red Sea)", "Ash-Shihr (Gulf of Aden)"],
-      "source": "EIA Country Analysis Brief — Yemen; figures approximated given conflict-era reporting opacity",
-      "updated": "2026-04-15"
+      "summary": "A small producer whose oil and gas industry has been disrupted by the civil war that began in 2014. The Masila Basin in the east holds more than 80% of its oil reserves, and Marib in the centre is its other main oil area. Its only LNG plant, at Balhaf, has been shut since April 2015.",
+      "exportRoutes": "Before the war, Marib crude was piped to the Ras Isa terminal on the Red Sea, and Masila crude was exported from Ash Shihr on the Gulf of Aden. Neither route uses the Strait of Hormuz.",
+      "keyExportTerminals": [
+        "Ras Isa",
+        "Ash Shihr",
+        "Bir Ali"
+      ],
+      "source": "EIA Country Analysis Brief: Yemen (2020)",
+      "updated": "2026-10-10"
     }
   ]
 }

@@ -1,186 +1,215 @@
-import type { DatasetId } from "../../types/Infrastructure";
+import type { DatasetCatalogEntry, DatasetId } from "../../types/Infrastructure";
+import { ENERGY_COLORS, ENERGY_LABELS, ENERGY_TYPES, type EnergyType } from "../../utils/assetEnergy";
+import { LARGEST_OPTIONS, NO_FILTERS, hasActiveFilters, type AssetFilters } from "../../utils/assetFilters";
+import { FilterSelect, type FilterOption } from "../common/FilterSelect";
 import styles from "./LeftRail.module.css";
 
 interface LeftRailProps {
   activeDatasetIds: DatasetId[];
-  datasetCounts: Record<DatasetId, number>;
-  activeRegion: RegionCode;
-  onSelectRegion: (region: RegionCode) => void;
+  activeEnergyTypes: EnergyType[];
+  catalog: DatasetCatalogEntry[];
+  /** Countries the country filter offers, each with its asset count. */
+  countryOptions: FilterOption[];
+  /** Assets per energy type and per layer that pass the filters. */
+  energyCounts: Record<EnergyType, number>;
+  filters: AssetFilters;
+  layerCounts: Record<DatasetId, number>;
+  /** Operators the operator filter offers, most assets first. */
+  operatorOptions: FilterOption[];
+  onChangeFilters: (filters: AssetFilters) => void;
   onToggleDataset: (datasetId: DatasetId) => void;
-  watchlist: WatchlistItem[];
+  onToggleEnergyType: (energyType: EnergyType) => void;
+  onToggleUnmappedRoutes: () => void;
+  /** Whether the map draws pipeline stretches that have no mapped route. */
+  showUnmappedRoutes: boolean;
 }
 
-export type RegionCode = "MENA" | "AG" | "RED_SEA" | "LEVANT";
+type GlyphShape = "diamond" | "triangle" | "triangleDown" | "dot" | "line" | "dashedLine";
 
-export interface WatchlistItem {
-  id: string;
-  label: string;
-  status: "nominal" | "elevated" | "alert" | "offline";
-  note: string;
-}
-
-interface GroupConfig {
-  title: string;
-  items: LayerItem[];
-}
-
-interface LayerItem {
-  datasetId: DatasetId;
-  label: string;
-  glyph?: string;
-  color: string;
-  dash?: boolean;
-}
-
-// Visual grouping from the design brief. Each row maps to a dataset
-// ID in the workspace reducer — toggling the checkbox dispatches the
-// existing `onToggleDataset` so the layer state stays authoritative
-// in a single place.
-const LAYER_GROUPS: GroupConfig[] = [
-  {
-    title: "PIPELINES",
-    items: [
-      { datasetId: "pipelines", label: "Crude & product", color: "#FF5722" }
-    ]
-  },
-  {
-    title: "UPSTREAM",
-    items: [
-      { datasetId: "fields", label: "Oil & gas fields", glyph: "●", color: "#FF8C00" }
-    ]
-  },
-  {
-    title: "DOWNSTREAM",
-    items: [
-      { datasetId: "refineries", label: "Refineries", glyph: "◆", color: "#FFCC80" },
-      { datasetId: "terminals", label: "Export terminals", glyph: "▲", color: "#E0E0E0" }
-    ]
-  },
-  {
-    title: "GEOPOLITICAL",
-    items: [
-      { datasetId: "chokepoints", label: "Chokepoints", glyph: "⊙", color: "#FFD600" }
-    ]
-  }
-];
-
-const REGION_CHIPS: { id: RegionCode; label: string }[] = [
-  { id: "MENA", label: "MENA" },
-  { id: "AG", label: "AG" },
-  { id: "RED_SEA", label: "RED SEA" },
-  { id: "LEVANT", label: "LEVANT" }
-];
+const GLYPH_BY_DATASET: Record<DatasetId, GlyphShape> = {
+  fields: "dot",
+  pipelines: "line",
+  refineries: "diamond",
+  terminals: "triangle"
+};
 
 /**
- * Fixed left-rail shell used across every view. Groups:
- *
- *   LAYERS · FILTERS   header
- *   REGION             chip row
- *   PIPELINES          grouped layer toggles
- *   UPSTREAM
- *   DOWNSTREAM
- *   GEOPOLITICAL
- *   WATCHLIST          live-populated from outage events + FIRMS
- *                      anomalies; read-only, surfaces what's hot.
+ * Controls for the map and table, and the key to reading them. Layers
+ * choose what kind of asset is shown (marker shape); energy types choose
+ * what it handles (marker colour); the filters narrow both to one country,
+ * one operator, or the largest assets. Kept short enough to fit without
+ * scrolling.
  */
 export function LeftRail({
   activeDatasetIds,
-  datasetCounts,
-  activeRegion,
-  onSelectRegion,
+  activeEnergyTypes,
+  catalog,
+  countryOptions,
+  energyCounts,
+  filters,
+  layerCounts,
+  onChangeFilters,
   onToggleDataset,
-  watchlist
+  onToggleEnergyType,
+  onToggleUnmappedRoutes,
+  operatorOptions,
+  showUnmappedRoutes
 }: LeftRailProps) {
   return (
     <div className={styles.rail}>
-      <header className={styles.railHeader}>
-        <span className={styles.railHeaderLabel}>
-          <span className={styles.railHeaderDot} />
-          LAYERS · FILTERS
-        </span>
-        <span className={styles.railHeaderTag}>L1</span>
-      </header>
+      <section className={styles.section}>
+        <div className={styles.sectionLabel}>
+          LAYERS <span className={styles.sectionHint}>MARKER SHAPE</span>
+        </div>
+        {catalog.map((dataset) => (
+          <ToggleRow
+            count={layerCounts[dataset.id]}
+            isActive={activeDatasetIds.includes(dataset.id)}
+            key={dataset.id}
+            label={dataset.title}
+            onToggle={() => onToggleDataset(dataset.id)}
+            swatch={<Glyph shape={GLYPH_BY_DATASET[dataset.id]} />}
+          />
+        ))}
+      </section>
 
       <section className={styles.section}>
-        <div className={styles.sectionLabel}>REGION</div>
-        <div className={styles.chipRow}>
-          {REGION_CHIPS.map((chip) => (
-            <button
-              className={chip.id === activeRegion ? styles.chipActive : styles.chip}
-              key={chip.id}
-              onClick={() => onSelectRegion(chip.id)}
-              type="button"
-            >
-              {chip.label}
+        <div className={styles.sectionLabel}>
+          ENERGY TYPE <span className={styles.sectionHint}>MARKER COLOUR</span>
+        </div>
+        {ENERGY_TYPES.map((energyType) => (
+          <ToggleRow
+            count={energyCounts[energyType]}
+            isActive={activeEnergyTypes.includes(energyType)}
+            key={energyType}
+            label={ENERGY_LABELS[energyType].toUpperCase()}
+            onToggle={() => onToggleEnergyType(energyType)}
+            swatch={<span className={styles.colorSwatch} style={{ backgroundColor: ENERGY_COLORS[energyType] }} />}
+          />
+        ))}
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.sectionLabel}>
+          FILTER
+          {hasActiveFilters(filters) ? (
+            <button className={styles.resetButton} onClick={() => onChangeFilters(NO_FILTERS)} type="button">
+              RESET
             </button>
-          ))}
+          ) : null}
+        </div>
+        <div className={styles.filters}>
+          <FilterSelect
+            label="COUNTRY"
+            onChange={(countryCode) => onChangeFilters({ ...filters, countryCode })}
+            options={countryOptions}
+            value={filters.countryCode}
+          />
+          <FilterSelect
+            isSearchable
+            label="OPERATOR"
+            onChange={(operatorId) => onChangeFilters({ ...filters, operatorId })}
+            options={operatorOptions}
+            value={filters.operatorId}
+          />
+          <FilterSelect
+            label="LARGEST"
+            onChange={(count) => onChangeFilters({ ...filters, largestPerLayer: count ? Number(count) : null })}
+            options={LARGEST_OPTIONS.map((count) => ({ label: `${count} PER LAYER`, value: String(count) }))}
+            value={filters.largestPerLayer === null ? null : String(filters.largestPerLayer)}
+          />
         </div>
       </section>
 
-      {LAYER_GROUPS.map((group) => (
-        <section className={styles.section} key={group.title}>
-          <div className={styles.sectionLabel}>{group.title}</div>
-          {group.items.map((item) => {
-            const isActive = activeDatasetIds.includes(item.datasetId);
-            const count = datasetCounts[item.datasetId] ?? 0;
-            return (
-              <label className={styles.layerRow} key={item.datasetId}>
-                <span
-                  aria-hidden="true"
-                  className={isActive ? styles.checkboxActive : styles.checkbox}
-                >
-                  {isActive ? "✓" : ""}
-                </span>
-                <input
-                  checked={isActive}
-                  className={styles.hiddenInput}
-                  onChange={() => onToggleDataset(item.datasetId)}
-                  type="checkbox"
-                />
-                {item.glyph ? (
-                  <span className={styles.glyph} style={{ color: item.color }}>
-                    {item.glyph}
-                  </span>
-                ) : (
-                  <span
-                    className={styles.lineSwatch}
-                    style={{ background: item.color }}
-                  />
-                )}
-                <span className={isActive ? styles.labelActive : styles.labelInactive}>
-                  {item.label}
-                </span>
-                <span className={styles.count}>{count}</span>
-              </label>
-            );
-          })}
-        </section>
-      ))}
-
       <section className={styles.section}>
-        <div className={styles.sectionLabel}>WATCHLIST</div>
-        {watchlist.length === 0 ? (
-          <div className={styles.emptyWatchlist}>NO ITEMS</div>
-        ) : (
-          watchlist.map((item) => (
-            <div className={styles.watchlistRow} key={item.id}>
-              <span className={`${styles.watchDot} ${statusClass(item.status, styles)}`} />
-              <span className={styles.watchLabel}>{item.label}</span>
-              <span className={styles.watchNote}>{item.note}</span>
-            </div>
-          ))
-        )}
+        <div className={styles.sectionLabel}>MAP KEY</div>
+        <ul className={styles.keyList}>
+          <li>
+            <span className={styles.keyGlyphs}>
+              <Glyph shape="triangle" />
+              <Glyph shape="triangleDown" />
+            </span>
+            LNG export / LNG import
+          </li>
+          <li>
+            <span className={styles.keyGlyphs}>
+              <Glyph shape="diamond" size={8} />
+              <Glyph shape="diamond" />
+            </span>
+            Larger = more capacity
+          </li>
+          <li>
+            <span className={styles.keyGlyphs}>
+              <Glyph isFaded shape="line" />
+            </span>
+            Faded = not operating
+          </li>
+          <li className={styles.keyToggle}>
+            <label className={styles.keyToggleLabel}>
+              <input
+                checked={showUnmappedRoutes}
+                className={styles.checkbox}
+                onChange={onToggleUnmappedRoutes}
+                type="checkbox"
+              />
+              <Glyph shape="dashedLine" />
+              <span className={showUnmappedRoutes ? styles.labelActive : styles.labelInactive}>
+                Dashed = route not mapped
+              </span>
+            </label>
+            <p className={styles.keyNote}>
+              Only the two ends are known, so the line is straight.
+            </p>
+          </li>
+        </ul>
       </section>
     </div>
   );
 }
 
-function statusClass(
-  status: WatchlistItem["status"],
-  stylesMap: Record<string, string>
-): string {
-  if (status === "alert") return stylesMap.watchAlert;
-  if (status === "elevated") return stylesMap.watchElevated;
-  if (status === "offline") return stylesMap.watchOffline;
-  return stylesMap.watchNominal;
+function ToggleRow({
+  count,
+  isActive,
+  label,
+  onToggle,
+  swatch
+}: {
+  count: number;
+  isActive: boolean;
+  label: string;
+  onToggle: () => void;
+  swatch: React.ReactNode;
+}) {
+  return (
+    <label className={styles.toggleRow}>
+      <input checked={isActive} className={styles.checkbox} onChange={onToggle} type="checkbox" />
+      <span aria-hidden="true" className={styles.swatchCell}>
+        {swatch}
+      </span>
+      <span className={isActive ? styles.labelActive : styles.labelInactive}>{label}</span>
+      <span className={styles.count}>{count}</span>
+    </label>
+  );
+}
+
+// Small pictures of the map markers. Neutral grey: shape is what they show.
+function Glyph({ isFaded = false, shape, size = 12 }: { isFaded?: boolean; shape: GlyphShape; size?: number }) {
+  const className = isFaded ? styles.glyphFaded : styles.glyph;
+
+  return (
+    <svg aria-hidden="true" className={className} height={size} viewBox="0 0 12 12" width={size}>
+      {shape === "diamond" ? <polygon points="6,0.5 11.5,6 6,11.5 0.5,6" /> : null}
+      {shape === "triangle" ? <polygon points="6,1 11.5,11 0.5,11" /> : null}
+      {shape === "triangleDown" ? <polygon points="6,11 11.5,1 0.5,1" /> : null}
+      {shape === "dot" ? <circle cx="6" cy="6" r="3" /> : null}
+      {shape === "line" ? <rect height="2" width="12" x="0" y="5" /> : null}
+      {shape === "dashedLine" ? (
+        <>
+          <rect height="2" width="3" x="0" y="5" />
+          <rect height="2" width="3" x="4.5" y="5" />
+          <rect height="2" width="3" x="9" y="5" />
+        </>
+      ) : null}
+    </svg>
+  );
 }

@@ -1,43 +1,35 @@
 {
-  "mode": "STATIC_SNAPSHOT",
-  "asOf": "2026-04-15",
-  "source": "Curated from EIA country analysis briefs, operator fact sheets, and public assay data. Figures are nominal.",
+  "source": "EIA, S&P Global, BP, Wikipedia",
   "grades": [
-    {
-      "id": "arab-extra-light",
-      "name": "Arab Extra Light",
-      "producer": "Saudi Arabia",
-      "producerIso": "SAU",
-      "apiGravity": 38.5,
-      "sulfurPct": 1.15,
-      "classification": "light-sour",
-      "pricingRef": "OSP vs Argus Sour Crude Index / DME Oman",
-      "productionMbpd": 0.4,
-      "note": "Lightest of the Arab grades, from Berri and Abu Safah fields. Heavily allocated to Asian light-sour configurations."
-    },
     {
       "id": "arab-super-light",
       "name": "Arab Super Light",
       "producer": "Saudi Arabia",
       "producerIso": "SAU",
-      "apiGravity": 50.6,
-      "sulfurPct": 0.05,
-      "classification": "light-sweet",
-      "pricingRef": "OSP vs Argus Sour Crude Index / DME Oman",
-      "productionMbpd": 0.2,
-      "note": "Ultra-light condensate stream from the Hawtah Trend. Used to lift heavier blends for direct-distillation yield."
+      "apiGravity": 50.1,
+      "sulfurPct": 0.09,
+      "note": "The lightest of the five Saudi grades. Saudi Aramco defines it as API gravity above 40° with sulfur below 0.5%. It makes up about 1% of Saudi crude reserves.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Saudi Arabia (2024)"
+    },
+    {
+      "id": "arab-extra-light",
+      "name": "Arab Extra Light",
+      "producer": "Saudi Arabia",
+      "producerIso": "SAU",
+      "apiGravity": 39.4,
+      "sulfurPct": 1.09,
+      "note": "Blended from the Abqaiq, Berri and Shaybah fields. Saudi Aramco defines the grade as API gravity 37° to 40° with sulfur 0.5% to 1.3%.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Saudi Arabia (2024)"
     },
     {
       "id": "arab-light",
       "name": "Arab Light",
       "producer": "Saudi Arabia",
       "producerIso": "SAU",
-      "apiGravity": 33.4,
-      "sulfurPct": 1.8,
-      "classification": "medium-sour",
-      "pricingRef": "OSP vs Argus Sour Crude Index / DME Oman",
-      "productionMbpd": 5.9,
-      "note": "Saudi Aramco flagship export grade. Baseline for the Gulf medium-sour complex; largest single crude stream in global trade."
+      "apiGravity": 32.8,
+      "sulfurPct": 1.97,
+      "note": "Mostly from the Ghawar field. Saudi Aramco defines the grade as API gravity 32° to 36° with sulfur 1.3% to 2.2%. It makes up about a third of Saudi crude reserves.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Saudi Arabia (2024)"
     },
     {
       "id": "arab-medium",
@@ -45,23 +37,19 @@
       "producer": "Saudi Arabia",
       "producerIso": "SAU",
       "apiGravity": 30.2,
-      "sulfurPct": 2.45,
-      "classification": "medium-sour",
-      "pricingRef": "OSP vs Argus Sour Crude Index / DME Oman",
-      "productionMbpd": 1.9,
-      "note": "Zuluf and Marjan fields. Higher sulfur than Arab Light, so priced at a discount and targeted at complex cokers."
+      "sulfurPct": 2.59,
+      "note": "Produced from offshore fields including Zuluf and Marjan. Saudi Aramco defines the grade as API gravity 29° to 32° with sulfur 2.2% to 2.9%.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Saudi Arabia (2024)"
     },
     {
       "id": "arab-heavy",
       "name": "Arab Heavy",
       "producer": "Saudi Arabia",
       "producerIso": "SAU",
-      "apiGravity": 27.4,
-      "sulfurPct": 2.9,
-      "classification": "medium-sour",
-      "pricingRef": "OSP vs Argus Sour Crude Index / DME Oman",
-      "productionMbpd": 1.6,
-      "note": "Safaniya — the world's largest offshore oil field. The heaviest Arab grade; favored by upgraders with coking capacity."
+      "apiGravity": 27.7,
+      "sulfurPct": 2.87,
+      "note": "Produced mainly from the offshore Safaniya field. Saudi Aramco defines the grade as API gravity below 29° with sulfur above 2.9%.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Saudi Arabia (2024)"
     },
     {
       "id": "iranian-light",
@@ -70,10 +58,8 @@
       "producerIso": "IRN",
       "apiGravity": 33.1,
       "sulfurPct": 1.5,
-      "classification": "medium-sour",
-      "pricingRef": "NIOC OSP vs Platts Dubai",
-      "productionMbpd": 1.3,
-      "note": "NIOC benchmark export grade. Priced against Dubai; availability sanctioned but widely traded into China and India."
+      "note": "Exported from Kharg Island, Iran's main crude terminal.",
+      "source": "Wikipedia: List of crude oil products"
     },
     {
       "id": "iranian-heavy",
@@ -81,215 +67,159 @@
       "producer": "Iran",
       "producerIso": "IRN",
       "apiGravity": 30.2,
-      "sulfurPct": 1.73,
-      "classification": "medium-sour",
-      "pricingRef": "NIOC OSP vs Platts Dubai",
-      "productionMbpd": 1.1,
-      "note": "From Ahvaz, Marun, and Gachsaran. Workhorse of the Iranian export complex; similar cut to Arab Medium."
+      "sulfurPct": 1.77,
+      "note": "Exported from Kharg Island, Iran's main crude terminal.",
+      "source": "Wikipedia: List of crude oil products"
     },
     {
-      "id": "forozan-blend",
-      "name": "Forozan Blend",
+      "id": "foroozan-blend",
+      "name": "Foroozan Blend",
       "producer": "Iran",
       "producerIso": "IRN",
-      "apiGravity": 31.5,
-      "sulfurPct": 2.5,
-      "classification": "medium-sour",
-      "pricingRef": "NIOC OSP vs Platts Dubai",
-      "productionMbpd": 0.25,
-      "note": "Offshore Persian Gulf blend (Foroozan, Esfandiar). Medium-sour; exported via Kharg Island."
-    },
-    {
-      "id": "soroosh",
-      "name": "Soroosh",
-      "producer": "Iran",
-      "producerIso": "IRN",
-      "apiGravity": 18.1,
-      "sulfurPct": 3.3,
-      "classification": "heavy-sour",
-      "pricingRef": "NIOC OSP vs Platts Dubai",
-      "productionMbpd": 0.1,
-      "note": "Offshore Bahregansar block. Heavy, high-sulfur; requires upgrading yards with deep bottom-of-barrel conversion."
+      "apiGravity": 29.7,
+      "sulfurPct": 2.34,
+      "note": "A blend exported from Kharg Island. It takes its name from the offshore Foroozan field.",
+      "source": "Wikipedia: List of crude oil products"
     },
     {
       "id": "basrah-light",
       "name": "Basrah Light",
       "producer": "Iraq",
       "producerIso": "IRQ",
-      "apiGravity": 33.7,
-      "sulfurPct": 1.95,
-      "classification": "medium-sour",
-      "pricingRef": "SOMO OSP vs Argus Sour Crude Index",
-      "productionMbpd": 1.8,
-      "note": "Southern Iraq, shipped from Basrah Oil Terminal via Hormuz. Historically the marker grade for Iraqi southern exports."
+      "apiGravity": 31.4,
+      "sulfurPct": 2.74,
+      "note": "A southern Iraqi grade. Its specification was reset on 1 January 2021, when Basrah Medium was added as a third southern grade.",
+      "source": "S&P Global (2020)"
     },
     {
       "id": "basrah-medium",
       "name": "Basrah Medium",
       "producer": "Iraq",
       "producerIso": "IRQ",
-      "apiGravity": 29.7,
-      "sulfurPct": 2.7,
-      "classification": "medium-sour",
-      "pricingRef": "SOMO OSP vs Argus Sour Crude Index",
-      "productionMbpd": 1.4,
-      "note": "Split from the old Basrah stream in 2021 to stabilize the quality bank. Primary Iraqi export grade today."
+      "apiGravity": 27.9,
+      "sulfurPct": 3.0,
+      "note": "Introduced on 1 January 2021 as a third southern export grade. With Basrah Heavy, it made up the exports from Iraq's southern Gulf terminals in 2024.",
+      "source": "S&P Global (2020); EIA Country Analysis Brief: Iraq (2025)"
     },
     {
       "id": "basrah-heavy",
       "name": "Basrah Heavy",
       "producer": "Iraq",
       "producerIso": "IRQ",
-      "apiGravity": 23.7,
-      "sulfurPct": 4.1,
-      "classification": "heavy-sour",
-      "pricingRef": "SOMO OSP vs Argus Sour Crude Index",
-      "productionMbpd": 0.6,
-      "note": "High-sulfur heavy stream from the south. Priced at a deep discount; targeted at coking refineries in Asia."
+      "apiGravity": 24.0,
+      "sulfurPct": 4.05,
+      "note": "The heaviest and most sulfurous grade in this table. Exported from Iraq's southern Gulf terminals.",
+      "source": "S&P Global (2020)"
     },
     {
       "id": "kirkuk",
       "name": "Kirkuk",
       "producer": "Iraq",
       "producerIso": "IRQ",
-      "apiGravity": 36.1,
-      "sulfurPct": 2.0,
-      "classification": "light-sour",
-      "pricingRef": "SOMO / Ceyhan FOB vs Brent",
-      "productionMbpd": 0.3,
-      "note": "Northern Iraqi grade evacuated via the Kirkuk-Ceyhan pipeline to Turkey. Mediterranean-facing, so Brent-priced."
+      "apiGravity": 33.9,
+      "sulfurPct": 2.26,
+      "note": "The northern Iraqi grade, from the Kirkuk area. It is exported through the Kirkuk-Ceyhan pipeline to Turkey's Mediterranean coast. That line was shut from March 2023 until late September 2025.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Iraq (2025)"
     },
     {
       "id": "kuwait-export",
       "name": "Kuwait Export",
       "producer": "Kuwait",
       "producerIso": "KWT",
-      "apiGravity": 30.5,
-      "sulfurPct": 2.52,
-      "classification": "medium-sour",
-      "pricingRef": "KPC OSP vs Argus Sour Crude Index",
-      "productionMbpd": 2.4,
-      "note": "Blended from Burgan and Raudhatain. KPC's primary long-haul export grade; ships via Mina al-Ahmadi through Hormuz."
+      "apiGravity": 30.2,
+      "sulfurPct": 2.72,
+      "note": "Kuwait's main export grade, a medium sour crude produced mainly from the Burgan field.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Kuwait (2023)"
     },
     {
       "id": "murban",
       "name": "Murban",
       "producer": "United Arab Emirates",
       "producerIso": "ARE",
-      "apiGravity": 40.2,
-      "sulfurPct": 0.78,
-      "classification": "light-sour",
-      "pricingRef": "IFAD Murban Futures (ICE Abu Dhabi)",
-      "productionMbpd": 1.7,
-      "note": "Onshore ADNOC grade. The only Middle East crude with a fully deliverable futures contract (IFAD). Asian light-sour benchmark."
+      "apiGravity": 40.0,
+      "sulfurPct": 0.77,
+      "note": "Abu Dhabi's main onshore grade. It loads at Jebel Dhanna and is also piped to Fujairah, outside the Strait of Hormuz.",
+      "source": "EIA Country Analysis Brief: United Arab Emirates (2026)"
     },
     {
       "id": "upper-zakum",
       "name": "Upper Zakum",
       "producer": "United Arab Emirates",
       "producerIso": "ARE",
-      "apiGravity": 34.4,
-      "sulfurPct": 1.75,
-      "classification": "medium-sour",
-      "pricingRef": "ADNOC OSP vs DME Oman",
-      "productionMbpd": 0.75,
-      "note": "Offshore giant field co-operated with ExxonMobil, CNPC, and Inpex. Priced against Oman; a close proxy for Arab Light."
+      "apiGravity": 33.2,
+      "sulfurPct": 2.09,
+      "note": "From the offshore Upper Zakum field. It loads at Zirku Island.",
+      "source": "EIA Country Analysis Brief: United Arab Emirates (2026)"
     },
     {
-      "id": "das-blend",
-      "name": "Das Blend",
+      "id": "das",
+      "name": "Das",
       "producer": "United Arab Emirates",
       "producerIso": "ARE",
-      "apiGravity": 39.0,
-      "sulfurPct": 1.15,
-      "classification": "light-sour",
-      "pricingRef": "ADNOC OSP vs DME Oman",
-      "productionMbpd": 0.3,
-      "note": "Offshore blend from Umm Shaif and Lower Zakum, staged through Das Island terminal."
+      "apiGravity": 39.1,
+      "sulfurPct": 1.14,
+      "note": "An offshore Abu Dhabi grade, named after Das Island.",
+      "source": "EIA Country Analysis Brief: United Arab Emirates (2026)"
     },
     {
       "id": "umm-lulu",
       "name": "Umm Lulu",
       "producer": "United Arab Emirates",
       "producerIso": "ARE",
-      "apiGravity": 39.2,
-      "sulfurPct": 0.72,
-      "classification": "light-sour",
-      "pricingRef": "ADNOC OSP vs DME Oman",
-      "productionMbpd": 0.2,
-      "note": "Newer offshore ADNOC grade. Similar quality band to Murban; exported separately as ADNOC grade-diversification strategy."
+      "apiGravity": 38.9,
+      "sulfurPct": 0.7,
+      "note": "An offshore Abu Dhabi grade from the Umm Al Lulu field.",
+      "source": "EIA Country Analysis Brief: United Arab Emirates (2026)"
     },
     {
       "id": "qatar-marine",
       "name": "Qatar Marine",
       "producer": "Qatar",
       "producerIso": "QAT",
-      "apiGravity": 36.0,
-      "sulfurPct": 1.7,
-      "classification": "light-sour",
-      "pricingRef": "QatarEnergy OSP vs DME Oman",
-      "productionMbpd": 0.48,
-      "note": "Offshore blend from Al-Shaheen and Maydan Mahzam. Ships via Halul Island through Hormuz."
+      "apiGravity": 35.8,
+      "sulfurPct": 1.47,
+      "note": "Qatar's offshore grade, from fields such as Idd El Shargi, Maydan Mahzam and Bul Hanine. It is exported from Halul Island.",
+      "source": "Wikipedia: List of crude oil products; QatarEnergy"
     },
     {
       "id": "qatar-land",
       "name": "Qatar Land",
       "producer": "Qatar",
       "producerIso": "QAT",
-      "apiGravity": 41.3,
-      "sulfurPct": 1.25,
-      "classification": "light-sour",
-      "pricingRef": "QatarEnergy OSP vs DME Oman",
-      "productionMbpd": 0.2,
-      "note": "Onshore Dukhan field stream. Lighter and sweeter than Qatar Marine; small but consistently produced."
-    },
-    {
-      "id": "dukhan",
-      "name": "Dukhan / Bahrain",
-      "producer": "Bahrain",
-      "producerIso": "BHR",
-      "apiGravity": 37.1,
-      "sulfurPct": 1.48,
-      "classification": "light-sour",
-      "pricingRef": "Bapco OSP vs Argus Sour Crude Index",
-      "productionMbpd": 0.2,
-      "note": "Onshore Bahraini crude fed into Bapco's Sitra refinery; a thin export cargo after domestic runs."
+      "apiGravity": 41.1,
+      "sulfurPct": 1.22,
+      "note": "Qatar's onshore grade, from the Dukhan field. It is exported from Mesaieed.",
+      "source": "Wikipedia: List of crude oil products; QatarEnergy"
     },
     {
       "id": "oman-export",
       "name": "Oman Export",
       "producer": "Oman",
       "producerIso": "OMN",
-      "apiGravity": 33.3,
-      "sulfurPct": 1.09,
-      "classification": "medium-sour",
-      "pricingRef": "DME Oman (deliverable benchmark)",
-      "productionMbpd": 0.85,
-      "note": "Underlying physical basis of the DME Oman futures contract — the most-looked-at Asian light-medium sour marker."
+      "apiGravity": 33.2,
+      "sulfurPct": 1.29,
+      "note": "Oman's export blend, loaded at Mina al Fahal near Muscat.",
+      "source": "BP crude assay (2020)"
     },
     {
       "id": "marib-light",
       "name": "Marib Light",
       "producer": "Yemen",
       "producerIso": "YEM",
-      "apiGravity": 40.5,
-      "sulfurPct": 0.18,
-      "classification": "light-sweet",
-      "pricingRef": "Spot vs Brent",
-      "productionMbpd": 0.02,
-      "note": "Onshore Yemen grade from the Marib-Shabwa basin. Production depressed by civil conflict; cargoes irregular."
+      "apiGravity": 48.9,
+      "sulfurPct": 0.07,
+      "note": "Yemen's light, sweet stream, from the Marib area. Before the war it was piped to the Ras Isa terminal on the Red Sea.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Yemen (2020)"
     },
     {
       "id": "masila",
       "name": "Masila",
       "producer": "Yemen",
       "producerIso": "YEM",
-      "apiGravity": 30.5,
-      "sulfurPct": 0.67,
-      "classification": "medium-sour",
-      "pricingRef": "Spot vs Brent",
-      "productionMbpd": 0.03,
-      "note": "Hadhramaut governorate. Exports via Ash-Shihr terminal on the Gulf of Aden — outside the Hormuz chokepoint."
+      "apiGravity": 31.4,
+      "sulfurPct": 0.54,
+      "note": "Yemen's medium-gravity stream, with more sulfur than Marib Light, from the Masila Basin. It is exported from the Ash Shihr terminal on the Gulf of Aden.",
+      "source": "Wikipedia: List of crude oil products; EIA Country Analysis Brief: Yemen (2020)"
     }
   ]
 }

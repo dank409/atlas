@@ -2,8 +2,16 @@ import { useEffect, useState } from "react";
 import { loadMapWorkspaceData } from "../services/workspaceData";
 import type { MapWorkspaceData } from "../types/Infrastructure";
 
+const EMPTY_WORKSPACE_DATA: MapWorkspaceData = {
+  assets: [],
+  catalog: [],
+  companies: [],
+  countryProfiles: [],
+  operatorAliases: []
+};
+
 export function useMapWorkspaceData() {
-  const [data, setData] = useState<MapWorkspaceData | null>(null);
+  const [data, setData] = useState<MapWorkspaceData>(EMPTY_WORKSPACE_DATA);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -40,19 +48,5 @@ export function useMapWorkspaceData() {
     };
   }, []);
 
-  return {
-    assets: data?.assets ?? [],
-    catalog: data?.catalog ?? [],
-    companiesById: data?.companiesById ?? {},
-    countriesByCode: data?.countriesByCode ?? {},
-    exposureByTargetId: data?.exposureByTargetId ?? {},
-    feedstockById: data?.feedstockById ?? {},
-    firmsBaselineByAssetId: data?.firmsBaselineByAssetId ?? EMPTY_BASELINE_MAP,
-    error,
-    isLoading
-  };
+  return { ...data, error, isLoading };
 }
-
-// Keep the empty-map reference stable across re-renders so consumers
-// that `useMemo` on it don't invalidate their cache needlessly.
-const EMPTY_BASELINE_MAP: Map<string, import("../types/firms").FirmsBaselineEntry> = new Map();

@@ -1,3 +1,4 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { loadCrudeGradeSnapshot } from "./crudeGrades";
 import type { CrudeGrade, CrudeGradeSnapshot } from "../types/CrudeGrade";
 
@@ -8,10 +9,8 @@ const arabLight: CrudeGrade = {
   producerIso: "SAU",
   apiGravity: 33.4,
   sulfurPct: 1.8,
-  classification: "medium-sour",
-  pricingRef: "OSP vs ASCI",
-  productionMbpd: 5.9,
-  note: "Saudi Aramco flagship."
+  note: "Saudi Aramco flagship.",
+  source: "Wikipedia"
 };
 
 const murban: CrudeGrade = {
@@ -21,17 +20,12 @@ const murban: CrudeGrade = {
   producerIso: "ARE",
   apiGravity: 40.2,
   sulfurPct: 0.78,
-  classification: "light-sour",
-  pricingRef: "IFAD Murban Futures",
-  productionMbpd: 1.7,
-  note: "ADNOC onshore."
+  note: "ADNOC onshore.",
+  source: "EIA"
 };
 
 const healthyPayload: CrudeGradeSnapshot = {
-  asOf: "2026-04-15",
-  cadence: "CURATED",
-  classification: "CURATED",
-  source: "Curated",
+  source: "EIA, Wikipedia",
   grades: [arabLight, murban]
 };
 
@@ -40,7 +34,7 @@ describe("loadCrudeGradeSnapshot", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads grades from the canonical reference path and marks them CURATED", async () => {
+  it("loads grades and attribution from the reference path", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async (input: string) => {
@@ -53,11 +47,9 @@ describe("loadCrudeGradeSnapshot", () => {
 
     const snapshot = await loadCrudeGradeSnapshot();
 
-    expect(snapshot.cadence).toBe("CURATED");
-    expect(snapshot.classification).toBe("CURATED");
     expect(snapshot.grades).toHaveLength(2);
     expect(snapshot.grades[0].name).toBe("Arab Light");
-    expect(snapshot.source).toBe("Curated");
+    expect(snapshot.source).toBe("EIA, Wikipedia");
   });
 
   it("drops rows with non-finite numeric fields", async () => {

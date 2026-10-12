@@ -10,6 +10,8 @@ from typing import Any
 
 from openpyxl import load_workbook
 
+from pipeline_geometry import drop_stray_parts
+
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "raw"
 OUTPUT_DIR = ROOT / "public" / "data" / "infrastructure"
@@ -28,6 +30,7 @@ TARGET_COUNTRIES = {
     "Syria": "SY",
     "Jordan": "JO",
     "Turkey": "TR",
+    "Türkiye": "TR",
     "Pakistan": "PK",
     "India": "IN",
 }
@@ -118,7 +121,6 @@ def build_refineries() -> dict[str, Any]:
         operator = clean_entity_name(row["OPERATOR"]) or "Unknown"
         country_code = TARGET_COUNTRIES[country_name]
         name = format_refinery_name(clean_string(row["FAC_NAME"]) or "Unknown refinery")
-        status = normalize_refinery_status(row["OGIM_STATUS"], row["FAC_STATUS"])
         feature_id = build_unique_refinery_id(
             used_feature_ids,
             country_code,
@@ -135,12 +137,10 @@ def build_refineries() -> dict[str, Any]:
             "countryName": country_name,
             "owner": operator,
             "operator": operator,
-            "status": status,
             "capacityUnit": "bpd",
             "type": "refinery",
             "lat": lat,
             "lon": lon,
-            "firmsRadius_km": refinery_firms_radius(capacity_bpd),
             "linkedContext": build_linked_context(country_code, operator),
         }
 
@@ -200,14 +200,14 @@ def build_refineries() -> dict[str, Any]:
                 "countryName": country_name,
                 "owner": owner,
                 "operator": operator,
-                "status": "unknown",
                 "capacityUnit": "bpd",
                 "type": "refinery",
                 "lat": lat,
                 "lon": lon,
-                "firmsRadius_km": refinery_firms_radius(capacity_bpd),
-                "linkedContext": build_linked_context(country_code, operator, owner),
-                "notes": "Supplemental refinery site retained because OGIM v2.7 does not include this facility."
+                    "linkedContext": build_linked_context(country_code, operator, owner),
+                # These sites are not from OGIM, so each names where it is from.
+                "source": clean_string(properties.get("source")),
+                "sourceDate": clean_string(properties.get("sourceDate")),
             }
 
             if capacity_bpd is not None:
@@ -230,12 +230,12 @@ def build_refineries() -> dict[str, Any]:
     return {
         "type": "FeatureCollection",
         "_metadata": {
-            "source": "EDF Oil and Gas Infrastructure Mapping (OGIM) v2.7 + curated refinery supplement",
+            "source": "EDF Oil and Gas Infrastructure Mapping (OGIM) v2.7",
             "downloadDate": "2025-03-28",
             "recordCount": len(features),
             "license": "CC BY 4.0",
             "sourceUrl": "https://zenodo.org/records/15103476",
-            "notes": "OGIM refinery status is largely unavailable in the regional slice, so unknown values are preserved instead of inferred. Curated supplement rows are only used when named Gulf sites are absent from OGIM."
+            "notes": "OGIM refineries in the Middle East. Al Zour and Ruwais are not in OGIM; those two records name their own source."
         },
         "features": features,
     }
@@ -270,7 +270,7 @@ def build_fields() -> dict[str, Any]:
             "id": f"field-{unit_id.lower()}",
             "name": clean_string(row[index["Unit Name"]]) or unit_id,
             "country": country_code,
-            "countryName": country_name,
+            "countryName": display_country_name(country_name),
             "status": normalize_status(row[index["Status"]]),
             "operator": operator,
             "basin": clean_string(row[index["Basin"]]),
@@ -350,7 +350,7 @@ def build_terminals() -> dict[str, Any]:
             "id": f"terminal-{project_id.lower()}",
             "name": clean_string(representative[index["TerminalName"]]) or project_id,
             "country": country_code,
-            "countryName": country_name,
+            "countryName": display_country_name(country_name),
             "status": choose_terminal_status(rows, index),
             "lat": lat,
             "lon": lon,
@@ -436,7 +436,7 @@ def build_pipelines() -> dict[str, Any]:
                 "id": f"pipeline-{str(props.get('ProjectID') or slugify(props.get('PipelineName') or 'pipeline')).lower()}",
                 "name": clean_string(props.get("PipelineName")) or clean_string(props.get("SegmentName")) or "Unknown pipeline",
                 "country": country_code,
-                "countryName": primary_country,
+                "countryName": display_country_name(primary_country),
                 "countries": [TARGET_COUNTRIES[country] for country in countries],
                 "owner": owner or parent or "Unknown",
                 "operator": None,
@@ -469,6 +469,8 @@ def build_pipelines() -> dict[str, Any]:
                     },
                 }
             )
+
+    drop_stray_parts(features)
 
     serialized_features = []
     for feature in sorted(features, key=lambda item: item["properties"]["name"]):
@@ -630,6 +632,11 @@ def normalize_pipeline_geometry(geometry: dict[str, Any] | None) -> dict[str, An
     return None
 
 
+def display_country_name(gem_name: str) -> str:
+    """GEM says Türkiye; the rest of the app's data says Turkey."""
+    return "Turkey" if gem_name == "Türkiye" else gem_name
+
+
 def build_linked_context(country_code: str, *entities: str | None) -> dict[str, Any] | None:
     company_id = None
     for entity in entities:
@@ -724,27 +731,6 @@ def normalize_ogim_country(value: str | None) -> str | None:
         "india": "India",
     }
     return country_aliases.get(normalized)
-
-
-def normalize_refinery_status(*values: Any) -> str:
-    for value in values:
-        normalized = normalize_name(value)
-        if not normalized or normalized == "n a":
-            continue
-        if "incident" in normalized or "outage" in normalized:
-            return "unplanned_incident"
-        if "maintenance" in normalized:
-            return "planned_maintenance"
-        if "construct" in normalized or "build" in normalized:
-            return "construction"
-        if "proposed" in normalized or "planned" in normalized or "startup" in normalized:
-            return "planned_startup"
-        if "clos" in normalized or "retired" in normalized or "decommission" in normalized:
-            return "permanent_closure"
-        if "operat" in normalized or "active" in normalized or "online" in normalized:
-            return "operational"
-
-    return "unknown"
 
 
 def normalize_status(value: Any) -> str:
@@ -912,16 +898,6 @@ def format_refinery_name(value: str) -> str:
     normalized = clean_string(value) or value
     titled = normalized.title()
     return titled if "refinery" in normalize_name(titled) else f"{titled} Refinery"
-
-
-def refinery_firms_radius(capacity_bpd: float | None) -> int:
-    if capacity_bpd is None:
-        return 3
-    if capacity_bpd >= 200_000:
-        return 5
-    if capacity_bpd >= 50_000:
-        return 3
-    return 2
 
 
 def write_feature_collection(path: Path, payload: dict[str, Any]) -> None:

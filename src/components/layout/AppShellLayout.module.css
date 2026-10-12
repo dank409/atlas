@@ -1,152 +1,95 @@
+/* Three columns (controls, main, detail) between a header row and a
+   status-bar row. Each side column's width is a custom property so its
+   open / collapsed / absent states only have to set one value. */
 .shell {
+  --left-width: 0px;
+  --right-width: 0px;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr) 360px;
-  grid-template-rows: 40px minmax(0, 1fr) 28px;
+  grid-template-columns: var(--left-width) minmax(0, 1fr) var(--right-width);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas:
+    "header header header"
+    "left main right"
+    "status status status";
   height: 100vh;
-  max-height: 100vh;
   overflow: hidden;
-  min-height: 0;
   background: #000000;
 }
 
-.shellWithTape {
-  grid-template-rows: 40px 32px minmax(0, 1fr) 28px;
+.leftOpen {
+  --left-width: 264px;
 }
 
-/* Collapsed sidebars are still rendered — they just shrink to a
-   22px rail that houses a single expand button. Keeping the column
-   in the grid means the toggle never escapes the sidebar area. */
-.shellLeftRail {
-  grid-template-columns: 22px minmax(0, 1fr) 360px;
+.leftCollapsed {
+  --left-width: 24px;
 }
 
-.shellRightRail {
-  grid-template-columns: 280px minmax(0, 1fr) 22px;
-}
-
-.shellLeftRail.shellRightRail {
-  grid-template-columns: 22px minmax(0, 1fr) 22px;
+.rightOpen {
+  --right-width: 340px;
 }
 
 .header {
-  grid-column: 1 / -1;
+  grid-area: header;
   min-width: 0;
-}
-
-.marketTape {
-  grid-column: 1 / -1;
-  min-width: 0;
-  overflow: hidden;
 }
 
 .leftSidebar,
 .rightSidebar {
-  display: flex;
-  flex-direction: column;
   min-width: 0;
   min-height: 0;
-  overflow: hidden;
-  background: #000000;
 }
 
 .leftSidebar {
+  grid-area: left;
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid #222222;
+  overflow: hidden;
 }
 
 .rightSidebar {
-  border-left: 1px solid #222222;
-}
-
-/* 24px strip at the very top of each open sidebar — same role as
-   the asset grid panel's header: a place for the collapse toggle
-   plus a short uppercase label so the user can see what the column
-   holds at a glance. */
-.sidebarStrip {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 24px;
-  padding: 0 8px;
-  border-bottom: 1px solid #1a1a1a;
-  background: #0a0a0a;
-  flex-shrink: 0;
-}
-
-.sidebarStripLabel {
-  flex: 1;
-  color: #666666;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.rightSidebar .sidebarStripLabel {
-  text-align: right;
-}
-
-.sidebarStripButton {
-  width: 18px;
-  height: 18px;
-  background: transparent;
-  border: 1px solid #333333;
-  color: #888888;
-  cursor: pointer;
-  font: inherit;
-  font-size: 9px;
-  line-height: 1;
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.sidebarStripButton:hover {
-  border-color: #ff8c00;
-  color: #ff8c00;
+  grid-area: right;
+  padding: 8px 8px 8px 0;
+  overflow-y: auto;
 }
 
 .sidebarBody {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-gutter: stable;
+  overflow-y: auto;
 }
 
-/* Rail variant: no header strip, no body — the whole column is
-   a single tall expand button. */
-.sidebarRail {
-  display: flex;
-  flex-direction: column;
+.sidebarCollapseButton,
+.sidebarRailButton {
+  flex-shrink: 0;
+  background: #0a0a0a;
+  border: 0;
+  color: #888888;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.sidebarCollapseButton {
+  padding: 6px 12px;
+  border-top: 1px solid #222222;
+  text-align: left;
 }
 
 .sidebarRailButton {
   width: 100%;
-  height: 40px;
-  background: #0a0a0a;
-  border: none;
-  border-bottom: 1px solid #222222;
-  color: #888888;
-  cursor: pointer;
-  font: inherit;
-  font-size: 11px;
-  line-height: 1;
+  height: 100%;
   padding: 0;
-  flex-shrink: 0;
 }
 
+.sidebarCollapseButton:hover,
 .sidebarRailButton:hover {
-  background: #111111;
   color: #ff8c00;
 }
 
 .mainViewport {
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  background: #000000;
-}
-
-.mainInner {
-  height: 100%;
+  grid-area: main;
   min-width: 0;
   min-height: 0;
   padding: 8px;
@@ -154,40 +97,58 @@
 }
 
 .statusBar {
-  grid-column: 1 / -1;
+  grid-area: status;
+  min-width: 0;
 }
 
 @media (max-width: 1199px) {
-  .shell {
-    grid-template-columns: 240px minmax(0, 1fr) 300px;
+  .leftOpen {
+    --left-width: 232px;
   }
 
-  .shellLeftRail {
-    grid-template-columns: 22px minmax(0, 1fr) 300px;
-  }
-
-  .shellRightRail {
-    grid-template-columns: 240px minmax(0, 1fr) 22px;
-  }
-
-  .shellLeftRail.shellRightRail {
-    grid-template-columns: 22px minmax(0, 1fr) 22px;
+  .rightOpen {
+    --right-width: 300px;
   }
 }
 
-@media (max-width: 1023px) {
+/* Narrow screens: one scrolling column in reading order. */
+@media (max-width: 899px) {
   .shell {
-    grid-template-columns: 1fr;
-    grid-template-rows: 40px auto auto auto 28px;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
   }
 
-  .shellWithTape {
-    grid-template-rows: 40px 32px auto auto auto 28px;
+  .mainViewport {
+    flex: 1 0 auto;
+    overflow: visible;
   }
 
-  .leftSidebar,
+  /* Map or table first, then its detail card, then the controls: on a
+     phone the content should not sit below a screen of checkboxes. */
+  .mainViewport {
+    order: 1;
+  }
+
   .rightSidebar {
-    border: none;
+    order: 2;
+    padding: 0 8px 8px;
+    overflow: visible;
+  }
+
+  .leftSidebar {
+    order: 3;
+    border: 0;
     border-top: 1px solid #222222;
+  }
+
+  .statusBar {
+    order: 4;
+  }
+
+  .sidebarRailButton {
+    height: 28px;
   }
 }

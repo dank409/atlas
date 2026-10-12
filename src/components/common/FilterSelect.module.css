@@ -1,0 +1,134 @@
+.filterSelect {
+  min-width: 0;
+}
+
+.trigger,
+.triggerActive {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  padding: 5px 6px;
+  background: #000000;
+  border: 1px solid #333333;
+  color: #e0e0e0;
+  font: inherit;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.triggerActive {
+  border-color: #ff8c00;
+}
+
+.trigger:hover,
+.triggerActive:hover,
+.trigger:focus-visible,
+.triggerActive:focus-visible {
+  border-color: #ff8c00;
+  outline: none;
+}
+
+.triggerLabel {
+  color: #888888;
+  letter-spacing: 0.08em;
+}
+
+.triggerValue {
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.triggerActive .triggerValue {
+  color: #ff8c00;
+}
+
+.caret {
+  color: #888888;
+}
+
+/* Fixed to the viewport: its place is set inline from the trigger's position. */
+.menu {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  max-width: 320px;
+  background: #111111;
+  border: 1px solid #333333;
+  color: #e0e0e0;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+}
+
+.search {
+  flex-shrink: 0;
+  margin: 0;
+  padding: 6px 8px;
+  appearance: none;
+  background: #000000;
+  border: 0;
+  border-bottom: 1px solid #333333;
+  border-radius: 0;
+  color: #e0e0e0;
+  font: inherit;
+  outline: none;
+}
+
+.search::placeholder {
+  color: #666666;
+}
+
+.options {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.option,
+.optionActive,
+.optionSelected {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: baseline;
+  padding: 5px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.optionActive {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+.optionSelected,
+.optionActive[aria-selected="true"] {
+  color: #ff8c00;
+}
+
+.optionLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.optionCount {
+  color: #666666;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  padding: 8px;
+  color: #666666;
+}

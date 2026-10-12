@@ -1,39 +1,49 @@
 .page {
-  display: flex;
-  flex-direction: column;
+  height: 100%;
   padding: 12px;
-  max-width: 860px;
-  margin: 0 auto;
-  width: 100%;
+  border: 1px solid #333333;
+  overflow-y: auto;
+}
+
+/* Reading text on the left, the sources table on the right. */
+.columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1099px) {
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
 }
 
 .lede {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 12px 4px 20px;
+  padding-bottom: 12px;
   border-bottom: 1px solid #222222;
-  margin-bottom: 16px;
 }
 
 .ledeTitle {
+  margin: 0 0 8px;
   color: #ff8c00;
   font-size: 14px;
   font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .ledeSubtitle {
-  color: #b8bfcc;
+  max-width: 900px;
+  margin: 0;
+  color: #e0e0e0;
   font-size: 12px;
-  letter-spacing: 0.02em;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .section {
-  padding: 12px 4px 16px;
-  border-bottom: 1px solid #111111;
+  padding: 12px 0;
+  border-bottom: 1px solid #1a1a1a;
 }
 
 .section:last-child {
@@ -41,19 +51,18 @@
 }
 
 .sectionTitle {
-  color: #7a8294;
+  margin: 0 0 8px;
+  color: #888888;
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.18em;
-  margin: 0 0 10px;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .body {
+  margin: 8px 0 0;
   color: #cccccc;
   font-size: 12px;
-  line-height: 1.65;
-  margin: 0;
+  line-height: 1.6;
 }
 
 .list {
@@ -61,28 +70,67 @@
   flex-direction: column;
   gap: 6px;
   margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.list li {
-  display: grid;
-  grid-template-columns: 14px 1fr;
-  gap: 6px;
+  padding: 0 0 0 16px;
   color: #cccccc;
   font-size: 12px;
-  line-height: 1.55;
+  line-height: 1.6;
+  list-style: square;
 }
 
-.listGlyph {
+.list li::marker {
   color: #ff8c00;
 }
 
-.code {
-  background: #111111;
+.tableWrap {
+  overflow-x: auto;
   border: 1px solid #222222;
-  padding: 0 4px;
-  color: #ff8c00;
-  font-size: 11px;
-  letter-spacing: 0.02em;
 }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.table th,
+.table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #1a1a1a;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table tr:last-child td {
+  border-bottom: 0;
+}
+
+.table th {
+  background: #0a0a0a;
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.table td {
+  color: #cccccc;
+  line-height: 1.5;
+}
+
+.table .layerCell {
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.table .numericCell {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.link {
+  color: #2196f3;
+}
+
+.link:hover {
+  color: #ff8c00;
+}
+
