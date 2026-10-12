@@ -20,13 +20,6 @@
   color: #333333;
 }
 
-.modeLive {
-  color: #00c853;
-}
-
-.modeStatic {
-  color: #ffd600;
-}
 
 .tableWrap {
   min-width: 0;
@@ -53,11 +46,18 @@
   text-overflow: ellipsis;
 }
 
-/* Clickable rows open the GradeDetailOverlay on click. Hover swaps
-   the cell background to a lighter tone and tints the name amber,
-   same cue the asset grid uses. No transitions. */
-.clickableRow {
+/* Clicking a row shows that grade in the card beside the table. */
+.clickableRow,
+.selectedRow {
   cursor: pointer;
+}
+
+.selectedRow td {
+  background: #1a1a1a;
+}
+
+.selectedRow .nameLabel {
+  color: #ff8c00;
 }
 
 .clickableRow:hover td {
@@ -138,46 +138,6 @@
   color: #666666;
   font-size: 10px;
   letter-spacing: 0.05em;
-}
-
-.classificationBadge {
-  display: inline-block;
-  padding: 2px 6px;
-  border: 1px solid #333333;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.classificationBadge[data-tone="light-sweet"] {
-  color: #00c853;
-  border-color: #00c853;
-}
-
-.classificationBadge[data-tone="light-sour"] {
-  color: #ffcc80;
-  border-color: #ffcc80;
-}
-
-.classificationBadge[data-tone="medium-sweet"] {
-  color: #a7ffeb;
-  border-color: #a7ffeb;
-}
-
-.classificationBadge[data-tone="medium-sour"] {
-  color: #ff8c00;
-  border-color: #ff8c00;
-}
-
-.classificationBadge[data-tone="heavy-sweet"] {
-  color: #b39ddb;
-  border-color: #b39ddb;
-}
-
-.classificationBadge[data-tone="heavy-sour"] {
-  color: #ff1744;
-  border-color: #ff1744;
 }
 
 .emptyState {

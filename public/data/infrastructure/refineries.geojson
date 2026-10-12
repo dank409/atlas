@@ -1,12 +1,12 @@
 {
   "type": "FeatureCollection",
   "_metadata": {
-    "source": "EDF Oil and Gas Infrastructure Mapping (OGIM) v2.7 + curated refinery supplement",
+    "source": "EDF Oil and Gas Infrastructure Mapping (OGIM) v2.7",
     "downloadDate": "2025-03-28",
-    "recordCount": 53,
+    "recordCount": 57,
     "license": "CC BY 4.0",
     "sourceUrl": "https://zenodo.org/records/15103476",
-    "notes": "OGIM refinery data filtered to Middle East region. Statuses curated from public operator disclosures and industry reference (2025). Curated supplement rows are only used when named Gulf sites are absent from OGIM."
+    "notes": "OGIM refineries in the Middle East. Six large refineries that OGIM lacks (Al Zour, Ruwais, SATORP, YASREF, Jazan, Sitra) are added from the source each record names."
   },
   "features": [
     {
@@ -26,12 +26,10 @@
         "countryName": "Egypt",
         "owner": "ALEXANDRIA PETROLEUM CO.",
         "operator": "ALEXANDRIA PETROLEUM CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 31.04917,
         "lon": 29.67108,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -55,12 +53,10 @@
         "countryName": "Egypt",
         "owner": "AMERIYA PETROLEUM REFINING CO.",
         "operator": "AMERIYA PETROLEUM REFINING CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 31.0983,
         "lon": 29.86311,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -84,12 +80,10 @@
         "countryName": "Egypt",
         "owner": "MIDDLE EAST OIL REFINERY",
         "operator": "MIDDLE EAST OIL REFINERY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 31.0225,
         "lon": 29.76528,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -113,12 +107,10 @@
         "countryName": "Egypt",
         "owner": "ASSIUT PETROLEUM REFINING CO.",
         "operator": "ASSIUT PETROLEUM REFINING CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 31.00284,
         "lon": 29.84428,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -142,12 +134,10 @@
         "countryName": "Egypt",
         "owner": "EL-NASR PETROLEUM CO.",
         "operator": "EL-NASR PETROLEUM CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 29.95729,
         "lon": 32.53276,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -171,12 +161,10 @@
         "countryName": "Egypt",
         "owner": "SUEZ PETROLEUM PROCESSING CO.",
         "operator": "SUEZ PETROLEUM PROCESSING CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 29.95863,
         "lon": 32.52024,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -200,12 +188,10 @@
         "countryName": "Egypt",
         "owner": "CAIRO PETROLEUM REFINING CO.",
         "operator": "CAIRO PETROLEUM REFINING CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 27.1962,
         "lon": 30.99116,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -229,12 +215,10 @@
         "countryName": "Egypt",
         "owner": "CAIRO PETROLEUM REFINING CO.",
         "operator": "CAIRO PETROLEUM REFINING CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 30.79348,
         "lon": 30.95761,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -258,12 +242,10 @@
         "countryName": "Egypt",
         "owner": "EL-NASR PETROLEUM CO.",
         "operator": "EL-NASR PETROLEUM CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 28.73454,
         "lon": 33.22161,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "EG"
         },
@@ -287,12 +269,10 @@
         "countryName": "Iran",
         "owner": "ABADAN OIL REFINING COMPANY",
         "operator": "ABADAN OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 30.34983,
         "lon": 48.27798,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -316,12 +296,10 @@
         "countryName": "Iran",
         "owner": "IMAM KHOMEINI OIL REFINING COMPANY",
         "operator": "IMAM KHOMEINI OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 34.00805,
         "lon": 49.47678,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -345,12 +323,10 @@
         "countryName": "Iran",
         "owner": "BANDAR ABBAS REFINING COMPANY",
         "operator": "BANDAR ABBAS REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 27.17152,
         "lon": 56.0781,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -374,12 +350,10 @@
         "countryName": "Iran",
         "owner": "ESFAHAN OIL REFINING COMPANY",
         "operator": "ESFAHAN OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 32.78134,
         "lon": 51.50631,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -403,12 +377,10 @@
         "countryName": "Iran",
         "owner": "KERMANSHAH OIL REFINING COMPANY",
         "operator": "KERMANSHAH OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 34.35255,
         "lon": 47.10413,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -432,12 +404,10 @@
         "countryName": "Iran",
         "owner": "LAVAN OIL REFINING COMPANY",
         "operator": "LAVAN OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 26.79954,
         "lon": 53.34996,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -461,12 +431,10 @@
         "countryName": "Iran",
         "owner": "PARS OIL COMPANY",
         "operator": "PARS OIL COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 35.73816,
         "lon": 51.10355,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -490,12 +458,10 @@
         "countryName": "Iran",
         "owner": "PERSIAN GULF STAR OIL COMPANY",
         "operator": "PERSIAN GULF STAR OIL COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 27.15966,
         "lon": 56.05833,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -519,12 +485,10 @@
         "countryName": "Iran",
         "owner": "SHIRAZ OIL REFINING COMPANY",
         "operator": "SHIRAZ OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 29.73499,
         "lon": 52.65466,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -548,12 +512,10 @@
         "countryName": "Iran",
         "owner": "TABRIZ OIL REFINING COMPANY",
         "operator": "TABRIZ OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 38.05921,
         "lon": 46.16122,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -577,12 +539,10 @@
         "countryName": "Iran",
         "owner": "TEHRAN OIL REFINING COMPANY",
         "operator": "TEHRAN OIL REFINING COMPANY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 35.53887,
         "lon": 51.42795,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "IR"
         },
@@ -606,12 +566,10 @@
         "countryName": "Iraq",
         "owner": "OIL REFINERIES ADMINISTRATION",
         "operator": "OIL REFINERIES ADMINISTRATION",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 34.99816,
         "lon": 43.48753,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -635,12 +593,10 @@
         "countryName": "Iraq",
         "owner": "OIL REFINERIES ADMINISTRATION",
         "operator": "OIL REFINERIES ADMINISTRATION",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 30.53828,
         "lon": 47.82224,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -664,12 +620,10 @@
         "countryName": "Iraq",
         "owner": "MIDLAND REFINERIES CO.",
         "operator": "MIDLAND REFINERIES CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 33.27492,
         "lon": 44.43236,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -693,12 +647,10 @@
         "countryName": "Iraq",
         "owner": "OIL REFINERIES ADMINISTRATION",
         "operator": "OIL REFINERIES ADMINISTRATION",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 34.07004,
         "lon": 42.36076,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -722,12 +674,10 @@
         "countryName": "Iraq",
         "owner": "OIL REFINERIES ADMINISTRATION",
         "operator": "OIL REFINERIES ADMINISTRATION",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 34.31755,
         "lon": 45.39963,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -751,12 +701,10 @@
         "countryName": "Iraq",
         "owner": "IRAQI CO. FOR OIL OPERATIONS",
         "operator": "IRAQI CO. FOR OIL OPERATIONS",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 35.52841,
         "lon": 44.33475,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -780,12 +728,10 @@
         "countryName": "Iraq",
         "owner": "OIL REFINERIES ADMINISTRATION",
         "operator": "OIL REFINERIES ADMINISTRATION",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 33.65339,
         "lon": 44.1178,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -809,12 +755,10 @@
         "countryName": "Iraq",
         "owner": "OIL REFINERIES ADMINISTRATION",
         "operator": "OIL REFINERIES ADMINISTRATION",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 35.7896,
         "lon": 43.28271,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "IQ"
         },
@@ -838,12 +782,10 @@
         "countryName": "Jordan",
         "owner": "JORDAN PETROLEUM REFINERY",
         "operator": "JORDAN PETROLEUM REFINERY",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 32.12295,
         "lon": 36.11163,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "JO"
         },
@@ -856,29 +798,28 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          48.4816,
-          28.7361
+          48.3364,
+          28.7127
         ]
       },
       "properties": {
         "id": "refinery-al-zour",
-        "name": "KNPC Al Zour Refinery",
+        "name": "Al Zour Refinery",
         "country": "KW",
         "countryName": "Kuwait",
-        "owner": "Kuwait Petroleum Corp",
-        "operator": "Kuwait National Petroleum Co",
-        "status": "operational",
+        "owner": "Kuwait Integrated Petroleum Industries Company",
+        "operator": "Kuwait Integrated Petroleum Industries Company",
         "capacityUnit": "bpd",
         "type": "refinery",
-        "lat": 28.7361,
-        "lon": 48.4816,
-        "firmsRadius_km": 5,
+        "lat": 28.7127,
+        "lon": 48.3364,
         "linkedContext": {
           "countryCode": "KW",
           "companyId": "kuwait-petroleum"
         },
-        "notes": "Supplemental refinery site retained because OGIM v2.7 does not include this facility.",
-        "capacity_bpd": 615000
+        "capacity_bpd": 615000,
+        "source": "EIA Country Analysis Brief: Kuwait (2023)",
+        "sourceDate": "2023-07"
       }
     },
     {
@@ -898,12 +839,10 @@
         "countryName": "Kuwait",
         "owner": "KUWAIT NATIONAL PETROLEUM CO.",
         "operator": "KUWAIT NATIONAL PETROLEUM CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 29.00391,
         "lon": 48.15339,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "KW",
           "companyId": "kuwait-petroleum"
@@ -928,12 +867,10 @@
         "countryName": "Kuwait",
         "owner": "KUWAIT NATIONAL PETROLEUM CO.",
         "operator": "KUWAIT NATIONAL PETROLEUM CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 29.06123,
         "lon": 48.1297,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "KW",
           "companyId": "kuwait-petroleum"
@@ -958,12 +895,10 @@
         "countryName": "Kuwait",
         "owner": "KUWAIT NATIONAL PETROLEUM CO.",
         "operator": "KUWAIT NATIONAL PETROLEUM CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 29.03122,
         "lon": 48.14654,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "KW",
           "companyId": "kuwait-petroleum"
@@ -988,12 +923,10 @@
         "countryName": "Oman",
         "owner": "OMAN REFINERY CO.",
         "operator": "OMAN REFINERY CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 23.62534,
         "lon": 58.51328,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "OM"
         },
@@ -1017,12 +950,10 @@
         "countryName": "Oman",
         "owner": "ORPC",
         "operator": "ORPC",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 24.49211,
         "lon": 56.62126,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "OM"
         }
@@ -1045,12 +976,10 @@
         "countryName": "Qatar",
         "owner": "NATIONAL OIL DISTRIBUTION CO.",
         "operator": "NATIONAL OIL DISTRIBUTION CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 24.9656,
         "lon": 51.54472,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "QA"
         },
@@ -1074,12 +1003,10 @@
         "countryName": "Saudi Arabia",
         "owner": "PETROMIN-SHELL",
         "operator": "PETROMIN-SHELL",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 27.03793,
         "lon": 49.56826,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "SA"
         },
@@ -1103,12 +1030,10 @@
         "countryName": "Saudi Arabia",
         "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
         "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 21.44784,
         "lon": 39.18671,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "SA",
           "companyId": "saudi-aramco"
@@ -1133,12 +1058,10 @@
         "countryName": "Saudi Arabia",
         "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
         "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 22.71829,
         "lon": 39.01571,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "SA",
           "companyId": "saudi-aramco"
@@ -1163,12 +1086,10 @@
         "countryName": "Saudi Arabia",
         "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
         "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 26.70243,
         "lon": 50.09207,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "SA",
           "companyId": "saudi-aramco"
@@ -1193,12 +1114,10 @@
         "countryName": "Saudi Arabia",
         "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
         "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 24.51852,
         "lon": 46.86798,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "SA",
           "companyId": "saudi-aramco"
@@ -1223,12 +1142,10 @@
         "countryName": "Saudi Arabia",
         "owner": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
         "operator": "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 23.97722,
         "lon": 38.23964,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "SA",
           "companyId": "saudi-aramco"
@@ -1253,12 +1170,10 @@
         "countryName": "Saudi Arabia",
         "owner": "SAUDI ARAMCO-MOBIL",
         "operator": "SAUDI ARAMCO-MOBIL",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 23.94383,
         "lon": 38.31537,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "SA",
           "companyId": "saudi-aramco"
@@ -1283,12 +1198,10 @@
         "countryName": "Syria",
         "owner": "BANIAS REFINING CO.",
         "operator": "BANIAS REFINING CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 35.21539,
         "lon": 35.96561,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "SY"
         },
@@ -1312,12 +1225,10 @@
         "countryName": "Syria",
         "owner": "HOMS REFINERY CO.",
         "operator": "HOMS REFINERY CO.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 34.71683,
         "lon": 36.63966,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "SY"
         },
@@ -1341,12 +1252,10 @@
         "countryName": "Turkey",
         "owner": "TURKISH PETROLEUM REFINERIES CORP.",
         "operator": "TURKISH PETROLEUM REFINERIES CORP.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 38.80291,
         "lon": 26.94137,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "TR"
         },
@@ -1370,12 +1279,10 @@
         "countryName": "Turkey",
         "owner": "TURKISH PETROLEUM REFINERIES CORP.",
         "operator": "TURKISH PETROLEUM REFINERIES CORP.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 37.87161,
         "lon": 41.14247,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "TR"
         },
@@ -1399,12 +1306,10 @@
         "countryName": "Turkey",
         "owner": "TURKISH PETROLEUM REFINERIES CORP.",
         "operator": "TURKISH PETROLEUM REFINERIES CORP.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 40.75063,
         "lon": 29.77044,
-        "firmsRadius_km": 5,
         "linkedContext": {
           "countryCode": "TR"
         },
@@ -1428,12 +1333,10 @@
         "countryName": "Turkey",
         "owner": "TURKISH PETROLEUM REFINERIES CORP.",
         "operator": "TURKISH PETROLEUM REFINERIES CORP.",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 39.74427,
         "lon": 33.4601,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "TR"
         },
@@ -1457,12 +1360,10 @@
         "countryName": "Turkey",
         "owner": "ANADOLU TASFIYEHANESI AS",
         "operator": "ANADOLU TASFIYEHANESI AS",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 36.82007,
         "lon": 34.70063,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "TR"
         },
@@ -1486,12 +1387,10 @@
         "countryName": "Turkey",
         "owner": "ERSAN PETROL SANAYII AS",
         "operator": "ERSAN PETROL SANAYII AS",
-        "status": "operational",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 37.40036,
         "lon": 37.14912,
-        "firmsRadius_km": 2,
         "linkedContext": {
           "countryCode": "TR"
         },
@@ -1504,8 +1403,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          54.0894,
-          24.1108
+          52.7278,
+          24.1063
         ]
       },
       "properties": {
@@ -1513,20 +1412,19 @@
         "name": "Ruwais Refinery",
         "country": "AE",
         "countryName": "United Arab Emirates",
-        "owner": "Abu Dhabi National Oil Co",
-        "operator": "ADNOC Refining",
-        "status": "operational",
+        "owner": "Abu Dhabi National Oil Company",
+        "operator": "Abu Dhabi National Oil Company",
         "capacityUnit": "bpd",
         "type": "refinery",
-        "lat": 24.1108,
-        "lon": 54.0894,
-        "firmsRadius_km": 5,
+        "lat": 24.1063,
+        "lon": 52.7278,
         "linkedContext": {
           "countryCode": "AE",
           "companyId": "adnoc"
         },
-        "notes": "Supplemental refinery site retained because OGIM v2.7 does not include this facility.",
-        "capacity_bpd": 837000
+        "capacity_bpd": 817000,
+        "source": "EIA Country Analysis Brief: United Arab Emirates (2026)",
+        "sourceDate": "2026-07"
       }
     },
     {
@@ -1546,16 +1444,131 @@
         "countryName": "Yemen",
         "owner": "ADEN REFINERY CO.",
         "operator": "ADEN REFINERY CO.",
-        "status": "unknown",
         "capacityUnit": "bpd",
         "type": "refinery",
         "lat": 12.75074,
         "lon": 44.8822,
-        "firmsRadius_km": 3,
         "linkedContext": {
           "countryCode": "YE"
         },
         "capacity_bpd": 130000
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-jubail-satorp",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          49.4991,
+          26.9546
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-jubail-satorp",
+        "name": "Jubail (SATORP) Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "Saudi Aramco-TotalEnergies",
+        "operator": "Saudi Aramco-TotalEnergies",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.9546,
+        "lon": 49.4991,
+        "linkedContext": {
+          "countryCode": "SA"
+        },
+        "capacity_bpd": 460000,
+        "source": "EIA Country Analysis Brief: Saudi Arabia (2024)",
+        "sourceDate": "2024-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-yanbu-yasref",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          38.2844,
+          23.9611
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-yanbu-yasref",
+        "name": "Yanbu (YASREF) Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "Saudi Aramco-Sinopec",
+        "operator": "Saudi Aramco-Sinopec",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 23.9611,
+        "lon": 38.2844,
+        "linkedContext": {
+          "countryCode": "SA"
+        },
+        "capacity_bpd": 430000,
+        "source": "EIA Country Analysis Brief: Saudi Arabia (2024)",
+        "sourceDate": "2024-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-sa-jazan",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          42.3838,
+          17.2838
+        ]
+      },
+      "properties": {
+        "id": "refinery-sa-jazan",
+        "name": "Jazan Refinery",
+        "country": "SA",
+        "countryName": "Saudi Arabia",
+        "owner": "Saudi Aramco",
+        "operator": "Saudi Aramco",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 17.2838,
+        "lon": 42.3838,
+        "linkedContext": {
+          "countryCode": "SA",
+          "companyId": "saudi-aramco"
+        },
+        "capacity_bpd": 400000,
+        "source": "EIA Country Analysis Brief: Saudi Arabia (2024)",
+        "sourceDate": "2024-10"
+      }
+    },
+    {
+      "type": "Feature",
+      "id": "refinery-bh-sitra",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          50.6094,
+          26.1108
+        ]
+      },
+      "properties": {
+        "id": "refinery-bh-sitra",
+        "name": "Sitra Refinery",
+        "country": "BH",
+        "countryName": "Bahrain",
+        "owner": "Bapco",
+        "operator": "Bapco",
+        "capacityUnit": "bpd",
+        "type": "refinery",
+        "lat": 26.1108,
+        "lon": 50.6094,
+        "linkedContext": {
+          "countryCode": "BH"
+        },
+        "capacity_bpd": 380000,
+        "source": "Wikipedia: Bahrain Petroleum Company",
+        "sourceDate": "2026-10"
       }
     }
   ]

@@ -1,6 +1,5 @@
 .glossary {
-  padding: 14px 18px 24px;
-  max-width: 880px;
+  padding: 12px;
 }
 
 .header {
@@ -21,26 +20,51 @@
 }
 
 .count {
-  color: #4e5666;
+  color: #666666;
   font-size: 10px;
   letter-spacing: 0.08em;
 }
 
+/* Short entries read best in narrow columns, so the list flows into as
+   many as the page width allows instead of one stretched line each. */
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
   margin: 0;
   padding: 0;
+  columns: 340px;
+  column-gap: 24px;
+  column-rule: 1px solid #1a1a1a;
 }
 
-.entry {
-  border-bottom: 1px solid #111111;
-  padding-bottom: 10px;
+.entry,
+.entryHighlighted {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #1a1a1a;
+  break-inside: avoid;
 }
 
-.entry:last-child {
-  border-bottom: 0;
+/* The term a link elsewhere in the app pointed at. */
+.entryHighlighted {
+  padding: 8px;
+  border: 1px solid #ff8c00;
+}
+
+.seeAlso {
+  display: block;
+  margin-top: 6px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #555555;
+  color: #cccccc;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.seeAlso:hover {
+  border-bottom-color: #ff8c00;
+  color: #ff8c00;
 }
 
 .termRow {
@@ -50,20 +74,20 @@
 }
 
 .term {
-  color: #e8ecf2;
+  color: #e0e0e0;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
 }
 
 .category {
-  color: #7a8294;
+  color: #888888;
   font-size: 9px;
   letter-spacing: 0.14em;
 }
 
 .definition {
-  color: #b8bfcc;
+  color: #cccccc;
   font-size: 11px;
   line-height: 1.6;
   margin: 4px 0 0;

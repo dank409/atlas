@@ -1,443 +1,441 @@
-import { render, waitFor } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type {
-  ChokepointAsset,
-  FieldAsset,
-  RefineryAsset,
-  TerminalAsset
-} from "../../types/Infrastructure";
-import type { MapDisplaySettings } from "../../types/mapDisplaySettings";
+import { makeField, makePipeline, makeRefinery, makeTerminal } from "../../test/fixtures";
+import type { InfrastructureAsset } from "../../types/Infrastructure";
+import { REGION_BOUNDS, getMaxBounds } from "./mapRegion";
 
+// Minimal stand-in for mapbox-gl's Map: records sources, layers and paint
+// writes so the tests can assert what MapView asked the map to draw.
 const mapboxMock = vi.hoisted(() => {
-  const state = {
-    latestMapInstance: null as null | InstanceType<typeof MockMap>,
-    mapConstructor: vi.fn()
-  };
+  type Handler = (event?: unknown) => void;
+  type StoredLayer = { filter?: unknown; id: string; layout: Record<string, unknown>; paint: Record<string, unknown> };
 
   class MockMap {
-    addControl = vi.fn();
-    addImage = vi.fn();
-    addLayer = vi.fn((layer: { id: string }) => {
-      this.layers.set(layer.id, layer);
-    });
-    addSource = vi.fn((id: string, source: { data: unknown }) => {
-      const storedSource = {
-        ...source,
-        setData: vi.fn((data: unknown) => {
-          storedSource.data = data;
-        })
-      };
-      this.sources.set(id, storedSource);
-    });
-    hasImage = vi.fn(() => false);
+    static latest: MockMap | null = null;
+    static constructed = 0;
+
+    handlers: Record<string, Handler[]> = {};
+    layers = new Map<string, StoredLayer>();
+    sources = new Map<string, { data: { features: unknown[] }; setData: (data: { features: unknown[] }) => void }>();
+    renderedFeatures: unknown[] = [];
+    canvas = { style: { cursor: "" } };
     dragRotate = { disable: vi.fn() };
+    touchZoomRotate = { disableRotation: vi.fn() };
+    addControl = vi.fn();
+    images = new Map<string, { data: Uint8ClampedArray; width: number }>();
     fitBounds = vi.fn();
     flyTo = vi.fn();
-    getBearing = vi.fn(() => 0);
-    getCanvas = vi.fn(() => ({ style: {} }));
-    getCenter = vi.fn(() => ({ lat: 25.6, lng: 50.4 }));
-    getLayer = vi.fn((id: string) => this.layers.get(id));
-    getPitch = vi.fn(() => 0);
-    getSource = vi.fn((id: string) => this.sources.get(id));
-    getZoom = vi.fn(() => 6.8);
-    handlers: Record<string, Array<(...args: unknown[]) => void>> = {};
-    isStyleLoaded = vi.fn(() => true);
-    jumpTo = vi.fn();
-    layers = new Map<string, { id: string; layout?: Record<string, unknown>; paint?: Record<string, unknown> }>();
-    queryRenderedFeatures = vi.fn(() => []);
     remove = vi.fn();
     resize = vi.fn();
-    setFilter = vi.fn();
-    setLayoutProperty = vi.fn((layerId: string, prop: string, value: unknown) => {
-      const layer = this.layers.get(layerId);
-      if (layer) {
-        layer.layout = { ...(layer.layout ?? {}), [prop]: value };
-      }
-    });
-    setPaintProperty = vi.fn((layerId: string, prop: string, value: unknown) => {
-      const layer = this.layers.get(layerId);
-      if (layer) {
-        layer.paint = { ...(layer.paint ?? {}), [prop]: value };
-      }
-    });
-    setProjection = vi.fn();
+    setMaxBounds = vi.fn();
     setStyle = vi.fn((style: string) => {
       this.style = style;
       this.layers.clear();
       this.sources.clear();
+      this.images.clear();
       this.emit("style.load");
     });
-    sources = new Map<string, { data: unknown; setData: ReturnType<typeof vi.fn> }>();
     style: string;
-    touchZoomRotate = { disableRotation: vi.fn() };
+    options: { bounds?: unknown; maxBounds?: unknown; style: string };
 
-    constructor(options: { style: string }) {
+    constructor(options: { bounds?: unknown; maxBounds?: unknown; style: string }) {
+      this.options = options;
       this.style = options.style;
-      state.mapConstructor(options);
-      state.latestMapInstance = this;
+      MockMap.latest = this;
+      MockMap.constructed += 1;
     }
 
-    emit(type: string) {
-      this.handlers[type]?.forEach((handler) => handler());
-    }
-
-    on(type: string, layerOrHandler: unknown, maybeHandler?: unknown) {
-      const handler =
-        typeof layerOrHandler === "function"
-          ? (layerOrHandler as (...args: unknown[]) => void)
-          : (maybeHandler as (...args: unknown[]) => void);
-
-      this.handlers[type] ??= [];
-      this.handlers[type].push(handler);
-
-      if (type === "load" || type === "style.load") {
-        queueMicrotask(() => {
-          handler();
-        });
-      }
-
+    on(type: string, handler: Handler) {
+      (this.handlers[type] ??= []).push(handler);
       return this;
     }
 
-    once(type: string, handler: (...args: unknown[]) => void) {
-      // Mapbox's `once` fires the handler at most one time. In the
-      // mock, `style.load` is emitted via `queueMicrotask` from the
-      // constructor path, so scheduling the same way here keeps the
-      // test's timing identical to the real lifecycle.
-      if (type === "load" || type === "style.load") {
-        queueMicrotask(() => {
-          handler();
-        });
-      } else {
-        const wrapper = (...args: unknown[]) => {
-          handler(...args);
-        };
-        this.handlers[type] ??= [];
-        this.handlers[type].push(wrapper);
-      }
-      return this;
+    emit(type: string, event?: unknown) {
+      this.handlers[type]?.forEach((handler) => handler(event));
     }
 
-    off() {
-      // Mock tolerates `.off(...)` calls without tracking them; the
-      // test isn't asserting listener removal, only that it doesn't
-      // throw when React cleans up mid-effect.
-      return this;
+    addImage(id: string, image: { data: Uint8ClampedArray; width: number }) {
+      this.images.set(id, image);
+    }
+
+    addSource(id: string, source: { data: { features: unknown[] } }) {
+      const stored = {
+        data: source.data,
+        setData: (data: { features: unknown[] }) => {
+          stored.data = data;
+        }
+      };
+      this.sources.set(id, stored);
+    }
+
+    addLayer(layer: { filter?: unknown; id: string; layout?: Record<string, unknown>; paint?: Record<string, unknown> }) {
+      this.layers.set(layer.id, { ...layer, layout: { ...layer.layout }, paint: { ...layer.paint } });
+    }
+
+    getSource(id: string) {
+      return this.sources.get(id);
+    }
+
+    getLayer(id: string) {
+      return this.layers.get(id);
+    }
+
+    getCanvas() {
+      return this.canvas;
+    }
+
+    getZoom() {
+      return 4.3;
+    }
+
+    getStyle() {
+      return { layers: Array.from(this.layers.values()) };
+    }
+
+    queryRenderedFeatures() {
+      return this.renderedFeatures;
+    }
+
+    setFilter(id: string, filter: unknown) {
+      this.layers.get(id)!.filter = filter;
+    }
+
+    setPaintProperty(id: string, property: string, value: unknown) {
+      this.layers.get(id)!.paint[property] = value;
+    }
+
+    setLayoutProperty(id: string, property: string, value: unknown) {
+      this.layers.get(id)!.layout[property] = value;
     }
   }
 
   class MockLngLatBounds {
-    extend = vi.fn();
+    points: unknown[] = [];
+
+    extend(point: unknown) {
+      this.points.push(point);
+      return this;
+    }
   }
 
-  return {
-    MockLngLatBounds,
-    MockMap,
-    state
-  };
+  return { MockLngLatBounds, MockMap };
 });
 
 vi.mock("mapbox-gl", () => ({
   default: {
+    LngLatBounds: mapboxMock.MockLngLatBounds,
     Map: mapboxMock.MockMap,
-    NavigationControl: vi.fn(),
-    accessToken: "",
-    LngLatBounds: mapboxMock.MockLngLatBounds
+    NavigationControl: class {},
+    accessToken: ""
   }
 }));
 
-import { MapView } from "./MapView";
+const { MapView } = await import("./MapView");
 
-const refineryAsset: RefineryAsset = {
-  assetKind: "refinery",
-  capacity_bpd: 837000,
-  capacityUnit: "bpd",
-  country: "AE",
-  countryName: "United Arab Emirates",
-  datasetId: "refineries",
-  id: "refinery-ruwais",
-  lat: 24.1108,
-  lon: 54.0894,
-  name: "Ruwais Refinery",
-  operator: "ADNOC Refining",
-  owner: "ADNOC",
-  status: "operational",
-  _metadata: {
-    downloadDate: "2026-04-14",
-    source: "OGIM"
-  }
-};
+const ruwais = makeRefinery();
+const ghawar = makeField();
+const eastWest = makePipeline();
+const ASSETS: InfrastructureAsset[] = [ruwais, ghawar, eastWest];
 
-const fieldAsset: FieldAsset = {
-  assetKind: "field",
-  basin: "Rub' al Khali",
-  country: "SA",
-  countryName: "Saudi Arabia",
-  datasetId: "fields",
-  fieldType: "oil",
-  id: "field-shaybah",
-  lat: 22.5,
-  lon: 53.9,
-  name: "Shaybah Field",
-  operator: "Saudi Aramco",
-  production_bpd: 1000000,
-  reserves_mmboe: 14700,
-  status: "operating",
-  _metadata: {
-    downloadDate: "2026-04-14",
-    source: "GEM"
-  }
-};
+type MapViewProps = Parameters<typeof MapView>[0];
 
-const terminalAsset: TerminalAsset = {
-  assetKind: "terminal",
-  capacity_mtpa: 15.0,
-  country: "QA",
-  countryName: "Qatar",
-  datasetId: "terminals",
-  id: "terminal-ras-laffan",
-  lat: 25.9167,
-  lon: 51.55,
-  name: "Ras Laffan LNG Terminal",
-  status: "operating",
-  terminalRole: "export",
-  terminalType: "lng_terminal",
-  _metadata: {
-    downloadDate: "2026-04-14",
-    source: "GEM"
-  }
-};
+function buildProps(overrides: Partial<MapViewProps> = {}): MapViewProps {
+  return {
+    basemapMode: "dark",
+    focus: null,
+    hasError: false,
+    isLoading: false,
+    isVisible: true,
+    onClearSelection: vi.fn(),
+    onSelectAsset: vi.fn(),
+    onSelectBasemap: vi.fn(),
+    onShowAll: vi.fn(),
+    selectedAssetId: null,
+    showUnmappedRoutes: true,
+    visibleAssets: ASSETS,
+    ...overrides
+  };
+}
 
-const CUSTOM_DISPLAY_SETTINGS: MapDisplaySettings = {
-  pointSize: 4,
-  sizeBy: "uniform",
-  colorBy: "status",
-  showLabels: true
-};
+function renderMap(overrides: Partial<MapViewProps> = {}) {
+  const props = buildProps(overrides);
+  const view = render(<MapView {...props} />);
+  const map = mapboxMock.MockMap.latest!;
+
+  act(() => map.emit("style.load"));
+
+  return {
+    map,
+    props,
+    rerender: (next: Partial<MapViewProps>) => view.rerender(<MapView {...props} {...next} />),
+    unmount: view.unmount
+  };
+}
+
+function features(map: InstanceType<typeof mapboxMock.MockMap>, sourceId: string) {
+  return map.getSource(sourceId)!.data.features as Array<{ properties: Record<string, unknown> }>;
+}
 
 describe("MapView", () => {
   beforeEach(() => {
-    vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "pk.test-token");
-    mapboxMock.state.latestMapInstance = null;
-    mapboxMock.state.mapConstructor.mockClear();
+    vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "pk.test");
+    mapboxMock.MockMap.latest = null;
+    mapboxMock.MockMap.constructed = 0;
   });
 
-  it("switches basemap style without rebuilding the map instance", async () => {
-    const chokepoint: ChokepointAsset = {
-      assetKind: "chokepoint",
-      country: "AE",
-      countryName: "United Arab Emirates",
-      datasetId: "chokepoints",
+  it("asks for a token instead of creating a map when none is configured", () => {
+    vi.stubEnv("VITE_MAPBOX_ACCESS_TOKEN", "");
+    render(<MapView {...buildProps()} />);
+
+    expect(screen.getByText(/MAPBOX TOKEN REQUIRED/)).toBeInTheDocument();
+    expect(mapboxMock.MockMap.constructed).toBe(0);
+  });
+
+  it("shows an error state instead of a map when the data failed to load", () => {
+    render(<MapView {...buildProps({ hasError: true, visibleAssets: [] })} />);
+
+    expect(screen.getByText("MAP DATA UNAVAILABLE")).toBeInTheDocument();
+    expect(mapboxMock.MockMap.constructed).toBe(0);
+  });
+
+  it("adds one source per layer and sorts assets into them", () => {
+    const { map } = renderMap();
+
+    expect(Array.from(map.sources.keys())).toEqual(["pipelines", "fields", "terminals", "refineries"]);
+    expect(features(map, "refineries")).toHaveLength(1);
+    expect(features(map, "fields")).toHaveLength(1);
+    expect(features(map, "pipelines")).toHaveLength(1);
+    expect(features(map, "terminals")).toHaveLength(0);
+  });
+
+  it("registers a marker icon for each shaped layer before adding the layers", () => {
+    const { map } = renderMap();
+
+    expect(Array.from(map.images.keys())).toEqual(["atlas-refinery", "atlas-lng-terminal"]);
+    expect(map.getLayer("refineries-layer")).toBeDefined();
+  });
+
+  it("tags each feature with the energy type and operating flag the styles read", () => {
+    const proposedGasLine = makePipeline({ hydrocarbon: "natural_gas", id: "pipeline-proposed", status: "proposed" });
+    const importTerminal = makeTerminal({ terminalRole: "import" });
+    const { map } = renderMap({ visibleAssets: [ruwais, proposedGasLine, importTerminal] });
+
+    expect(features(map, "refineries")[0].properties).toMatchObject({ energy: "oil", isOperating: true, sizeValue: 837000 });
+    expect(features(map, "pipelines")[0].properties).toMatchObject({ energy: "gas", isOperating: false });
+    expect(features(map, "terminals")[0].properties).toMatchObject({ energy: "gas", terminalRole: "import" });
+  });
+
+  it("draws a pipeline's mapped stretches and its long straight joins as separate features", () => {
+    const partlyMapped = makePipeline({
       geometry: {
-        type: "LineString",
         coordinates: [
-          [54.9, 25.7],
-          [55.1, 25.8]
-        ]
+          [49.0, 26.0],
+          [49.1, 26.0],
+          [49.2, 26.0],
+          [39.2, 26.0]
+        ],
+        type: "LineString"
       },
-      id: "cp-hormuz",
-      linkedContext: {
-        benchmarkRefs: ["BRN", "WTI"],
-        countryCode: "AE"
-      },
-      name: "Strait Of Hormuz",
-      status: "strategic",
-      transitVolume_mbpd: 20.5,
-      _metadata: {
-        downloadDate: "2026-04-13",
-        source: "Curated chokepoints"
-      }
-    };
-
-    const { rerender } = render(
-      <MapView
-        activeDatasetIds={["chokepoints"]}
-        hasError={false}
-        basemapMode="dark"
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[chokepoint]}
-      />
-    );
-
-    await waitFor(() => {
-      expect(mapboxMock.state.mapConstructor).toHaveBeenCalledTimes(1);
+      id: "pipeline-partly-mapped"
     });
+    const { map } = renderMap({ visibleAssets: [partlyMapped] });
 
-    rerender(
-      <MapView
-        activeDatasetIds={["chokepoints"]}
-        hasError={false}
-        basemapMode="satellite"
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[chokepoint]}
-      />
-    );
-
-    await waitFor(() => {
-      expect(mapboxMock.state.latestMapInstance?.setStyle).toHaveBeenCalledTimes(1);
-    });
-
-    expect(mapboxMock.state.mapConstructor).toHaveBeenCalledTimes(1);
-    expect(mapboxMock.state.latestMapInstance?.jumpTo).toHaveBeenCalledWith({
-      bearing: 0,
-      center: { lat: 25.6, lng: 50.4 },
-      pitch: 0,
-      zoom: 6.8
-    });
-  });
-
-  it("applies display settings after style load and reapplies them after a style swap", async () => {
-    const { rerender } = render(
-      <MapView
-        activeDatasetIds={["refineries", "fields", "terminals"]}
-        basemapMode="dark"
-        hasError={false}
-        mapDisplaySettings={CUSTOM_DISPLAY_SETTINGS}
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[refineryAsset, fieldAsset, terminalAsset]}
-      />
-    );
-
-    await waitFor(() => {
-      expect(
-        mapboxMock.state.latestMapInstance?.layers.get("fields-label-layer")?.layout?.visibility
-      ).toBe("visible");
-    });
-
-    expect(
-      mapboxMock.state.latestMapInstance?.layers.get("fields-layer")?.paint?.["circle-color"]
-    ).toEqual([
-      "match",
-      ["get", "status"],
-      "operational",
-      "#00C853",
-      "operating",
-      "#00C853",
-      "planned_startup",
-      "#FF8C00",
-      "planned_maintenance",
-      "#FFD600",
-      "unplanned_incident",
-      "#FF1744",
-      "construction",
-      "#2196F3",
-      "unknown",
-      "#666666",
-      "#555555"
-    ]);
-
-    rerender(
-      <MapView
-        activeDatasetIds={["refineries", "fields", "terminals"]}
-        basemapMode="satellite"
-        hasError={false}
-        mapDisplaySettings={CUSTOM_DISPLAY_SETTINGS}
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[refineryAsset, fieldAsset, terminalAsset]}
-      />
-    );
-
-    await waitFor(() => {
-      expect(
-        mapboxMock.state.latestMapInstance?.layers.get("fields-label-layer")?.layout?.visibility
-      ).toBe("visible");
-    });
-    expect(
-      mapboxMock.state.latestMapInstance?.layers.get("fields-layer")?.paint?.["circle-color"]
-    ).toEqual([
-      "match",
-      ["get", "status"],
-      "operational",
-      "#00C853",
-      "operating",
-      "#00C853",
-      "planned_startup",
-      "#FF8C00",
-      "planned_maintenance",
-      "#FFD600",
-      "unplanned_incident",
-      "#FF1744",
-      "construction",
-      "#2196F3",
-      "unknown",
-      "#666666",
-      "#555555"
+    expect(features(map, "pipelines").map((feature) => feature.properties)).toEqual([
+      expect.objectContaining({ id: "pipeline-partly-mapped", isRouteMapped: true }),
+      expect.objectContaining({ id: "pipeline-partly-mapped", isRouteMapped: false })
     ]);
   });
 
-  it("includes reserves in the fields GeoJSON source for reserves sizing", async () => {
-    render(
-      <MapView
-        activeDatasetIds={["fields"]}
-        basemapMode="dark"
-        hasError={false}
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[fieldAsset]}
-      />
-    );
+  it("hides the dashed joins, and takes them out of hover and click, when asked to", () => {
+    const { map, rerender } = renderMap();
 
-    await waitFor(() => {
-      const fieldsSource = mapboxMock.state.latestMapInstance?.sources.get("fields");
-      expect(fieldsSource).toBeDefined();
-      expect(
-        (fieldsSource?.data as { features: Array<{ properties: { reserves_mmboe?: number } }> })
-          .features[0]?.properties.reserves_mmboe
-      ).toBe(14700);
-    });
+    expect(map.getLayer("pipelines-schematic-layer")!.layout.visibility).toBe("visible");
+    expect(map.getLayer("pipelines-hit-layer")!.filter).toBeNull();
+
+    rerender({ showUnmappedRoutes: false });
+
+    expect(map.getLayer("pipelines-schematic-layer")!.layout.visibility).toBe("none");
+    expect(map.getLayer("pipelines-hit-layer")!.filter).toEqual(["==", ["get", "isRouteMapped"], true]);
+    // A selected pipeline is still drawn whole.
+    expect(map.getLayer("pipelines-selected-layer")!.layout.visibility).toBeUndefined();
   });
 
-  it("keeps asset labels hidden while FIRMS mode is active", async () => {
-    const { rerender } = render(
-      <MapView
-        activeDatasetIds={["refineries", "fields", "terminals"]}
-        basemapMode="firms"
-        hasError={false}
-        mapDisplaySettings={{ ...CUSTOM_DISPLAY_SETTINGS, showLabels: false }}
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[refineryAsset, fieldAsset, terminalAsset]}
-      />
+  it("pushes new data to the sources when the visible assets change", () => {
+    const { map, rerender } = renderMap();
+
+    rerender({ visibleAssets: [ruwais] });
+
+    expect(features(map, "refineries")).toHaveLength(1);
+    expect(features(map, "fields")).toHaveLength(0);
+    expect(features(map, "pipelines")).toHaveLength(0);
+  });
+
+  it("offers to show everything when nothing is visible, but not while data is loading", async () => {
+    const user = userEvent.setup();
+    const { props, rerender } = renderMap({ isLoading: true, visibleAssets: [] });
+
+    expect(screen.queryByText("NO ASSETS VISIBLE")).not.toBeInTheDocument();
+
+    rerender({ isLoading: false, visibleAssets: [] });
+    await user.click(screen.getByRole("button", { name: "SHOW ALL" }));
+
+    expect(props.onShowAll).toHaveBeenCalledTimes(1);
+  });
+
+  it("rings the selected point asset, dims the rest and flies to it", () => {
+    const { map, rerender } = renderMap();
+
+    rerender({ selectedAssetId: ruwais.id });
+
+    expect(map.getLayer("refineries-selected-layer")!.filter).toEqual(["==", ["get", "id"], ruwais.id]);
+    expect(map.getLayer("fields-layer")!.paint["circle-opacity"]).toEqual([
+      "case",
+      ["==", ["get", "id"], ruwais.id],
+      1,
+      0.5
+    ]);
+    expect(map.flyTo).toHaveBeenCalledWith(expect.objectContaining({ center: [ruwais.lon, ruwais.lat], zoom: 6.5 }));
+  });
+
+  it("fits the camera to a selected pipeline's full route", () => {
+    const { map, rerender } = renderMap();
+
+    rerender({ selectedAssetId: eastWest.id });
+
+    expect(map.getLayer("pipelines-selected-layer")!.filter).toEqual(["==", ["get", "id"], eastWest.id]);
+    expect(map.fitBounds).toHaveBeenCalledTimes(1);
+    expect(map.flyTo).not.toHaveBeenCalled();
+  });
+
+  it("restores resting opacity when the selection clears", () => {
+    const { map, rerender } = renderMap({ selectedAssetId: ruwais.id });
+
+    rerender({ selectedAssetId: null });
+
+    expect(map.getLayer("refineries-layer")!.paint["icon-opacity"]).toEqual(["case", ["get", "isOperating"], 1, 0.45]);
+    expect(map.getLayer("refineries-selected-layer")!.filter).toEqual(["==", ["get", "id"], ""]);
+  });
+
+  it("holds the camera while hidden and moves once when shown again", () => {
+    const { map, rerender } = renderMap({ isVisible: false });
+
+    rerender({ isVisible: false, selectedAssetId: ruwais.id });
+    expect(map.flyTo).not.toHaveBeenCalled();
+    // The highlight is still applied so it is right when the map reappears.
+    expect(map.getLayer("refineries-selected-layer")!.filter).toEqual(["==", ["get", "id"], ruwais.id]);
+
+    rerender({ isVisible: true, selectedAssetId: ruwais.id });
+    expect(map.flyTo).toHaveBeenCalledTimes(1);
+
+    rerender({ isVisible: false, selectedAssetId: ruwais.id });
+    rerender({ isVisible: true, selectedAssetId: ruwais.id });
+    expect(map.flyTo).toHaveBeenCalledTimes(1);
+  });
+
+  it("opens on the region and cannot be zoomed out or panned far beyond it", () => {
+    const { map } = renderMap();
+
+    expect(map.options.bounds).toEqual(REGION_BOUNDS);
+    // jsdom gives the panel no size, so the limit is the one for a square panel.
+    expect(map.options.maxBounds).toEqual(getMaxBounds(0, 0));
+  });
+
+  it("frames what a filter narrows to, and returns to the region when the filter clears", () => {
+    const iraq = { bounds: [[39, 29], [48, 37]] as [[number, number], [number, number]], id: "IQ|" };
+    const { map, rerender } = renderMap();
+
+    expect(map.fitBounds).not.toHaveBeenCalled();
+
+    rerender({ focus: iraq });
+    expect(map.fitBounds).toHaveBeenLastCalledWith(iraq.bounds, expect.objectContaining({ maxZoom: 8 }));
+
+    // Same filter, new object: no second move.
+    rerender({ focus: { ...iraq } });
+    expect(map.fitBounds).toHaveBeenCalledTimes(1);
+
+    rerender({ focus: null });
+    expect(map.fitBounds).toHaveBeenLastCalledWith(REGION_BOUNDS, expect.anything());
+  });
+
+  it("waits until the map is shown before framing a filter set from another view", () => {
+    const iraq = { bounds: [[39, 29], [48, 37]] as [[number, number], [number, number]], id: "IQ|" };
+    const { map, rerender } = renderMap({ isVisible: false });
+
+    rerender({ focus: iraq, isVisible: false });
+    expect(map.fitBounds).not.toHaveBeenCalled();
+
+    rerender({ focus: iraq, isVisible: true });
+    expect(map.fitBounds).toHaveBeenCalledTimes(1);
+  });
+
+  it("returns to the opening view from RESET VIEW", async () => {
+    const user = userEvent.setup();
+    const { map } = renderMap();
+
+    await user.click(screen.getByRole("button", { name: "RESET VIEW" }));
+
+    expect(map.fitBounds).toHaveBeenCalledWith(
+      [
+        [25, 12],
+        [63, 42]
+      ],
+      expect.anything()
     );
+  });
 
-    await waitFor(() => {
-      expect(mapboxMock.state.latestMapInstance?.layers.get("refineries-layer")).toBeDefined();
-    });
+  it("selects the asset under a click and clears the selection on an empty click", () => {
+    const { map, props } = renderMap();
 
-    rerender(
-      <MapView
-        activeDatasetIds={["refineries", "fields", "terminals"]}
-        basemapMode="firms"
-        hasError={false}
-        mapDisplaySettings={CUSTOM_DISPLAY_SETTINGS}
-        onClearSelection={vi.fn()}
-        onSelectAsset={vi.fn()}
-        onSelectBasemap={vi.fn()}
-        selectedAssetId={null}
-        visibleAssets={[refineryAsset, fieldAsset, terminalAsset]}
-      />
-    );
+    map.renderedFeatures = [{ properties: { id: ghawar.id } }];
+    act(() => map.emit("click", { point: { x: 10, y: 10 } }));
+    expect(props.onSelectAsset).toHaveBeenCalledWith(ghawar);
 
-    await waitFor(() => {
-      expect(
-        mapboxMock.state.latestMapInstance?.layers.get("refineries-label-layer")?.layout?.visibility
-      ).toBe("none");
-    });
+    map.renderedFeatures = [];
+    act(() => map.emit("click", { point: { x: 10, y: 10 } }));
+    expect(props.onClearSelection).toHaveBeenCalledTimes(1);
+  });
+
+  it("shows a hover card naming the asset, its type and its energy, and removes it on mouse out", () => {
+    const { map } = renderMap();
+
+    map.renderedFeatures = [{ properties: { id: eastWest.id } }];
+    act(() => map.emit("mousemove", { point: { x: 40, y: 60 } }));
+
+    expect(screen.getByText(eastWest.name)).toBeInTheDocument();
+    expect(screen.getByText("PIPELINE · CRUDE OIL")).toBeInTheDocument();
+    expect(map.getCanvas().style.cursor).toBe("pointer");
+    expect(map.getLayer("pipelines-hover-layer")!.filter).toEqual(["==", ["get", "id"], eastWest.id]);
+
+    act(() => map.emit("mouseout"));
+
+    expect(screen.queryByText(eastWest.name)).not.toBeInTheDocument();
+    expect(map.getLayer("pipelines-hover-layer")!.filter).toEqual(["==", ["get", "id"], ""]);
+  });
+
+  it("does not reset the style on first render, and rebuilds icons and layers after a basemap swap", async () => {
+    const user = userEvent.setup();
+    const { map, props, rerender } = renderMap({ selectedAssetId: ruwais.id });
+
+    expect(map.setStyle).not.toHaveBeenCalled();
+
+    await user.click(screen.getByRole("button", { name: "SAT" }));
+    expect(props.onSelectBasemap).toHaveBeenCalledWith("satellite");
+
+    act(() => rerender({ basemapMode: "satellite", selectedAssetId: ruwais.id }));
+
+    expect(map.setStyle).toHaveBeenCalledWith("mapbox://styles/mapbox/satellite-v9");
+    expect(map.images.size).toBe(2);
+    expect(features(map, "refineries")).toHaveLength(1);
+    // Selection survives the swap.
+    expect(map.getLayer("refineries-selected-layer")!.filter).toEqual(["==", ["get", "id"], ruwais.id]);
+  });
+
+  it("removes the map on unmount", () => {
+    const { map, unmount } = renderMap();
+
+    unmount();
+
+    expect(map.remove).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,153 +1,205 @@
+import { useEffect, useRef } from "react";
+import type { DatasetId } from "../../types/Infrastructure";
+import type { NavigateReference } from "../../types/View";
 import styles from "./GlossaryPanel.module.css";
+
+/** Where an entry can send the reader to see the term in use. */
+type SeeAlso =
+  | { kind: "table"; datasetId: DatasetId; label: string }
+  | { kind: "reference"; tab: "countries" | "grades"; label: string };
 
 interface GlossaryEntry {
   term: string;
   definition: string;
-  category: "market" | "physical" | "geopol" | "contract";
+  category: "unit" | "infrastructure" | "crude";
+  seeAlso?: SeeAlso;
 }
 
-/**
- * Curated glossary of oil-market terms a geopol analyst will hit
- * inside Atlas but isn't necessarily fluent in. Intentionally short
- * entries — an expanded definition belongs in a textbook, not a
- * terminal. Terms are sourced from ICE, CME, Platts, and EIA
- * reference material, paraphrased for brevity.
- */
+interface GlossaryPanelProps {
+  /** Term to scroll to and outline, when the reader arrived from a link. */
+  highlightedTerm?: string | null;
+  onNavigate: NavigateReference;
+  /** Open the TABLE view on one layer. */
+  onOpenTable: (datasetId: DatasetId) => void;
+}
+
+const IN_REFINERIES: SeeAlso = { datasetId: "refineries", kind: "table", label: "REFINERIES IN THE TABLE" };
+const IN_PIPELINES: SeeAlso = { datasetId: "pipelines", kind: "table", label: "PIPELINES IN THE TABLE" };
+const IN_FIELDS: SeeAlso = { datasetId: "fields", kind: "table", label: "FIELDS IN THE TABLE" };
+const IN_TERMINALS: SeeAlso = { datasetId: "terminals", kind: "table", label: "LNG TERMINALS IN THE TABLE" };
+const IN_GRADES: SeeAlso = { kind: "reference", label: "CRUDE GRADES", tab: "grades" };
+const IN_COUNTRIES: SeeAlso = { kind: "reference", label: "EXPORT ROUTES BY COUNTRY", tab: "countries" };
+
+/** The units and terms this app uses, in plain words and kept short. */
 const ENTRIES: GlossaryEntry[] = [
   {
-    term: "Backwardation",
-    category: "market",
+    term: "BPD",
+    seeAlso: IN_REFINERIES,
+    category: "unit",
     definition:
-      "Forward-curve shape where near-dated contracts settle higher than later ones. Signals tight prompt supply — what the bypass model would call DEPLETING."
+      "Barrels per day. One barrel is 42 US gallons, about 159 litres. Used here for refinery capacity."
   },
   {
-    term: "Contango",
-    category: "market",
+    term: "BOE/D",
+    seeAlso: IN_PIPELINES,
+    category: "unit",
     definition:
-      "Inverse of backwardation. Later-dated contracts trade above the prompt — typical of oversupply and carries incentive to store barrels."
+      "Barrels of oil equivalent per day. Gas is converted to the amount of oil with the same energy, roughly 6,000 cubic feet of gas per barrel, so oil and gas can be added together. Used here for pipeline capacity and field production."
   },
   {
-    term: "Brent",
-    category: "market",
+    term: "MTPA",
+    seeAlso: IN_TERMINALS,
+    category: "unit",
     definition:
-      "North Sea light sweet grade; the global crude marker for seaborne barrels. Settles at ICE Futures Europe."
+      "Million tonnes per annum, the usual measure of LNG terminal capacity. One MTPA of LNG is roughly 1.4 billion cubic metres of gas a year."
   },
   {
-    term: "WTI",
-    category: "market",
+    term: "Refinery",
+    seeAlso: IN_REFINERIES,
+    category: "infrastructure",
     definition:
-      "West Texas Intermediate; U.S. light sweet benchmark. Settled at NYMEX and physically deliverable at Cushing, OK."
+      "Plant that turns crude oil into products such as gasoline, diesel and jet fuel. Its capacity is how much crude it can process in a day."
   },
   {
-    term: "DME Oman",
-    category: "market",
+    term: "Oil or gas field",
+    seeAlso: IN_FIELDS,
+    category: "infrastructure",
     definition:
-      "Medium-sour Gulf benchmark, the only deliverable Middle East crude future. Settled on the Dubai Mercantile Exchange."
+      "An underground accumulation of oil, gas or both, produced through wells."
   },
   {
-    term: "Murban",
-    category: "market",
+    term: "Pipeline",
+    seeAlso: IN_PIPELINES,
+    category: "infrastructure",
     definition:
-      "ADNOC's light-sour grade and the IFAD-traded Gulf light benchmark. Single-grade deliverable, used by Asian refiners."
+      "Carries crude oil, natural gas or NGL overland or under the sea, typically from fields to refineries, processing plants or export terminals."
+  },
+  {
+    term: "LNG",
+    seeAlso: IN_TERMINALS,
+    category: "infrastructure",
+    definition:
+      "Liquefied natural gas. Gas cooled to about −162 °C becomes a liquid around 1/600 of its volume, which makes it practical to ship by tanker."
+  },
+  {
+    term: "LNG export / import terminal",
+    seeAlso: IN_TERMINALS,
+    category: "infrastructure",
+    definition:
+      "An export terminal liquefies gas and loads it onto ships. An import terminal receives LNG and turns it back into gas for the local grid."
+  },
+  {
+    term: "FSRU",
+    seeAlso: IN_TERMINALS,
+    category: "infrastructure",
+    definition:
+      "Floating storage and regasification unit. A moored ship that works as an LNG import terminal, quicker to set up than an onshore plant."
+  },
+  {
+    term: "NGL",
+    seeAlso: IN_PIPELINES,
+    category: "infrastructure",
+    definition:
+      "Natural gas liquids: ethane, propane, butane and heavier hydrocarbons separated from raw natural gas."
+  },
+  {
+    term: "Condensate",
+    category: "infrastructure",
+    definition:
+      "Very light liquid hydrocarbons that condense out of gas when it reaches the surface. Often produced alongside gas."
+  },
+  {
+    term: "Upstream / midstream / downstream",
+    category: "infrastructure",
+    definition:
+      "Upstream is finding and producing oil and gas (fields). Midstream is moving and storing it (pipelines, terminals). Downstream is refining and selling products (refineries)."
+  },
+  {
+    term: "VLCC",
+    category: "infrastructure",
+    definition:
+      "Very Large Crude Carrier. 200–320 kdwt. The workhorse of Middle East → Asia flows. ~2 million barrels per cargo."
+  },
+  {
+    term: "Chokepoint",
+    seeAlso: IN_COUNTRIES,
+    category: "infrastructure",
+    definition:
+      "A narrow sea passage that a large share of shipped oil and gas must pass through, such as the Strait of Hormuz, Bab el-Mandeb or the Suez Canal."
   },
   {
     term: "API gravity",
-    category: "physical",
+    seeAlso: IN_GRADES,
+    category: "crude",
     definition:
       "Inverse density scale for crude. Higher API = lighter, lower viscosity, more distillate yield. Arab Light is ~33°; Maya is ~22°."
   },
   {
     term: "Sulfur content",
-    category: "physical",
+    seeAlso: IN_GRADES,
+    category: "crude",
     definition:
       "Weight % sulfur. <0.5% is 'sweet', >0.5% is 'sour'. Refiners with hydrotreaters can process sour; simple refineries can't."
   },
   {
     term: "Nelson Complexity",
-    category: "physical",
+    category: "crude",
     definition:
       "Numerical score of refinery capability to upgrade heavy/sour feedstocks. Higher = more conversion capacity = higher-value product slate."
-  },
-  {
-    term: "VLCC",
-    category: "physical",
-    definition:
-      "Very Large Crude Carrier. 200–320 kdwt. The workhorse of Middle East → Asia flows. ~2 million barrels per cargo."
-  },
-  {
-    term: "STS transfer",
-    category: "physical",
-    definition:
-      "Ship-to-ship cargo transfer at sea. Common for cargoes avoiding sanctions or reaching ports that can't accept VLCCs."
-  },
-  {
-    term: "Chokepoint",
-    category: "geopol",
-    definition:
-      "Narrow maritime passage carrying outsized share of global trade. Hormuz (≈21 Mbpd), Bab el-Mandeb (≈8.2 Mbpd), Suez+SUMED (≈9.2 Mbpd)."
-  },
-  {
-    term: "OPEC+",
-    category: "geopol",
-    definition:
-      "OPEC members plus ten cooperating non-members (notably Russia, Kazakhstan, Oman). Coordinated quota framework since 2016."
-  },
-  {
-    term: "SPR",
-    category: "geopol",
-    definition:
-      "Strategic Petroleum Reserve. U.S. government stockpile, nominal max release ~4.4 Mbpd, but practical draw rate is limited."
-  },
-  {
-    term: "OECD commercial stocks",
-    category: "geopol",
-    definition:
-      "Industry inventories in OECD countries. The IEA's operational minimum (~2,700 Mbbl) is the floor the bypass model watches for breach."
-  },
-  {
-    term: "Crack spread",
-    category: "market",
-    definition:
-      "Refining margin proxy. 3-2-1 = 3 barrels crude → 2 gasoline + 1 distillate, priced as a spread. Positive = refiner incentive to run."
-  },
-  {
-    term: "Differential",
-    category: "contract",
-    definition:
-      "Price of a physical grade vs. its marker. E.g. 'Arab Light at Brent −0.40' means Saudi Arab Light delivered at Brent minus $0.40/bbl."
-  },
-  {
-    term: "Basis",
-    category: "contract",
-    definition:
-      "Difference between cash/physical price and the nearby futures settlement. A proxy for physical tightness."
   }
 ];
 
 const CATEGORY_LABELS: Record<GlossaryEntry["category"], string> = {
-  market: "MARKET",
-  physical: "PHYSICAL",
-  geopol: "GEOPOLITICAL",
-  contract: "CONTRACT"
+  crude: "CRUDE OIL",
+  infrastructure: "INFRASTRUCTURE",
+  unit: "UNIT"
 };
 
-export function GlossaryPanel() {
+export function GlossaryPanel({ highlightedTerm = null, onNavigate, onOpenTable }: GlossaryPanelProps) {
+  const highlightedRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    highlightedRef.current?.scrollIntoView?.({ block: "center" });
+  }, [highlightedTerm]);
+
   return (
     <div className={styles.glossary}>
       <div className={styles.header}>
-        <span className={styles.title}>OIL-MARKET GLOSSARY</span>
-        <span className={styles.count}>{ENTRIES.length} TERMS · CURATED</span>
+        <span className={styles.title}>GLOSSARY</span>
+        <span className={styles.count}>{ENTRIES.length} TERMS</span>
       </div>
       <dl className={styles.list}>
-        {ENTRIES.map((entry) => (
-          <div className={styles.entry} key={entry.term}>
-            <dt className={styles.termRow}>
-              <span className={styles.term}>{entry.term}</span>
-              <span className={styles.category}>{CATEGORY_LABELS[entry.category]}</span>
-            </dt>
-            <dd className={styles.definition}>{entry.definition}</dd>
-          </div>
-        ))}
+        {ENTRIES.map((entry) => {
+          const isHighlighted = entry.term === highlightedTerm;
+          const { seeAlso } = entry;
+
+          return (
+            <div
+              className={isHighlighted ? styles.entryHighlighted : styles.entry}
+              key={entry.term}
+              ref={isHighlighted ? highlightedRef : undefined}
+            >
+              <dt className={styles.termRow}>
+                <span className={styles.term}>{entry.term}</span>
+                <span className={styles.category}>{CATEGORY_LABELS[entry.category]}</span>
+              </dt>
+              <dd className={styles.definition}>
+                {entry.definition}
+                {seeAlso ? (
+                  <button
+                    className={styles.seeAlso}
+                    onClick={() =>
+                      seeAlso.kind === "table" ? onOpenTable(seeAlso.datasetId) : onNavigate(seeAlso.tab)
+                    }
+                    type="button"
+                  >
+                    {seeAlso.label} ▸
+                  </button>
+                ) : null}
+              </dd>
+            </div>
+          );
+        })}
       </dl>
     </div>
   );

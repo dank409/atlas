@@ -10,10 +10,8 @@ const arabLight: CrudeGrade = {
   producerIso: "SAU",
   apiGravity: 33.4,
   sulfurPct: 1.8,
-  classification: "medium-sour",
-  pricingRef: "OSP vs ASCI",
-  productionMbpd: 5.9,
-  note: "Saudi Aramco flagship."
+  note: "Saudi Aramco flagship.",
+  source: "Wikipedia"
 };
 
 const murban: CrudeGrade = {
@@ -23,10 +21,8 @@ const murban: CrudeGrade = {
   producerIso: "ARE",
   apiGravity: 40.2,
   sulfurPct: 0.78,
-  classification: "light-sour",
-  pricingRef: "IFAD Murban Futures",
-  productionMbpd: 1.7,
-  note: "ADNOC onshore futures-deliverable grade."
+  note: "ADNOC onshore grade.",
+  source: "EIA"
 };
 
 const basrahHeavy: CrudeGrade = {
@@ -36,48 +32,31 @@ const basrahHeavy: CrudeGrade = {
   producerIso: "IRQ",
   apiGravity: 23.7,
   sulfurPct: 4.1,
-  classification: "heavy-sour",
-  pricingRef: "SOMO OSP vs ASCI",
-  productionMbpd: 0.6,
-  note: "High-sulfur heavy stream priced deeply discounted."
+  note: "High-sulfur heavy stream.",
+  source: "S&P Global"
 };
 
 const snapshot: CrudeGradeSnapshot = {
-  asOf: "2026-04-15",
-  cadence: "CURATED",
-  classification: "CURATED",
-  source: "Curated",
+  source: "EIA, Wikipedia",
   grades: [arabLight, murban, basrahHeavy]
 };
 
 describe("CrudeGradeTable", () => {
-  it("renders the 5-column essentials set (name, api, sulfur, class, prod)", () => {
-    // Columns were pared from 7 → 5: PRICING REF + NOTE moved into
-    // the GradeDetailOverlay drill-down. Sort buttons double as
-    // header labels.
-    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
+  it("shows only the name and the two sourced figures, leaving the prose to the detail card", () => {
+    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} onInspectGrade={vi.fn()} />);
 
+    expect(screen.getAllByRole("columnheader").map((header) => header.textContent)).toEqual([
+      "NAME·",
+      "API°▼",
+      "SULFUR %·"
+    ]);
     expect(screen.getByRole("button", { name: "SORT BY NAME" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SORT BY API" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "SORT BY SULFUR" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "SORT BY CLASSIFICATION" })
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "SORT BY PRODUCTION" })
-    ).toBeInTheDocument();
-
-    // De-scoped columns now live in the overlay, not the grid.
-    expect(
-      screen.queryByRole("button", { name: "SORT BY PRICING REFERENCE" })
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: "SORT BY NOTE" })
-    ).not.toBeInTheDocument();
   });
 
   it("renders a row for every grade with producer subtitle", () => {
-    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
+    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} onInspectGrade={vi.fn()} />);
 
     expect(screen.getByText("Arab Light")).toBeInTheDocument();
     expect(screen.getByText("Murban")).toBeInTheDocument();
@@ -87,7 +66,7 @@ describe("CrudeGradeTable", () => {
     expect(screen.getByText("IRAQ")).toBeInTheDocument();
   });
 
-  it("routes row clicks through onInspectGrade when provided", () => {
+  it("routes row clicks through onInspectGrade", () => {
     const onInspect = vi.fn();
     render(
       <CrudeGradeTable
@@ -107,21 +86,23 @@ describe("CrudeGradeTable", () => {
     );
   });
 
-  it("renders the classification badge with a data-tone matching the classification", () => {
-    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
+  it("marks the selected grade's row", () => {
+    render(
+      <CrudeGradeTable
+        snapshot={snapshot}
+        isLoading={false}
+        error={null}
+        onInspectGrade={vi.fn()}
+        selectedGradeId="murban"
+      />
+    );
 
-    const mediumSour = screen.getByText("medium sour");
-    expect(mediumSour).toHaveAttribute("data-tone", "medium-sour");
-
-    const heavySour = screen.getByText("heavy sour");
-    expect(heavySour).toHaveAttribute("data-tone", "heavy-sour");
-
-    const lightSour = screen.getByText("light sour");
-    expect(lightSour).toHaveAttribute("data-tone", "light-sour");
+    expect(screen.getByText("Murban").closest("tr")).toHaveAttribute("aria-selected", "true");
+    expect(screen.getByText("Arab Light").closest("tr")).toHaveAttribute("aria-selected", "false");
   });
 
   it("defaults to API° descending sort (Murban > Arab Light > Basrah Heavy)", () => {
-    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
+    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} onInspectGrade={vi.fn()} />);
 
     const rows = screen.getAllByRole("row").slice(1); // skip header row
     expect(within(rows[0]).getByText("Murban")).toBeInTheDocument();
@@ -130,7 +111,7 @@ describe("CrudeGradeTable", () => {
   });
 
   it("flips the API° sort direction when the user clicks the header twice", () => {
-    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
+    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} onInspectGrade={vi.fn()} />);
 
     // Default is desc — clicking once toggles to asc (Basrah first).
     fireEvent.click(screen.getByRole("button", { name: "SORT BY API" }));
@@ -140,17 +121,16 @@ describe("CrudeGradeTable", () => {
     expect(within(rows[2]).getByText("Murban")).toBeInTheDocument();
   });
 
-  it("surfaces the snapshot mode and source attribution in the meta row", () => {
-    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} />);
+  it("shows the table's source attribution and counts", () => {
+    render(<CrudeGradeTable snapshot={snapshot} isLoading={false} error={null} onInspectGrade={vi.fn()} />);
 
-    expect(screen.getByText("CURATED CURATED")).toBeInTheDocument();
-    expect(screen.getByText(/SOURCE: Curated/)).toBeInTheDocument();
+    expect(screen.getByText("SOURCES: EIA, Wikipedia")).toBeInTheDocument();
     expect(screen.getByText("GRADES: 3")).toBeInTheDocument();
     expect(screen.getByText("PRODUCERS: 3")).toBeInTheDocument();
   });
 
   it("renders a loading placeholder when snapshot is null and loading", () => {
-    render(<CrudeGradeTable snapshot={null} isLoading={true} error={null} />);
+    render(<CrudeGradeTable snapshot={null} isLoading={true} error={null} onInspectGrade={vi.fn()} />);
     expect(screen.getByText(/LOADING CRUDE GRADES/)).toBeInTheDocument();
   });
 
@@ -160,6 +140,7 @@ describe("CrudeGradeTable", () => {
         snapshot={null}
         isLoading={false}
         error={new Error("fetch 404")}
+        onInspectGrade={vi.fn()}
       />
     );
     expect(screen.getByText(/LOAD FAILED/)).toBeInTheDocument();

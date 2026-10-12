@@ -1,147 +1,54 @@
-import type {
-  AssetGridRow,
-  ChokepointAsset,
-  DatasetCatalogEntry,
-  DatasetFiltersById,
-  DatasetId,
-  InfrastructureAsset,
-  PipelineAsset,
-  RefineryAsset
-} from "../types/Infrastructure";
-import { formatCapacity, formatCapacityCompact, formatLengthKm, formatMtpa, formatTransitVolume } from "./formatters";
+import type { DatasetId, InfrastructureAsset } from "../types/Infrastructure";
+import { getEnergyType, type EnergyType } from "./assetEnergy";
+import { formatDailyVolume, formatMtpa } from "./formatters";
 
-export const DEFAULT_DATASET_FILTERS: DatasetFiltersById = {
-  chokepoints: {
-    country: "ALL",
-    status: "ALL",
-    text: ""
-  },
-  fields: {
-    country: "ALL",
-    status: "ALL",
-    text: ""
-  },
-  pipelines: {
-    country: "ALL",
-    hydrocarbon: "ALL",
-    status: "ALL",
-    text: ""
-  },
-  refineries: {
-    country: "ALL",
-    operator: "ALL",
-    status: "ALL",
-    text: ""
-  },
-  terminals: {
-    country: "ALL",
-    status: "ALL",
-    text: ""
-  }
-};
-
+/** Assets whose layer and energy type are both switched on. */
 export function filterAssets(
   assets: InfrastructureAsset[],
   activeDatasetIds: DatasetId[],
-  filtersByDataset: DatasetFiltersById
+  activeEnergyTypes: EnergyType[]
 ) {
-  return assets.filter((asset) => {
-    if (!activeDatasetIds.includes(asset.datasetId)) {
-      return false;
-    }
-
-    const query = filtersByDataset[asset.datasetId].text.trim().toLowerCase();
-
-    if (query && !matchesText(asset, query)) {
-      return false;
-    }
-
-    if (filtersByDataset[asset.datasetId].country !== "ALL" && asset.country !== filtersByDataset[asset.datasetId].country) {
-      return false;
-    }
-
-    if (filtersByDataset[asset.datasetId].status !== "ALL" && asset.status !== filtersByDataset[asset.datasetId].status) {
-      return false;
-    }
-
-    if (asset.assetKind === "refinery") {
-      const refineryFilters = filtersByDataset.refineries;
-
-      if (refineryFilters.operator !== "ALL" && asset.operator !== refineryFilters.operator) {
-        return false;
-      }
-    }
-
-    if (asset.assetKind === "pipeline") {
-      const pipelineFilters = filtersByDataset.pipelines;
-
-      if (pipelineFilters.hydrocarbon !== "ALL" && asset.hydrocarbon !== pipelineFilters.hydrocarbon) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-}
-
-export function buildAssetGridRows(assets: InfrastructureAsset[], catalog: DatasetCatalogEntry[]): AssetGridRow[] {
-  const catalogLabelById = Object.fromEntries(catalog.map((entry) => [entry.id, entry.title]));
-
-  return assets
-    .map((asset) => ({
-      asset,
-      countryName: asset.countryName,
-      datasetLabel: catalogLabelById[asset.datasetId] ?? asset.datasetId.toUpperCase(),
-      name: asset.name,
-      primaryMetric: buildPrimaryMetric(asset),
-      reference: asset.linkedContext?.ticker ?? asset._metadata.source,
-      secondaryMetric: buildSecondaryMetric(asset),
-      status: asset.status.replaceAll("_", " ")
-    }));
-}
-
-export function buildSearchResults(assets: InfrastructureAsset[], query: string) {
-  const normalizedQuery = query.trim().toLowerCase();
-
-  if (!normalizedQuery) {
-    return [];
-  }
-
-  return assets.filter((asset) =>
-    [asset.name, asset.countryName, asset.country, buildOwner(asset), buildOperator(asset), getAssetTypeLabel(asset)]
-      .filter(Boolean)
-      .join(" ")
-      .toLowerCase()
-      .includes(normalizedQuery)
+  return assets.filter(
+    (asset) => activeDatasetIds.includes(asset.datasetId) && activeEnergyTypes.includes(getEnergyType(asset))
   );
 }
 
-export function buildDatasetOptions(assets: InfrastructureAsset[], datasetId: DatasetId, field: "country" | "status" | "operator" | "hydrocarbon") {
-  const datasetAssets = assets.filter((asset) => asset.datasetId === datasetId);
-  const values = new Set<string>();
+/** Case-insensitive match against name, country, operator / owner and type. */
+export function matchesQuery(asset: InfrastructureAsset, query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
 
-  datasetAssets.forEach((asset) => {
-    if (field === "country") {
-      values.add(asset.country);
-      return;
-    }
+  return normalizedQuery === "" || buildSearchText(asset).includes(normalizedQuery);
+}
 
-    if (field === "status") {
-      values.add(asset.status);
-      return;
-    }
+export function buildSearchResults(assets: InfrastructureAsset[], query: string) {
+  return query.trim() === "" ? [] : assets.filter((asset) => matchesQuery(asset, query));
+}
 
-    if (field === "operator" && asset.assetKind === "refinery") {
-      values.add(asset.operator);
-      return;
-    }
+export function countByDataset(assets: InfrastructureAsset[]): Record<DatasetId, number> {
+  const counts: Record<DatasetId, number> = { fields: 0, pipelines: 0, refineries: 0, terminals: 0 };
 
-    if (field === "hydrocarbon" && asset.assetKind === "pipeline") {
-      values.add(asset.hydrocarbon);
-    }
+  assets.forEach((asset) => {
+    counts[asset.datasetId] += 1;
   });
 
-  return Array.from(values).sort((left, right) => left.localeCompare(right));
+  return counts;
+}
+
+/** Largest headline number first; assets with no reported number last, by name. */
+export function sortByPrimaryMetric<TAsset extends InfrastructureAsset>(assets: TAsset[]): TAsset[] {
+  return [...assets].sort(
+    (left, right) => getPrimaryMetricValue(right) - getPrimaryMetricValue(left) || left.name.localeCompare(right.name)
+  );
+}
+
+export function countByEnergyType(assets: InfrastructureAsset[]): Record<EnergyType, number> {
+  const counts: Record<EnergyType, number> = { gas: 0, mixed: 0, ngl: 0, oil: 0 };
+
+  assets.forEach((asset) => {
+    counts[getEnergyType(asset)] += 1;
+  });
+
+  return counts;
 }
 
 export function getAssetTypeLabel(asset: InfrastructureAsset) {
@@ -153,155 +60,99 @@ export function getAssetTypeLabel(asset: InfrastructureAsset) {
     return "REFINERY";
   }
 
-  if (asset.assetKind === "chokepoint") {
-    return "CHOKEPOINT";
-  }
-
   if (asset.assetKind === "field") {
     return "FIELD";
   }
 
-  return "TERMINAL";
+  return "LNG TERMINAL";
 }
 
-export function getLegendItems(datasetId: DatasetId) {
-  if (datasetId === "refineries") {
-    return [
-      { color: "#00C853", label: "Operational" },
-      { color: "#FF8C00", label: "Planned startup / maintenance" },
-      { color: "#FF1744", label: "Unplanned incident" },
-      { color: "#2196F3", label: "Construction" },
-      { color: "#666666", label: "Status unavailable" }
-    ];
-  }
-
-  if (datasetId === "pipelines") {
-    return [
-      { color: "#FF5722", label: "Crude oil" },
-      { color: "#FF8C00", label: "Natural gas" },
-      { color: "#FFB74D", label: "NGL" },
-      { color: "#FFFFFF", label: "Mixed / strategic" }
-    ];
-  }
-
-  if (datasetId === "chokepoints") {
-    return [
-      { color: "#FF1744", label: "Strategic chokepoint" }
-    ];
-  }
-
-  if (datasetId === "fields") {
-    return [
-      { color: "#FF8C00", label: "Oil-weighted" },
-      { color: "#64B5F6", label: "Gas-weighted" },
-      { color: "#E0E0E0", label: "Mixed / condensate" }
-    ];
-  }
-
-  if (datasetId === "terminals") {
-    return [
-      { color: "#FF8C00", label: "Export terminal" },
-      { color: "#64B5F6", label: "Import terminal" }
-    ];
-  }
-
-  return [];
+/**
+ * Name for lists and tooltips. GEM splits many pipelines into segments
+ * that share one name, so the segment is appended to tell them apart.
+ */
+export function getAssetDisplayName(asset: InfrastructureAsset) {
+  return asset.assetKind === "pipeline" && asset.segmentName ? `${asset.name} · ${asset.segmentName}` : asset.name;
 }
 
-function buildOwner(asset: InfrastructureAsset) {
-  if (asset.assetKind === "pipeline" || asset.assetKind === "refinery") {
-    return asset.owner;
+/** The company the source names for the asset: operator where given, else owner. */
+export function getAssetOperator(asset: InfrastructureAsset): string | null {
+  if (asset.assetKind === "pipeline") {
+    return asset.owner || null;
   }
 
   if (asset.assetKind === "terminal") {
-    return asset.owner ?? "";
+    return asset.operator || asset.owner || null;
   }
 
-  return "";
+  return asset.operator || null;
 }
 
-function buildOperator(asset: InfrastructureAsset) {
-  if (asset.assetKind === "pipeline" || asset.assetKind === "refinery" || asset.assetKind === "terminal") {
-    return asset.operator ?? "";
-  }
-
-  return "";
+/**
+ * Project status as the source publishes it. Null for refineries, which
+ * have none. Shown as a labelled source field, never as our own claim.
+ */
+export function getSourceStatus(asset: InfrastructureAsset): string | null {
+  return asset.assetKind === "refinery" ? null : asset.status;
 }
 
-function matchesText(asset: InfrastructureAsset, query: string) {
-  return [
-    asset.name,
-    asset.countryName,
-    asset.country,
-    buildOwner(asset),
-    buildOperator(asset),
-    getAssetTypeLabel(asset),
-    asset.assetKind === "pipeline" ? asset.countries?.join(" ") : "",
-    asset.assetKind === "field" ? asset.fieldType ?? "" : "",
-    asset.assetKind === "terminal" ? asset.terminalRole ?? asset.terminalType ?? "" : ""
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase()
-    .includes(query);
+/** False only when the source explicitly gives a status other than operating. */
+export function isOperating(asset: InfrastructureAsset) {
+  const status = getSourceStatus(asset);
+
+  return status === null || status === "operating";
 }
 
-function buildPrimaryMetric(asset: InfrastructureAsset) {
+/** The one headline number per asset; `--` when the source does not report it. */
+export function formatPrimaryMetric(asset: InfrastructureAsset) {
   if (asset.assetKind === "refinery") {
-    return asset.capacity_bpd ? formatCapacityCompact(asset.capacity_bpd) : "--";
+    return asset.capacity_bpd ? formatDailyVolume(asset.capacity_bpd) : "--";
   }
 
   if (asset.assetKind === "pipeline") {
-    return asset.capacity_boed ? formatCapacity(asset.capacity_boed).replace("bpd", "BOE/D") : "--";
-  }
-
-  if (asset.assetKind === "chokepoint") {
-    return formatTransitVolume(asset.transitVolume_mbpd);
+    return asset.capacity_boed ? formatDailyVolume(asset.capacity_boed, "BOE/D") : "--";
   }
 
   if (asset.assetKind === "terminal") {
     return asset.capacity_mtpa ? formatMtpa(asset.capacity_mtpa) : "--";
   }
 
-  if (asset.assetKind === "field") {
-    return asset.production_bpd ? formatCapacityCompact(asset.production_bpd) : "--";
-  }
-
-  return "--";
+  // GEM's field figure combines oil and gas, so it is barrels of oil
+  // equivalent, not barrels (the property name predates that distinction).
+  return asset.production_bpd ? formatDailyVolume(asset.production_bpd, "BOE/D") : "--";
 }
 
-function buildSecondaryMetric(asset: InfrastructureAsset) {
-  if (asset.assetKind === "pipeline") {
-    return asset.length_km ? formatLengthKm(asset.length_km) : "--";
-  }
-
+/** Numeric value behind `formatPrimaryMetric`, for sorting. Missing sorts as 0. */
+export function getPrimaryMetricValue(asset: InfrastructureAsset) {
   if (asset.assetKind === "refinery") {
-    return buildOwner(asset);
+    return asset.capacity_bpd ?? 0;
   }
 
-  if (asset.assetKind === "chokepoint") {
-    return asset.linkedContext?.benchmarkRefs?.join(" | ") ?? "Strategic transit";
+  if (asset.assetKind === "pipeline") {
+    return asset.capacity_boed ?? 0;
   }
 
   if (asset.assetKind === "terminal") {
-    return asset.terminalRole ? `${asset.terminalRole.toUpperCase()} LNG` : buildOwner(asset);
+    return asset.capacity_mtpa ?? 0;
   }
 
-  if (asset.assetKind === "field") {
-    return asset.basin ?? "--";
-  }
-
-  return "--";
+  return asset.production_bpd ?? 0;
 }
 
-export function isRefineryAsset(asset: InfrastructureAsset): asset is RefineryAsset {
-  return asset.assetKind === "refinery";
-}
-
-export function isPipelineAsset(asset: InfrastructureAsset): asset is PipelineAsset {
-  return asset.assetKind === "pipeline";
-}
-
-export function isChokepointAsset(asset: InfrastructureAsset): asset is ChokepointAsset {
-  return asset.assetKind === "chokepoint";
+function buildSearchText(asset: InfrastructureAsset) {
+  return [
+    getAssetDisplayName(asset),
+    asset.countryName,
+    asset.country,
+    getAssetOperator(asset),
+    asset.assetKind === "terminal" ? asset.owner : "",
+    getAssetTypeLabel(asset),
+    asset.assetKind === "pipeline" ? asset.countries?.join(" ") : "",
+    asset.assetKind === "pipeline" ? asset.hydrocarbon.replaceAll("_", " ") : "",
+    asset.assetKind === "field" ? asset.fieldType : "",
+    asset.assetKind === "terminal" ? asset.terminalRole : ""
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
 }

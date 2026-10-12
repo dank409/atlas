@@ -8,29 +8,23 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import type { CrudeGrade, CrudeGradeSnapshot } from "../../types/CrudeGrade";
-import {
-  formatCadenceLabel,
-  formatClassificationLabel
-} from "../../types/DataSource";
 import styles from "./CrudeGradeTable.module.css";
 
 interface CrudeGradeTableProps {
   snapshot: CrudeGradeSnapshot | null;
   isLoading: boolean;
   error: Error | null;
-  /**
-   * Row click → inspect overlay. When provided, rows are marked
-   * clickable (cursor + hover) and emit the full `CrudeGrade` to
-   * the caller. Omitted in tests that only want to assert rendering.
-   */
-  onInspectGrade?: (grade: CrudeGrade) => void;
+  /** Row click shows the grade's detail card (note and source of the figures). */
+  onInspectGrade: (grade: CrudeGrade) => void;
+  selectedGradeId?: string | null;
 }
 
 export function CrudeGradeTable({
   snapshot,
   isLoading,
   error,
-  onInspectGrade
+  onInspectGrade,
+  selectedGradeId = null
 }: CrudeGradeTableProps) {
   const columns = useMemo(() => buildColumns(), []);
   const [sorting, setSorting] = useState<SortingState>([
@@ -62,10 +56,7 @@ export function CrudeGradeTable({
     return <div className={styles.emptyState}>NO CRUDE GRADES IN THE REFERENCE TABLE.</div>;
   }
 
-  const modeClassName =
-    snapshot?.classification === "OBSERVED" ? styles.modeLive : styles.modeStatic;
   const producerCount = new Set(grades.map((grade) => grade.producerIso)).size;
-  const totalProductionMbpd = grades.reduce((sum, grade) => sum + grade.productionMbpd, 0);
 
   return (
     <div className={styles.gridShell}>
@@ -73,16 +64,6 @@ export function CrudeGradeTable({
         <span>GRADES: {grades.length}</span>
         <span className={styles.separator}>|</span>
         <span>PRODUCERS: {producerCount}</span>
-        <span className={styles.separator}>|</span>
-        <span>TOTAL: {totalProductionMbpd.toFixed(2)} MBPD</span>
-        <span className={styles.separator}>|</span>
-        <span>AS OF: {snapshot?.asOf ?? "--"}</span>
-        <span className={styles.separator}>|</span>
-        <span className={modeClassName}>
-          {snapshot
-            ? `${formatClassificationLabel(snapshot.classification)} ${formatCadenceLabel(snapshot.cadence)}`
-            : "CURATED"}
-        </span>
       </div>
       <div className={styles.tableWrap}>
         <table className={styles.table}>
@@ -91,11 +72,9 @@ export function CrudeGradeTable({
               an ellipsis instead of shoving API / SULFUR off the
               right edge of the panel. */}
           <colgroup>
-            <col style={{ width: "36%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "14%" }} />
-            <col style={{ width: "20%" }} />
-            <col style={{ width: "16%" }} />
+            <col style={{ width: "48%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "30%" }} />
           </colgroup>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -133,33 +112,29 @@ export function CrudeGradeTable({
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => {
-              const isClickable = Boolean(onInspectGrade);
-              return (
-                <tr
-                  className={isClickable ? styles.clickableRow : undefined}
-                  key={row.id}
-                  onClick={
-                    isClickable ? () => onInspectGrade?.(row.original) : undefined
-                  }
-                >
-                  {row.getVisibleCells().map((cell) => {
-                    const isNumeric = cell.column.columnDef.meta?.numeric === true;
-                    const className = isNumeric ? styles.numericCell : undefined;
-                    return (
-                      <td className={className} key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                aria-selected={row.original.id === selectedGradeId}
+                className={row.original.id === selectedGradeId ? styles.selectedRow : styles.clickableRow}
+                key={row.id}
+                onClick={() => onInspectGrade(row.original)}
+              >
+                {row.getVisibleCells().map((cell) => {
+                  const isNumeric = cell.column.columnDef.meta?.numeric === true;
+                  const className = isNumeric ? styles.numericCell : undefined;
+                  return (
+                    <td className={className} key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
       {snapshot ? (
-        <div className={styles.sourceLine}>SOURCE: {snapshot.source}</div>
+        <div className={styles.sourceLine}>SOURCES: {snapshot.source}</div>
       ) : null}
     </div>
   );
@@ -173,10 +148,8 @@ declare module "@tanstack/react-table" {
 }
 
 function buildColumns(): Array<ColumnDef<CrudeGrade>> {
-  // Trimmed from 7 → 5 columns: PRICING REF and NOTE moved into the
-  // inspect overlay that opens on row click. The grid's job is now
-  // scan-at-a-glance assay (API° / sulfur / class / production) —
-  // the metadata lives one click away.
+  // The note and the source of each grade's figures are long prose; they
+  // live in the detail card beside the table so the rows stay scannable.
   return [
     {
       id: "name",
@@ -213,27 +186,6 @@ function buildColumns(): Array<ColumnDef<CrudeGrade>> {
       header: () => <span>SULFUR %</span>,
       cell: (info) => info.row.original.sulfurPct.toFixed(2),
       meta: { label: "SULFUR", numeric: true }
-    },
-    {
-      id: "classification",
-      accessorKey: "classification",
-      header: () => <span>CLASS</span>,
-      cell: (info) => {
-        const classification = info.row.original.classification;
-        return (
-          <span className={styles.classificationBadge} data-tone={classification}>
-            {classification.replace("-", " ")}
-          </span>
-        );
-      },
-      meta: { label: "CLASSIFICATION" }
-    },
-    {
-      id: "productionMbpd",
-      accessorKey: "productionMbpd",
-      header: () => <span>PROD (MBPD)</span>,
-      cell: (info) => info.row.original.productionMbpd.toFixed(2),
-      meta: { label: "PRODUCTION", numeric: true }
     }
   ];
 }

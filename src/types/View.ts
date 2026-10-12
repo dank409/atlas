@@ -1,52 +1,19 @@
-/**
- * Top-level navigation views, modelled on a Bloomberg-style terminal
- * where each tab is a dedicated workspace with its own center pane
- * and right rail module stack. The left-rail layer/filter column is
- * shared across all views.
- *
- * The set of views is intentionally frozen — no new top-level tabs
- * without a corresponding scope discussion. Sub-views that belong to
- * an existing category (e.g. REFERENCE > Voyages / Refineries / News
- * / Glossary) live under that tab rather than adding a new top-level
- * entry.
- */
-export type ViewMode =
-  | "map"
-  | "markets"
-  | "flows"
-  | "chokes"
-  | "events"
-  | "models"
-  | "ais"
-  | "notes"
-  | "reference"
-  | "about"
-  | "data";
+export type ViewMode = "map" | "table" | "reference" | "about";
 
-/** REFERENCE tab has its own internal sub-nav. */
-export type ReferenceSubView = "refineries" | "voyages" | "news" | "glossary";
+export const VIEW_REGISTRY: ReadonlyArray<{ id: ViewMode; label: string }> = [
+  { id: "map", label: "MAP" },
+  { id: "table", label: "TABLE" },
+  { id: "reference", label: "REFERENCE" },
+  { id: "about", label: "ABOUT" }
+];
 
-export interface ViewDescriptor {
-  id: ViewMode;
-  label: string;
-  /**
-   * When true the view renders a full-width center pane with no
-   * right-rail module stack (e.g. a table-only view like NOTES).
-   * Defaults to false — most views use the standard 3-column shape.
-   */
-  fullWidth?: boolean;
+export type ReferenceTab = "countries" | "operators" | "grades" | "glossary";
+
+/** Where the Reference view is: which tab, and which entry is open in each. */
+export interface ReferenceLocation {
+  selectedIdByTab: Partial<Record<ReferenceTab, string>>;
+  tab: ReferenceTab;
 }
 
-export const VIEW_REGISTRY: ViewDescriptor[] = [
-  { id: "map", label: "MAP" },
-  { id: "markets", label: "MARKETS" },
-  { id: "flows", label: "FLOWS" },
-  { id: "chokes", label: "CHOKES" },
-  { id: "events", label: "EVENTS" },
-  { id: "models", label: "MODELS" },
-  { id: "ais", label: "AIS" },
-  { id: "notes", label: "NOTES" },
-  { id: "reference", label: "REFERENCE" },
-  { id: "about", label: "ABOUT" },
-  { id: "data", label: "DATA" }
-];
+/** Open a Reference tab, optionally on a specific entry. */
+export type NavigateReference = (tab: ReferenceTab, id?: string) => void;

@@ -2,18 +2,13 @@ import { useEffect, useState } from "react";
 import { loadCrudeGradeSnapshot } from "../services/crudeGrades";
 import type { CrudeGradeSnapshot } from "../types/CrudeGrade";
 
-interface UseCrudeGradesResult {
+export interface UseCrudeGradesResult {
   error: Error | null;
   isLoading: boolean;
   snapshot: CrudeGradeSnapshot | null;
 }
 
-/**
- * Loads the static crude-grade reference snapshot on mount. Mirrors the
- * shape of `useIceSettlements` so consumers branch on `isLoading` /
- * `snapshot` uniformly. No refetch interval — the underlying data only
- * moves when operators publish new assays (months at a time).
- */
+/** Loads the static crude-grade reference snapshot once, on mount. */
 export function useCrudeGrades(): UseCrudeGradesResult {
   const [snapshot, setSnapshot] = useState<CrudeGradeSnapshot | null>(null);
   const [error, setError] = useState<Error | null>(null);

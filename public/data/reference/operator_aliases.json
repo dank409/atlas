@@ -1,0 +1,70 @@
+{
+  "_metadata": {
+    "source": "Operator name-normalization map",
+    "note": "Merges spelling/brand variants of the SAME legal entity into one canonical operator, and links to companies.json where a rich profile exists. Parent/subsidiary rollups are intentionally NOT performed — explicitly-suffixed subsidiaries (e.g. 'ADNOC Offshore') remain separate operators.",
+    "updated": "2026-10-10"
+  },
+  "aliases": [
+    {
+      "canonicalSlug": "saudi-aramco",
+      "displayName": "Saudi Aramco",
+      "curatedCompanyId": "saudi-aramco",
+      "variants": [
+        "Saudi Aramco",
+        "Saudi Arabian Oil",
+        "Saudi Arabian Oil Co",
+        "Saudi Arabian Oil Co.",
+        "SAUDI ARABIAN OIL CO. (SAUDI ARAMCO)",
+        "Aramco"
+      ]
+    },
+    {
+      "canonicalSlug": "adnoc",
+      "displayName": "Abu Dhabi National Oil Company (ADNOC)",
+      "curatedCompanyId": "adnoc",
+      "variants": [
+        "ADNOC",
+        "Abu Dhabi National Oil",
+        "Abu Dhabi National Oil Company"
+      ]
+    },
+    {
+      "canonicalSlug": "kuwait-petroleum",
+      "displayName": "Kuwait Petroleum Corporation",
+      "curatedCompanyId": "kuwait-petroleum",
+      "variants": [
+        "Kuwait Petroleum Corporation",
+        "Kuwait Petroleum Corp",
+        "Kuwait Petroleum Corp.",
+        "KPC"
+      ]
+    },
+    {
+      "canonicalSlug": "qatarenergy",
+      "displayName": "QatarEnergy",
+      "variants": [
+        "QatarEnergy",
+        "Qatar Energy",
+        "Qatar Petroleum"
+      ]
+    },
+    {
+      "canonicalSlug": "nioc",
+      "displayName": "National Iranian Oil Company",
+      "variants": [
+        "National Iranian Oil Company",
+        "National Iranian Oil Co",
+        "National Iranian Oil"
+      ]
+    },
+    {
+      "canonicalSlug": "egas",
+      "displayName": "Egyptian Natural Gas Holding Company (EGAS)",
+      "variants": [
+        "Egyptian Natural Gas Holding Company",
+        "Egyptian Natural Gas Holding Co",
+        "EGAS"
+      ]
+    }
+  ]
+}

@@ -1,59 +1,46 @@
 .topNav {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto auto;
+  display: flex;
   align-items: center;
-  gap: 12px;
-  height: 40px;
+  gap: 16px;
+  min-height: 40px;
   padding: 0 12px;
-  background: #000000;
+  background: #0a0a0a;
+  border-top: 2px solid #ff8c00;
   border-bottom: 1px solid #222222;
   color: #e0e0e0;
   font-size: 11px;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
 }
 
-.brandBlock {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 8px;
+/* Boxed so the name reads as a mark, not as the first tab. */
+.brand {
+  padding: 3px 8px;
   border: 1px solid #ff8c00;
   color: #ff8c00;
-}
-
-.brand {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.18em;
 }
 
-.domainTag {
-  color: #666666;
-  font-size: 9px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
 .tabs {
   display: flex;
-  align-items: stretch;
-  gap: 2px;
-  min-width: 0;
-  overflow: hidden;
+  align-self: stretch;
+  gap: 4px;
+  margin-right: auto;
+  padding-left: 12px;
+  border-left: 1px solid #333333;
 }
 
 .tab,
 .tabActive {
+  padding: 0 10px;
   background: transparent;
-  border: 1px solid transparent;
-  color: #888888;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  color: #666666;
   cursor: pointer;
-  font: inherit;
-  font-size: 10px;
+  font-size: 11px;
+  font-weight: 600;
   letter-spacing: 0.08em;
-  padding: 6px 10px;
-  text-transform: uppercase;
 }
 
 .tab:hover {
@@ -61,19 +48,24 @@
 }
 
 .tabActive {
-  color: #ff8c00;
   border-bottom-color: #ff8c00;
+  color: #ff8c00;
 }
 
 .searchRegion {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #050505;
-  border: 1px solid #2b3240;
+  width: 360px;
+  max-width: 100%;
   padding: 4px 8px;
-  min-width: 280px;
-  position: relative;
+  background: #000000;
+  border: 1px solid #333333;
+}
+
+.searchRegion:focus-within {
+  border-color: #ff8c00;
 }
 
 .searchPrompt {
@@ -83,60 +75,60 @@
 
 .searchInput {
   flex: 1;
+  min-width: 0;
+  appearance: none;
   background: transparent;
   border: 0;
-  color: #e8ecf2;
-  font: inherit;
+  color: #e0e0e0;
   font-size: 11px;
   letter-spacing: 0.04em;
   outline: none;
-  text-transform: uppercase;
-  min-width: 0;
 }
 
 .searchInput::placeholder {
-  color: #4e5666;
-  letter-spacing: 0.08em;
-}
-
-.searchHint {
-  color: #4e5666;
-  font-size: 9px;
-  letter-spacing: 0.08em;
-  padding: 0 2px;
-  border: 1px solid #2b3240;
+  color: #666666;
 }
 
 .searchResults {
   position: absolute;
-  left: 0;
-  right: 0;
   top: calc(100% + 2px);
-  background: #000000;
-  border: 1px solid #2b3240;
+  left: -1px;
+  right: -1px;
+  z-index: 40;
   max-height: 320px;
   overflow-y: auto;
-  z-index: 40;
+  background: #111111;
+  border: 1px solid #333333;
 }
 
-.searchResult {
+.searchResult,
+.searchResultActive {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 2px;
   width: 100%;
+  padding: 6px 8px;
   background: transparent;
   border: 0;
-  border-bottom: 1px solid #111111;
-  color: inherit;
+  border-bottom: 1px solid #222222;
   cursor: pointer;
-  font: inherit;
-  padding: 6px 10px;
   text-align: left;
 }
 
-.searchResult:hover {
-  background: #0a0a0a;
+.searchResult:last-child,
+.searchResultActive:last-child {
+  border-bottom: 0;
+}
+
+/* The row Enter will open. */
+.searchResultActive,
+.searchResult:focus-visible {
+  background: #1a1a1a;
+  outline: none;
+}
+
+.searchResultActive .resultName {
+  color: #ff8c00;
 }
 
 .resultName {
@@ -145,65 +137,34 @@
 }
 
 .resultMeta {
-  color: #666666;
-  font-size: 9px;
-  letter-spacing: 0.04em;
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.05em;
 }
 
 .emptySearchState {
+  padding: 8px;
   color: #666666;
   font-size: 11px;
-  padding: 8px 10px;
 }
 
-.clockBlock {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  color: #7a8294;
-  font-size: 10px;
-  font-variant-numeric: tabular-nums;
-}
+@media (max-width: 899px) {
+  .topNav {
+    flex-wrap: wrap;
+    padding: 4px 12px;
+  }
 
-.clockItem {
-  display: inline-flex;
-  gap: 4px;
-}
+  .tabs {
+    padding-left: 0;
+    border-left: 0;
+  }
 
-.clockLabel {
-  color: #4e5666;
-  letter-spacing: 0.08em;
-}
+  .tab,
+  .tabActive {
+    padding: 6px 10px;
+  }
 
-.clockValue {
-  color: #e8ecf2;
-}
-
-.sessionOpen {
-  color: #00c853;
-  letter-spacing: 0.04em;
-}
-
-.sessionDate {
-  color: #4e5666;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-}
-
-.scenarioBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 6px;
-  border: 1px solid #ff8c00;
-  color: #ff8c00;
-  font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.scenarioDot {
-  width: 5px;
-  height: 5px;
-  background: #ff8c00;
+  .searchRegion {
+    width: 100%;
+  }
 }

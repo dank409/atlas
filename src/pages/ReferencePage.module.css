@@ -1,29 +1,39 @@
 .page {
   display: flex;
   flex-direction: column;
-  min-height: 0;
   height: 100%;
+  min-height: 0;
+  border: 1px solid #333333;
 }
 
-.subtabs {
+.toolbar {
   display: flex;
-  gap: 0;
-  padding: 8px 12px 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  padding: 0 12px 0 8px;
   border-bottom: 1px solid #222222;
+  flex-shrink: 0;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-right: auto;
 }
 
 .tab,
 .tabActive {
+  padding: 8px;
   background: transparent;
   border: 0;
   border-bottom: 2px solid transparent;
-  color: #7a8294;
+  color: #666666;
   cursor: pointer;
-  font: inherit;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  padding: 8px 14px;
-  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
 }
 
 .tab:hover {
@@ -31,12 +41,85 @@
 }
 
 .tabActive {
-  color: #ff8c00;
   border-bottom-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.tabHint {
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.08em;
 }
 
 .body {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+}
+
+/* List on the left, the selected entry on the right. Each side scrolls
+   on its own so a long list does not push the entry off screen. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(360px, 1fr);
+  gap: 12px;
+  height: 100%;
+  padding: 12px;
+}
+
+.listPane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.detailPane {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.filterInput {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  appearance: none;
+  background: #000000;
+  border: 1px solid #333333;
+  border-radius: 0;
+  color: #e0e0e0;
+  font-size: 11px;
+}
+
+.filterInput:focus {
+  border-color: #ff8c00;
+  outline: none;
+}
+
+.filterInput::placeholder {
+  color: #666666;
+}
+
+@media (max-width: 899px) {
+  .page {
+    height: auto;
+  }
+
+  .body {
+    overflow: visible;
+  }
+
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+  }
+
+  .listPane {
+    max-height: 50vh;
+  }
+
+  .detailPane {
+    overflow: visible;
+  }
 }

@@ -1,6 +1,8 @@
-# Design System — Energy Intelligence Terminal
+# Design System — Atlas
 
-This document defines every visual element of the terminal. Follow it exactly. Every deviation — a rounded corner, a wrong shade of gray, a sans-serif font — breaks the terminal aesthetic. When in doubt, reference the Bloomberg Terminal screenshots (orange on black, dense, monospace, zero decoration).
+This document defines the visual language of the app: a dense, monospace, amber-on-black terminal look. Follow it exactly. A rounded corner, a wrong shade of gray, or a sans-serif font breaks it.
+
+The CSS below is a reference specification. The components do not import these custom properties; they use the same hex values directly in their CSS Modules.
 
 ---
 
@@ -31,8 +33,8 @@ This document defines every visual element of the terminal. Follow it exactly. E
   --text-disabled: #444444;    /* Disabled elements */
 
   /* Semantic */
-  --color-positive: #00C853;   /* Green — operational, price up, positive change */
-  --color-negative: #FF1744;   /* Red — alert, price down, negative change, incidents */
+  --color-positive: #00C853;   /* Green — reserved; not currently used */
+  --color-negative: #FF1744;   /* Red — errors, e.g. a failed data load */
   --color-warning: #FFD600;    /* Yellow — elevated, caution, maintenance */
   --color-info: #2196F3;       /* Blue — informational, construction, links */
 
@@ -42,36 +44,14 @@ This document defines every visual element of the terminal. Follow it exactly. E
   --border-strong: #555555;    /* Button borders, interactive elements */
   --border-accent: #FF8C00;    /* Active/selected element borders */
 
-  /* Chart-specific */
-  --chart-line-1: #FF8C00;     /* Primary series (Brent) */
-  --chart-line-2: #FFB74D;     /* Secondary series (WTI) */
-  --chart-line-3: #FF5722;     /* Tertiary series */
-  --chart-grid: #1A1A1A;       /* Chart grid lines */
-  --chart-axis: #444444;       /* Chart axis lines */
-  --chart-label: #888888;      /* Chart axis labels */
+  /* Energy types — the colour channel on the map, the left rail and the cards */
+  --energy-oil: #FF8C00;    /* crude oil */
+  --energy-gas: #42A5F5;    /* natural gas / LNG */
+  --energy-ngl: #B388FF;    /* NGL: violet, so it cannot be mistaken for crude */
+  --energy-mixed: #BDBDBD;  /* mixed oil and gas */
 
-  /* Infrastructure layer colors */
-  --layer-refinery-operational: #00C853;
-  --layer-refinery-startup: #FF8C00;
-  --layer-refinery-incident: #FF1744;
-  --layer-refinery-maintenance: #FFD600;
-  --layer-refinery-closed: #555555;
-  --layer-refinery-construction: #2196F3;
-
-  --layer-pipe-crude: #FF5722;
-  --layer-pipe-gas: #FF8C00;
-  --layer-pipe-ngl: #FFB74D;
-  --layer-pipe-products: #FFCC80;
-
-  --layer-field-oil: #FF8C00;
-  --layer-field-gas: #4FC3F7;
-  --layer-field-condensate: #CE93D8;
-  --layer-field-mixed: #FFFFFF;
-
-  /* FIRMS severity */
-  --firms-normal: #555555;
-  --firms-elevated: #FFD600;
-  --firms-alert: #FF1744;
+  /* Map selection: white, because amber is already the crude-oil colour */
+  --map-selection: #FFFFFF;
 }
 ```
 
@@ -88,7 +68,7 @@ This document defines every visual element of the terminal. Follow it exactly. E
   --text-md: 13px;     /* Important text, card content */
   --text-lg: 14px;     /* Panel headers, key values */
   --text-xl: 16px;     /* Page titles, large stat values */
-  --text-2xl: 20px;    /* Hero numbers (Brent price, etc.) */
+  --text-2xl: 20px;    /* Hero numbers */
   --text-3xl: 24px;    /* Terminal brand ID only */
 
   /* Weights */
@@ -301,7 +281,7 @@ Used in the dashboard situation room for key indicators.
 
 ### 2.5 Data Table
 
-Dense, professional, Bloomberg-style data grid.
+Dense data grid.
 
 ```css
 .data-table {
@@ -461,55 +441,7 @@ Dense, professional, Bloomberg-style data grid.
 }
 ```
 
-### 2.7 Alert Entry
-
-```css
-.alert-entry {
-  padding: var(--space-md) var(--space-lg);
-  border-bottom: var(--border-width) solid var(--border-subtle);
-  cursor: pointer;
-}
-
-.alert-entry:hover {
-  background: var(--bg-hover);
-}
-
-.alert-entry.severity-alert {
-  border-left: 2px solid var(--color-negative);
-}
-
-.alert-entry.severity-elevated {
-  border-left: 2px solid var(--color-warning);
-}
-
-.alert-timestamp {
-  font-size: var(--text-xs);
-  color: var(--text-tertiary);
-}
-
-.alert-severity {
-  font-size: var(--text-xs);
-  font-weight: var(--weight-bold);
-  text-transform: uppercase;
-}
-
-.alert-severity.alert { color: var(--color-negative); }
-.alert-severity.elevated { color: var(--color-warning); }
-
-.alert-facility {
-  font-size: var(--text-sm);
-  color: var(--text-bright);
-  font-weight: var(--weight-semibold);
-}
-
-.alert-detail {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-  margin-top: var(--space-xs);
-}
-```
-
-### 2.8 Search Input
+### 2.7 Search Input
 
 ```css
 .search-input {
@@ -579,7 +511,7 @@ Dense, professional, Bloomberg-style data grid.
 }
 ```
 
-### 2.9 Tooltip (Map Hover)
+### 2.8 Tooltip (Map Hover)
 
 ```css
 .map-tooltip {
@@ -596,7 +528,7 @@ Dense, professional, Bloomberg-style data grid.
 }
 ```
 
-### 2.10 Status Bar
+### 2.9 Status Bar
 
 ```css
 .status-bar {
@@ -620,33 +552,9 @@ Dense, professional, Bloomberg-style data grid.
 .status-bar-separator {
   color: var(--border-default);
 }
-
-.status-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-}
-
-.status-dot.connected {
-  background: var(--color-positive);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.status-dot.degraded {
-  background: var(--color-warning);
-}
-
-.status-dot.offline {
-  background: var(--color-negative);
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
 ```
 
-### 2.11 Header Bar
+### 2.10 Header Bar
 
 ```css
 .header-bar {
@@ -672,93 +580,43 @@ Dense, professional, Bloomberg-style data grid.
   color: var(--border-default);
   font-size: var(--text-lg);
 }
-
-.header-clock {
-  margin-left: auto;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
-}
 ```
 
 ---
 
-## 3. Chart Styling Guide
-
-All charts follow these rules:
-
-### Background
-Transparent (inherits `--bg-primary` from container).
-
-### Grid lines
-Very subtle: `var(--chart-grid)` = `#1A1A1A`. Horizontal grid lines only. No vertical grid lines. Dashed pattern: `dasharray: 4 4`.
-
-### Axis lines
-`var(--chart-axis)` = `#444444`. Thin (1px).
-
-### Axis labels
-`var(--chart-label)` = `#888888`. Monospace. Size: `var(--text-xs)`.
-
-### Data lines
-Primary series: `var(--chart-line-1)` = `#FF8C00` (amber). Width: 1.5px. No dots on line (only on hover).
-Secondary series: `var(--chart-line-2)` = `#FFB74D`. Width: 1px.
-
-### Crosshair on hover
-Thin vertical + horizontal lines in `#555555`. Tooltip showing value at crosshair intersection.
-
-### Area fills
-Semi-transparent: `opacity: 0.1-0.2` of the line color. Used for backwardation/contango shading and inventory 5-year range bands.
-
-### No decorative elements
-No chart titles in the chart SVG (title goes in the containing panel header). No legends inside the chart (legend in the panel if needed). No data point markers except on hover. No background gradient. No 3D effects. No chart borders (the panel border is sufficient).
-
----
-
-## 4. Iconography
+## 3. Iconography
 
 Minimal. No icon library. Use unicode characters and simple inline SVGs.
 
 - Collapse: `▸` (collapsed) / `▾` (expanded)
 - Sort ascending: `▲`
 - Sort descending: `▼`
-- Price up: `▲` in green
-- Price down: `▼` in red
 - Close: `×`
 - Search: `⌕` or `/` hint text
 - Separator: `·` or `|`
-- Active connection: `●` (circle) in green, pulsing
-- Layer visible: `◉` (filled circle)
-- Layer hidden: `○` (empty circle)
 
-For asset type icons in search results and table rows, use simple 2-letter codes in a small badge:
-- `RF` = Refinery
-- `PL` = Pipeline
-- `FL` = Field
-- `TM` = Terminal
-- `PT` = Port
-- `LG` = LNG
+Map markers carry meaning through shape, and the left rail's key draws the same shapes as small inline SVGs: diamond = refinery, triangle = LNG terminal (up for export, down for import), dot = field, line = pipeline, dashed line = route not mapped.
 
 ---
 
-## 5. Responsive Breakpoints
+## 4. Responsive Breakpoints
 
 | Width | Behavior |
 |-------|----------|
-| ≥1440px | Full layout: both sidebars available, all panels |
-| 1200-1439px | Compact: both sidebars available but narrower (240px / 300px) |
-| 1024-1199px | Single sidebar: only one sidebar at a time, toggle between |
-| <1024px | Mobile: not a priority. Show simplified dashboard or map only |
+| ≥1200px | Left rail 264px (collapsible). Detail column 340px, present only while something is selected |
+| 900-1199px | Compact: 232px / 300px |
+| <900px | Single scrolling column: header, map or table, detail card, controls, status bar |
 
 ---
 
-## 6. Loading States
+## 5. Loading States
 
 No spinners. No skeleton screens. Just:
 - Data area shows `LOADING...` in `var(--text-disabled)`, centered, uppercase, monospace
 - Once loaded, content appears immediately (no fade-in, no slide-in)
-- Status bar shows real-time fetch status
+- Status bar shows `DATA: LOADING`, then `DATA: STATIC SNAPSHOT`
 
-## 7. Empty States
+## 6. Empty States
 
 When no data matches current filters:
 ```
@@ -769,9 +627,9 @@ Centered, uppercase first line in `var(--text-tertiary)`, second line in `var(--
 
 ---
 
-## 8. Anti-Patterns — NEVER DO THESE
+## 7. Anti-Patterns — NEVER DO THESE
 
-1. ❌ Rounded corners on any element (except status dots which are circles)
+1. ❌ Rounded corners on any element
 2. ❌ Box shadows or drop shadows
 3. ❌ Gradients (linear, radial, or otherwise)
 4. ❌ Sans-serif or serif fonts anywhere
@@ -781,11 +639,11 @@ Centered, uppercase first line in `var(--text-tertiary)`, second line in `var(--
 8. ❌ Bouncy or spring animations
 9. ❌ Loading spinners
 10. ❌ Skeleton loading screens
-11. ❌ Emoji in UI elements (acceptable only in country profiles for flags)
+11. ❌ Emoji in UI elements
 12. ❌ Icons from icon libraries (Lucide, FontAwesome, etc.)
 13. ❌ Card-style elevated surfaces with shadows
 14. ❌ Hamburger menus
-15. ❌ Modal overlays (use sidebar panels instead)
+15. ❌ Modal overlays. Details open in the right column or beside their list
 16. ❌ Tooltips with arrows/carets
 17. ❌ Color backgrounds on buttons (default state)
 18. ❌ Any shade of blue as a background

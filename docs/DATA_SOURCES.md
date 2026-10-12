@@ -1,422 +1,181 @@
-# Data Sources — Energy Intelligence Terminal
+# Data Sources — Atlas
 
-This document details every data source used in the platform: where to get it, what format it comes in, how to parse it, and what its limitations are.
+Everything the app shows is a static file in `public/data/`. Nothing is fetched from a third-party API at
+runtime except map tiles.
 
----
+## Infrastructure layers
 
-## 1. Global Energy Monitor (GEM) — Infrastructure Data
+Each file is a GeoJSON `FeatureCollection` with a `_metadata` block (`source`, `downloadDate`, `recordCount`,
+`license`, `sourceUrl`). The app reads attribution from that block, so update it whenever a file is rebuilt.
 
-### Overview
-GEM maintains several open-source trackers that form the backbone of our infrastructure layers. This is the SAME data Bloomberg uses in its MAP function — GEM is credited in Bloomberg's map attribution (visible in the screenshots: "Global Gas Infrastructure Tracker, Global Energy Monitor").
+| File | Source | Downloaded | Records in file | Licence |
+|---|---|---|---|---|
+| `infrastructure/refineries.geojson` | EDF Oil and Gas Infrastructure Mapping (OGIM) v2.7, plus six sites from EIA and Wikipedia | 2025-03-28 | 57 | CC BY 4.0 |
+| `infrastructure/pipelines.geojson` | Global Energy Monitor: Global Oil Infrastructure Tracker (2025-03) and Global Gas Infrastructure Tracker (2025-11); three Turkish pipelines from EIA; routes from OpenStreetMap (2026-10-11) | 2025-11 | 416 | CC BY 4.0; routes ODbL |
+| `infrastructure/fields.geojson` | Global Energy Monitor: Global Oil and Gas Extraction Tracker | 2026-03 | 439 | CC BY 4.0 |
+| `infrastructure/terminals.geojson` | Global Energy Monitor: Global Gas Infrastructure Tracker (LNG terminals, 2025-09) | 2025-09 | 29 | CC BY 4.0 |
 
-### Trackers We Use
+Links:
 
-#### Global Oil Infrastructure Tracker (GOIT)
-- **URL**: https://globalenergymonitor.org/projects/global-oil-infrastructure-tracker/
-- **Coverage**: Refineries, oil pipelines, oil storage, export terminals worldwide
-- **Download**: Available as XLSX from the GEM website (free, may require account)
-- **Refresh**: Updated quarterly (January, April, July, October)
-- **Key fields for refineries**: Unit Name, Country, Subnational Unit, Owner, Operator, Status, Capacity (bbl/day), Latitude, Longitude, Start Year
-- **Key fields for pipelines**: Pipeline Name, Segment Name, Country, Owner, Operator, Status, Hydrocarbon, Capacity (bbl/day or BOE/day), Diameter (inches), Length (km), Start Point, End Point, Cost (USD), Route Coordinates (GeoJSON where available)
+- OGIM v2.7: https://zenodo.org/records/15103476
+- GEM oil infrastructure: https://globalenergymonitor.org/projects/global-oil-infrastructure-tracker/download-data/
+- GEM gas infrastructure: https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/download-data/
+- GEM extraction: https://globalenergymonitor.org/projects/global-oil-gas-extraction-tracker/download-data/
+- OpenStreetMap (pipeline routes), © OpenStreetMap contributors, ODbL: https://www.openstreetmap.org/copyright
 
-#### Global Gas Infrastructure Tracker (GGIT)
-- **URL**: https://globalenergymonitor.org/projects/global-gas-infrastructure-tracker/
-- **Coverage**: Gas pipelines, LNG terminals, gas processing plants
-- **Download**: XLSX from GEM website
-- **Key fields**: Similar to GOIT but gas-specific. Capacity in BOE/D or BCM/year.
+### What the app does to the data at load time
 
-#### Global Oil & Gas Extraction Tracker
-- **URL**: https://globalenergymonitor.org/projects/global-oil-gas-extraction-tracker/
-- **Coverage**: Oil and gas fields worldwide
-- **Key fields**: Field Name, Country, Basin, Operator, Status, Field Type, Reserves (MMBOE), Production Rate, Discovery Year, Coordinates
+- Drops GEM features whose status is `cancelled` or `shelved`. Those projects were never built. This leaves
+  57 refineries, 400 pipelines, 437 fields and 21 LNG terminals.
+- Assigns each asset an energy type for the map colour, read straight from a source field: a pipeline's
+  hydrocarbon, a field's type. Refineries are all crude oil refineries and terminals are all LNG.
+- Splits each pipeline into stretches that follow a route and straight joins of 30 km or more with no point
+  along them (`src/utils/pipelineRoute.ts`). The joins are drawn dashed.
 
-### Data Processing Pipeline
+### Pipeline routes
 
-1. Download XLSX files from GEM
-2. Filter to Middle East countries: SA, IR, IQ, KW, AE, QA, OM, BH, YE (plus Egypt, Jordan, Syria, Turkey for pipeline transit routes)
-3. Convert to JSON/GeoJSON format matching our TypeScript interfaces
-4. For pipelines: extract route coordinates where available, create simplified start-end lines where not
-5. Store as static files in `public/data/infrastructure/` (runtime fetch path: `/data/infrastructure/...`)
-6. Document the GEM tracker version and download date in each file's metadata
+GEM's geometry for this region is mostly schematic: 229 of the 397 built pipelines arrive as one straight line
+between two end points, and many of the rest are a handful of points hundreds of kilometres apart. Two scripts
+work on the published file after `build_workspace_data.py`:
 
-### Limitations
-- Data is updated quarterly, not real-time. Facility status (e.g., "unplanned incident") may be outdated.
-- Route geometry is not available for all pipelines. Some only have start/end coordinates.
-- Capacity figures may differ between sources. GEM uses reported/estimated values.
-- Coordinate precision varies. Some facilities are placed at city-level, not exact facility coordinates. Cross-reference with satellite imagery (Google Maps/Earth) for major facilities.
+1. **`scripts/pipeline_geometry.py`** removes stray pieces. Five GEM gas records (Shouibah-Khor Al-Zubair,
+   Khormor-Jambur-Kirkuk, Khormor-Pirdawood, and two MGS III segments) carry a geometry collection that also
+   contains the routes of an Egyptian and a Libyan pipeline. A piece is kept if it touches a country the
+   pipeline is listed in, or connects to one that does; a leftover piece that is an exact copy of another
+   pipeline's route and does not connect to the pipeline's own is dropped too.
+2. **`scripts/snap_pipelines_to_osm.py`** replaces straight stretches with the real route from OpenStreetMap
+   (`scripts/fetch_osm_pipelines.py` downloads the OSM pipelines first). For each straight stretch of 8 km or
+   more on a built pipeline (operating, idle, mothballed or retired) it looks for a chain of OSM pipelines that
+   - carries the same kind of product (OSM `substance`; untagged OSM pipelines count for any hydrocarbon unless
+     another tag says water, sewage and so on),
+   - starts and ends near the stretch's two ends (within 10% of its length, between 2 and 40 km), and
+   - is at most 1.35 times as long as the straight line.
 
-### Important: Manual Enrichment
-For key facilities (top 30 by capacity), we should manually verify and enrich:
-- Exact coordinates (using satellite imagery)
-- Correct FIRMS geofence radius (based on facility footprint visible in satellite)
-- Any missing metadata
-- Bloomberg ticker if available (for cross-reference)
+   When there is one, its route is used and the record gets `routeSource: "OpenStreetMap"`. Proposed and
+   under-construction pipelines are never matched, since they have no route yet. On 2026-10-11 this gave 118
+   pipelines an OSM route, about a third of the straight-line length. The rest stay as GEM drew them and show
+   dashed. The match is by place and product, not by name, so a route can be a neighbouring pipeline in the same
+   corridor rather than the exact pipe.
 
----
+3. **`scripts/add_eia_pipelines.py`** fills in Turkey (see below).
 
-## 2. NASA FIRMS — Thermal Anomaly Detection
+Some GEM records join two places that the pipeline does not physically connect in one run. The Israel-Jordan gas
+pipeline is listed as 65 km but drawn from the offshore Leviathan field to northern Jordan, 220 km away. Those
+stay dashed.
 
-### Overview
-Fire Information for Resource Management System (FIRMS) provides near real-time active fire/thermal anomaly data from satellite-based sensors. We use this for disruption monitoring.
+### Turkey
 
-### API Details
+GEM's trackers spell the country "Türkiye". The build script only knew "Turkey" when the published extract was
+made, so every Turkish pipeline, field and LNG terminal was dropped and Turkey showed refineries only (those
+come from OGIM). The script now accepts both spellings, so a rebuild from the raw GEM files will bring them
+in. GEM's public map files were no longer downloadable on 2026-10-11, so until then:
 
-**Base URL**: `https://firms.modaps.eosdis.nasa.gov/api/area/csv`
+- `scripts/add_eia_pipelines.py` adds Baku-Tbilisi-Ceyhan, TurkStream and Blue Stream from the pipeline tables
+  in EIA's Türkiye brief (July 2023). Capacity and length are EIA's; gas capacity is converted from trillion
+  cubic feet a year to barrels of oil equivalent a day at 6,000 cubic feet to the barrel. Each route is the set
+  of OpenStreetMap lines carrying the pipeline's name. EIA names no owner, so that field is empty.
+- The same script lists Turkey on four cross-border pipelines the extract already had under Iraq, Iran or Syria
+  (Kirkuk-Ceyhan, Kurdistan, Tabriz-Ankara, Türkiye-Syria).
+- TANAP is not added: OSM has only short named pieces of it. Turkey's LNG terminals and fields are still
+  missing; EIA's brief has no table for either.
 
-**Endpoint format**: `{BASE_URL}/{MAP_KEY}/{SENSOR}/{BOUNDING_BOX}/{TIME_RANGE}`
+Nothing else is changed, estimated or filled in.
 
-**Sensors**:
-- `VIIRS_SNPP_NRT` — Suomi NPP satellite, VIIRS instrument. ~375m resolution. Preferred sensor.
-- `VIIRS_NOAA20_NRT` — NOAA-20 satellite, same instrument. Complementary passes.
-- `MODIS_NRT` — Older, ~1km resolution. Less precise but longer historical baseline.
+### Known limits
 
-**Bounding box for Middle East**: `30,12,65,40` (West, South, East, North)
-- Covers: Arabian Peninsula, Iran, Iraq, Levant, Egypt (eastern), Oman, Yemen
+- **Refineries have no status.** OGIM does not carry operating status for refineries in the region, so the
+  file has no `status` property and the app shows none. (An earlier version of the file had hand-entered
+  statuses; they were removed because nothing backed them.)
+- **Status on the other layers is GEM's.** It is what the tracker listed on the download date. The app uses it
+  to fade non-operating assets.
+- **Six refineries are not from OGIM.** Al Zour, Ruwais, SATORP, YASREF and Jazan take their owner and capacity
+  from EIA country analysis briefs; Sitra's 380,000 b/d is from Wikipedia's Bahrain Petroleum Company article.
+  Locations are from OpenStreetMap, except Ruwais (Wikipedia). Each record carries its own `source` and
+  `sourceDate`, which the app shows in place of the layer's.
+- **The refinery layer is still OGIM's vintage otherwise.** It lists Shuaiba in Kuwait, which EIA's 2023 brief
+  does not.
+- **Fields are points.** GEM gives one coordinate per field, not an outline. Production is reported for fewer
+  than half of them.
+- **Pipeline capacity is patchy.** About half of the pipelines have a capacity figure.
+- **Coverage follows the sources.** A facility missing from GEM or OGIM is missing here.
 
-**Time range**: `1` (last 24h), `2`, `3`, `7`, `10` days
+### Rebuilding
 
-**Full example**:
-```
-https://firms.modaps.eosdis.nasa.gov/api/area/csv/YOUR_MAP_KEY/VIIRS_SNPP_NRT/30,12,65,40/3
-```
+`scripts/build_workspace_data.py` reads the raw downloads from `raw/` (gitignored; several GB), filters them to
+the region and writes the four files. The two OSM steps then add the pipeline routes.
 
-### API Key
-- Register at: https://firms.modaps.eosdis.nasa.gov/api/area/
-- Free tier: 500 requests per minute — more than sufficient
-- Store as `VITE_FIRMS_MAP_KEY` environment variable
-
-### Response Format (CSV)
-```csv
-latitude,longitude,bright_ti4,scan,track,acq_date,acq_time,satellite,instrument,confidence,version,bright_ti5,frp,daynight
-26.3217,50.1532,312.4,0.39,0.36,2026-04-10,0530,N,VIIRS,nominal,2.0NRT,289.3,2.4,N
-```
-
-**Key fields**:
-- `latitude`, `longitude` — hotspot position
-- `confidence` — VIIRS uses categorical: `low`, `nominal`, `high`. MODIS uses numeric 0-100.
-- `frp` — Fire Radiative Power in MW. Higher = more intense. Gas flares typically 1-50 MW. Major fires can be 100+ MW.
-- `bright_ti4` — Brightness temperature (Kelvin). Higher = hotter detection.
-- `acq_date`, `acq_time` — Acquisition datetime (UTC)
-- `daynight` — `D` or `N`. Night detections are generally more reliable (less solar interference).
-
-### Processing Notes
-
-**Confidence normalization (single cross-sensor rule)**:
-- Normalize confidence into a `confidenceScore` (0-100) for all sensors:
-  - VIIRS: `low` -> 40, `nominal` -> 75, `high` -> 95
-  - MODIS: use numeric confidence directly (clamped 0-100)
-- Default display threshold: `confidenceScore >= 80`
-- User slider controls this normalized threshold, not raw per-sensor values.
-
-**Gas flare identification**: Persistent hotspots at known facility locations (same lat/lon ± 0.01° across multiple days) with consistent FRP values are likely gas flares. These should be tagged as `normal` in our severity classification.
-
-**Satellite pass timing**: VIIRS Suomi NPP crosses the equator at roughly 01:30 and 13:30 local solar time. Detections cluster around these times. This means "24H" data actually represents 2-3 satellite passes, not continuous monitoring. The user should understand this.
-
-**False positives**: Desert regions have high ground temperatures that can register as low-confidence thermal anomalies. Our geofence filtering eliminates most of these. In summer months (June-August), false positive rates increase.
-
-### Rate Limiting Strategy
-- Cache FIRMS responses in browser localStorage with a TTL of 30 minutes
-- Don't re-fetch on every layer toggle — only when time window changes or cache expires
-- Show "last fetched" timestamp in the status bar
-
----
-
-## 3. EIA (U.S. Energy Information Administration) — Prices & Inventory
-
-### Overview
-The EIA provides the most accessible free API for energy data. While it's US-centric, it includes global benchmark prices and international production data.
-
-### API Details
-
-**Base URL**: `https://api.eia.gov/v2/`
-
-**API Key**: Register at https://www.eia.gov/opendata/register.php — free, instant.
-
-**Authentication**: Pass as query parameter `api_key=YOUR_KEY`
-
-### Endpoints We Use
-
-#### Daily Crude Oil Spot Prices
-```
-GET https://api.eia.gov/v2/petroleum/pri/spt/data/
-?api_key={KEY}
-&frequency=daily
-&data[0]=value
-&facets[product][]= EPCBRENT (Brent) or EPCWTI (WTI)
-&sort[0][column]=period
-&sort[0][direction]=desc
-&length=365
+```bash
+pip install -r requirements.txt
+npm run build:data
+python3 scripts/fetch_osm_pipelines.py
+python3 scripts/snap_pipelines_to_osm.py
+python3 scripts/add_eia_pipelines.py
 ```
 
-Returns daily Brent and WTI spot prices ($/barrel). This is our primary price data source.
+Without the raw downloads, `python3 scripts/pipeline_geometry.py` and the two OSM steps can still be run on the
+published pipeline file.
 
-#### Weekly US Crude Oil Inventories
-```
-GET https://api.eia.gov/v2/petroleum/stoc/wstk/data/
-?api_key={KEY}
-&frequency=weekly
-&data[0]=value
-&facets[product][]=EPC0
-&sort[0][column]=period
-&sort[0][direction]=desc
-&length=260
-```
+## Reference files
 
-Returns weekly US crude oil commercial inventories (thousand barrels). ~5 years of weekly data for the 5-year range band.
+| File | Contents |
+|---|---|
+| `reference/countries.json` | A background note for each of the 13 countries on the map: summary, export routes, ports and terminals named |
+| `reference/companies.json` | Background notes for three operators: Saudi Aramco, ADNOC, Kuwait Petroleum |
+| `reference/crude_grades.json` | 22 crude grades: producer, API gravity, sulfur, a note, and the source of the two figures |
+| `reference/operator_aliases.json` | Spellings of the same company's name, so the operator index can merge them |
 
-#### Petroleum Product Prices (for crack spreads)
-```
-GET https://api.eia.gov/v2/petroleum/pri/spt/data/
-?api_key={KEY}
-&frequency=daily
-&data[0]=value
-&facets[product][]=EPMRU (RBOB Gasoline) or EPDHK (No. 2 Heating Oil)
-```
+The country and operator **entries** in the Reference view are not in these files. They are computed from the
+infrastructure layers at load time (`src/utils/referenceIndex.ts`): asset counts, listed refining capacity,
+pipeline length and asset lists all come from the map data. These files only add the prose.
 
-These combined with crude prices allow crack spread calculation.
+Rules the files follow:
 
-#### International Crude Oil Production
-```
-GET https://api.eia.gov/v2/international/data/
-?api_key={KEY}
-&frequency=monthly
-&data[0]=value
-&facets[activityId][]=1  (production)
-&facets[productId][]=57  (crude oil including condensate)
-&facets[countryRegionId][]=SAU,IRN,IRQ,KWT,ARE,QAT,OMN,BHR,YEM
-&sort[0][column]=period
-&sort[0][direction]=desc
-```
+- Country notes do not restate figures the datasets also give, such as refining capacity, because the two
+  would disagree.
+- A grade's `producer` must match a country note's `name` exactly; that is how grades and countries link.
+- Every country note, operator note and crude grade has a `source`, and the app shows it on the entry.
+- A crude grade carries only API gravity and sulfur. Production volumes, pricing references and a
+  light/medium/heavy class were removed on 2026-10-10: the first two had no source, and the class was a label
+  from cut-offs of our own that contradicted the producers' own names (Arab Light came out as "medium").
+- `operator_aliases.json` only groups spellings of one legal entity. Subsidiaries are not merged into parents.
 
-Monthly production by country. **Warning**: International data lags by 2-3 months.
+### What the notes were checked against
 
-### Rate Limits
-- No strict rate limit published, but be respectful: cache all responses for at least 1 hour
-- Daily price data only updates once per day (~6pm ET), so cache until next day
-- Weekly inventory updates Wednesday at 10:30 AM ET
+The notes are written by hand. On 2026-10-10 each one was checked against a named source and rewritten to say
+only what that source supports. The app shows each entry's source in a short form (publisher and year).
 
-### Limitations
-- EIA prices are US-centric spot prices, not the same as Platts assessments or OSPs (Official Selling Prices) that physical traders actually use. They're directionally accurate but not trading-grade.
-- International production data lags 2-3 months
-- No futures curve data — that requires CME (see below)
-- No Middle East-specific refining margins — those need to be calculated from price differentials
+- **Country notes.** Eleven are checked against the EIA Country Analysis Brief for that country (plus EIA's
+  World Oil Transit Chokepoints page for the Strait of Hormuz and Sumed). The briefs differ a lot in age:
+  UAE July 2026, Qatar October 2025, Iraq July 2025, Saudi Arabia and Iran October 2024, Egypt August 2024,
+  Kuwait and Türkiye July 2023, Yemen November 2020, Oman January 2019, Syria June 2015. EIA has no brief for
+  Bahrain or Jordan; Bahrain's note rests on two news reports (MEED 2018, Reuters 2019) and Jordan's on
+  Wikipedia's "Energy in Jordan".
+- **Operator notes.** Checked against the EIA brief for the operator's country.
+- **Crude grades.** No single open source publishes assays for all of them, so the source varies by grade and is
+  recorded on each one:
+  - the four UAE grades are from the table in EIA's UAE brief (which credits S&P Global Platts);
+  - the three Basrah grades are the specification Iraq's SOMO set from 1 January 2021, as reported by S&P Global;
+  - Oman Export is from a BP crude assay (sample of 10 October 2020);
+  - the other fourteen are from Wikipedia's "List of crude oil products", which cites no source for its
+    figures. Treat those as typical values only. For the five Saudi grades the note also gives the band Saudi
+    Aramco publishes (from EIA's Saudi Arabia brief), which the Wikipedia figures can be compared against.
+- **Not opened directly.** The S&P Global and BP pages refuse automated access, so those figures were taken
+  from search-engine summaries of the pages rather than from the pages themselves.
+- **Events.** The notes describe normal export routes as their sources did. They do not follow events,
+  including the closure of the Strait of Hormuz that EIA's July 2026 UAE brief reports from March 2026.
 
----
+### Field production unit
 
-## 4. CME Group — Futures Settlement Data
+GEM reports field production in mixed units. The build script adds oil and gas together for the latest data
+year, so the `production_bpd` property is barrels of oil **equivalent** per day despite its name. The app
+labels it `BOE/D`.
 
-### Overview
-CME publishes daily settlement prices for WTI crude oil futures (NYMEX) and Brent crude oil futures (ICE, but CME has Brent contracts too). This is needed for the futures forward curve and backwardation/contango analysis.
+## Basemaps
 
-### Data Access
-CME's daily settlement data is published on their website:
-- **WTI (CL)**: https://www.cmegroup.com/markets/energy/crude-oil/light-sweet-crude.settlements.html
-- **Brent (BZ)**: https://www.cmegroup.com/markets/energy/crude-oil/brent-crude-oil.settlements.html
+| Basemap | Provider | Notes |
+|---|---|---|
+| Dark | CARTO Dark Matter (© CARTO, © OpenStreetMap contributors) | Loaded as a style URL through Mapbox GL JS |
+| Satellite | Mapbox Satellite (© Mapbox) | Uses the Mapbox access token |
 
-**There is no free API.** The data must be either:
-1. Manually downloaded and converted to JSON periodically
-2. Scraped from the settlements page (check ToS — CME has restrictions on automated scraping)
-3. Obtained through Nasdaq Data Link (formerly Quandl) which has some CME data on free tier
-
-### Realistic Approach for v1
-- Maintain a manually updated JSON file with current forward curve data
-- Update it daily or weekly
-- Clearly label the update date on the chart
-- Long-term: explore free data sources that relay CME settlements
-
-### Data Structure
-```json
-{
-  "curve_date": "2026-04-10",
-  "commodity": "WTI",
-  "contracts": [
-    {"month": "2026-05", "label": "M1", "settle": 72.45},
-    {"month": "2026-06", "label": "M2", "settle": 72.10},
-    {"month": "2026-07", "label": "M3", "settle": 71.85},
-    ...
-  ],
-  "source": "CME Group Daily Settlements",
-  "last_updated": "2026-04-10T22:00:00Z"
-}
-```
-
----
-
-## 5. OPEC — Production & Policy Data
-
-### Overview
-OPEC publishes the Monthly Oil Market Report (MOMR) around the 12th-13th of each month. It contains production by country (based on secondary sources), demand forecasts, and supply estimates.
-
-### Data Access
-- **MOMR PDF**: https://www.opec.org/opec_web/en/publications/338.htm
-- **Annual Statistical Bulletin**: https://www.opec.org/opec_web/en/publications/202.htm (historical data)
-
-**There is no OPEC API.** Production data must be extracted from the MOMR PDF tables or from secondary sources that digitize it (EIA International data, JODI).
-
-### Realistic Approach for v1
-- Use EIA International data as primary source (API-accessible, see section 3)
-- Supplement with manually curated data from MOMR for the most recent month (since EIA lags)
-- Store in curated JSON files per country with monthly time series
-- Clearly label which months come from which source
-
-### OPEC+ Quotas
-- OPEC+ quota allocations are announced in press releases after ministerial meetings
-- These are curated manually into a JSON file
-- Compare quota to actual production for compliance tracking
-
----
-
-## 6. JODI (Joint Organisations Data Initiative)
-
-### Overview
-JODI provides monthly oil statistics submitted by governments. It includes production, refinery throughput, imports/exports, and demand for major countries.
-
-### Data Access
-- **JODI Oil World Database**: https://www.jodidata.org/oil/
-- Free access with registration
-- Download as CSV
-
-### Key Data Points
-- Crude oil production by country (monthly)
-- Refinery input/output
-- Crude and product imports/exports
-- Demand (approximated through product deliveries)
-
-### Limitations
-- Submissions are voluntary and sometimes incomplete
-- Data lags by 2-3 months
-- Some countries (notably Iran) may not submit regularly
-- Quality varies by reporting country
-
----
-
-## 7. Country Profiles — Curated Data
-
-### Overview
-Country profiles are manually curated from multiple public sources. They are NOT auto-populated from any single API.
-
-### Sources for Curation
-- EIA Country Analysis Briefs (https://www.eia.gov/international/analysis/)
-- OPEC Member Country profiles
-- CIA World Factbook (energy sections)
-- Industry references (ESAI, Platts, Argus — public summaries)
-- News reports for current sanctions, disputes, and policy changes
-
-### Update Cadence
-- Review and update monthly or when significant events occur (production changes, sanctions changes, new infrastructure commissioning)
-- Each profile JSON file has a `lastUpdated` field
-
----
-
-## 8. News / RSS Feeds
-
-### Available Feeds
-
-| Source | URL | Notes |
-|--------|-----|-------|
-| EIA Today in Energy | https://www.eia.gov/todayinenergy/rss.xml | Reliable, 1-2 articles/day |
-| OPEC Press Releases | Check opec.org for RSS availability | May not have RSS — fallback to checking website |
-| Reuters Energy | Reuters limits free RSS access | May need alternative |
-
-### Fallback Strategy
-If RSS is unreliable, curate a set of bookmarked source links and display them as a reference panel rather than a fake live feed. Honesty about what is observed, curated, or stale is important.
-
-Degraded-mode requirements (must be visible in UI):
-- Keep the last successful fetch timestamp and label it as stale when outdated.
-- Mark fallback entries with explicit cadence / provenance labels (for example: `CURATED`, `LAST KNOWN`, `EOD`, or `NRT SATELLITE`) so users can distinguish observed vs curated content.
-- Never imply continuous connectivity for feeds that are EOD, weekly, or manual.
-
----
-
-## 9. Chokepoint Transit Data — Static Reference
-
-### Sources
-- EIA analysis: "The Strait of Hormuz is the world's most important oil chokepoint" (regularly updated analysis page)
-- EIA: "World Oil Transit Chokepoints" — provides estimated volumes for Hormuz, Bab el-Mandeb, Suez, Turkish Straits, Malacca
-
-### Data Structure
-```json
-{
-  "chokepoints": [
-    {
-      "name": "Strait of Hormuz",
-      "transitVolume_mbpd": 20.5,
-      "percentOfGlobalSeaborne": 21,
-      "narrowestPoint_km": 33,
-      "coordinates": [[56.0, 26.7], [56.5, 26.3]],
-      "notes": "~20-21 million bpd of crude and products. Flows primarily to Asia (India, China, Japan, South Korea). Iran and Oman border the strait.",
-      "source": "EIA World Oil Transit Chokepoints, 2023",
-      "lastUpdated": "2025-06"
-    }
-  ]
-}
-```
-
----
-
-## 10. File Organization
-
-```
-public/data/
-├── infrastructure/
-│   ├── refineries.geojson      # From GEM GOIT
-│   ├── pipelines.geojson       # From GEM GOIT + GGIT
-│   ├── fields.geojson          # From GEM Extraction Tracker
-│   ├── terminals.geojson       # From GEM GOIT (terminals/ports)
-│   └── metadata.json           # GEM tracker version, download date
-├── reference/
-│   ├── chokepoints.geojson     # Curated
-│   ├── crude_grades.json       # Curated reference table
-│   ├── countries.json          # Country profiles
-│   ├── shipping_routes.geojson # Major tanker route lines
-│   └── opec_quotas.json        # Current OPEC+ quota allocations
-├── market/
-│   ├── futures_curve.json      # Daily CME settlement data (manual update)
-│   ├── production_history.json # Monthly production by country
-│   └── outage_log.json         # Manually curated outage events
-└── README.md                   # Data dictionary and update log
-```
-
-Runtime fetch paths mirror this tree at `/data/...` (for example, `/data/infrastructure/refineries.geojson`).
-
-Each file should include a top-level metadata object. GeoJSON files must remain valid FeatureCollections:
-```json
-{
-  "type": "FeatureCollection",
-  "_metadata": {
-    "source": "Global Energy Monitor - Global Oil Infrastructure Tracker v2024-Q4",
-    "downloadDate": "2025-01-15",
-    "filterCriteria": "Middle East region only",
-    "recordCount": 27,
-    "notes": "Coordinates verified for top 15 facilities via satellite imagery"
-  },
-  "features": [ ... ]
-}
-```
-
----
-
-## 11. Refresh strategy
-
-Atlas is a static SPA. Live data arrives via **client-side fetches
-from the browser**, not a server-side batch pipeline:
-
-- **EIA** prices fetch live on page load when `VITE_EIA_API_KEY` is
-  set (see `src/services/eiaPrices.ts`), falling back to the
-  checked-in `public/data/market/crude_prices_30d.json` if the key
-  is missing or the request fails.
-- **FIRMS** thermal anomalies fetch live when `VITE_FIRMS_MAP_KEY`
-  is set, same live-or-static pattern.
-- **AISStream** opens a WebSocket from the AIS WATCH view when
-  `VITE_AISSTREAM_API_KEY` is set.
-
-Everything else (`dme_oman_30d.json`, `murban_30d.json`,
-`ice_brent_settlements.json`, `refinery_margins.json`,
-`baker_hughes.json`, `jwc_listings.json`,
-`crude_bilateral_monthly.json`, `outages.json`) is curated and
-committed directly. Refreshing those means editing the JSON and
-pushing a commit — intentionally hand-touched, no auto-pipeline.
-An earlier version of Atlas shipped a nightly GitHub Actions cron
-that overwrote a subset of the JSON files against EIA/FRED/FIRMS;
-that machinery was removed because it was brittle and the curated-
-snapshot flow is simpler and honest.
+Mapbox GL JS needs an access token for both. Map labels use the font `Open Sans Regular` because it is the one
+font both providers serve glyphs for.

@@ -1,0 +1,121 @@
+.section {
+  padding: 8px 12px;
+  border-top: 1px solid #333333;
+}
+
+.sectionTitle {
+  margin: 0 0 8px;
+  color: #888888;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.empty {
+  margin: 0;
+  color: #666666;
+  font-size: 11px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  padding: 3px 8px;
+  background: transparent;
+  border: 1px solid #555555;
+  color: #cccccc;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.chip:hover {
+  border-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.assetList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assetLink {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 4px 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #222222;
+  cursor: pointer;
+  text-align: left;
+}
+
+.assetList li:last-child .assetLink {
+  border-bottom: 0;
+}
+
+.assetName {
+  min-width: 0;
+  color: #ffffff;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+.assetMeta {
+  flex-shrink: 0;
+  color: #888888;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+.assetLink:hover .assetName,
+.assetLink:hover .assetMeta {
+  color: #ff8c00;
+}
+
+.toggle {
+  margin-top: 6px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #555555;
+  color: #cccccc;
+  cursor: pointer;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.toggle:hover {
+  border-bottom-color: #ff8c00;
+  color: #ff8c00;
+}
+
+.prose {
+  margin: 0 0 8px;
+  color: #e0e0e0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.prose:last-child {
+  margin-bottom: 0;
+}
+
+.proseLabel {
+  display: block;
+  margin-bottom: 2px;
+  color: #888888;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}

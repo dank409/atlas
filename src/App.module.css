@@ -1,10 +1,23 @@
-.sidebarStack {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 8px;
+.mapLayer {
+  height: 100%;
 }
 
-.fullHeightPanel {
+.mapLayerHidden {
+  display: none;
+}
+
+.loadingState {
+  display: grid;
+  place-items: center;
   height: 100%;
+  border: 1px solid #333333;
+  color: #666666;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 899px) {
+  .mapLayer {
+    height: 70vh;
+  }
 }
